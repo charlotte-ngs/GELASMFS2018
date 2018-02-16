@@ -76,9 +76,9 @@ vec_topics_schedule[which(Datum == format(as.Date("2018/03/19"), "%d.%m"))] <- "
 vec_topics_schedule[which(Datum == format(as.Date("2018/04/09"), "%d.%m"))] <- "Einführung angewandte Zuchtwertschätzung"
 vec_topics_schedule[which(Datum == format(as.Date("2018/04/16"), "%d.%m"))] <- "ZWS Rind I"
 vec_topics_schedule[which(Datum == format(as.Date("2018/04/23"), "%d.%m"))] <- "ZWS Rind II"
-vec_topics_schedule[which(Datum == format(as.Date("2018/04/30"), "%d.%m"))] <- "Braunvieh Schweiz und Qualitas"
-vec_topics_schedule[which(Datum == format(as.Date("2018/05/07"), "%d.%m"))] <- "ZWS Rind III"
-vec_topics_schedule[which(Datum == format(as.Date("2018/05/14"), "%d.%m"))] <- "ZWS Schwein"
+vec_topics_schedule[which(Datum == format(as.Date("2018/04/30"), "%d.%m"))] <- "Braunvieh Schweiz und Qualitas in Zug"
+vec_topics_schedule[which(Datum == format(as.Date("2018/05/07"), "%d.%m"))] <- "Suisag und Zuchtprogramm beim Schwein - Andreas Hofer (Suisag)"
+vec_topics_schedule[which(Datum == format(as.Date("2018/05/14"), "%d.%m"))] <- "ZWS Rind III"
 
 # define dataframe for schedule table
 df_schedule <- data.frame(Woche = Woche, Datum = Datum, Thema = vec_topics_schedule, stringsAsFactors = FALSE)
