@@ -1,0 +1,51 @@
+---
+title: "Angewandte Statistische Methoden in den Nutztierwissenschaften"
+author: "Peter von Rohr"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+bibliography: ["ASMNW.bib"]
+biblio-style: apalike
+link-citations: yes
+description: "Unterlagen zur Vorlesung Angewandte Statistische Methoden in den Nutztierwissenschaften."
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::knit_hooks$set(conv.odg = rmddochelper::odg.graphics.conv.hook)
+r6objTableAbbrev <- rmddochelper::R6ClassTableAbbrev$new()
+```
+
+# Vorwort {-}
+Dieses Dokument umfasst die kompletten Unterlagen zur Vorlesung __Angewandte Statistische Methoden in den Nutztierwissenschaften__. Der Titel dieser Vorlesung ist sehr allgemein gehalten. Dies würde es erlauben einen grosszügigen Überblick über eine breite Palette an statistischen Methoden, welche in den Nutztierwissenschaften eingesetzt werden, zu geben. 
+
+Wir schlagen an dieser Stelle aber einen anderen Weg ein, und fokussieren uns auf statistische Methoden, welche in der genomischen Selektion von Bedeutung sind. Nur diese bewusste Wahl eines spezifischen Gebietes ermöglicht es uns, den behandelten Stoff angemessen zu vertiefen. Im anschliessenden Unterabschnitt wollen wir die hier getroffene Entscheidung der Fokusierung auf die genomische Selektion motivieren. Dabei soll gezeigt werden, dass wir mit der Wahl des Themas der multiplen linearen Regression als Ausgangspunkt auch eine Leserschaft ansprechen, welche nicht primär an der Tierzucht interessiert ist.
+
+
+## Motivation {-}
+Der Begriff der __genomischen Selektion__ bedeutet, dass für die Selektionsentscheide in einem Zuchtprogramm detailierte Informatioen aus dem Genom der Selektionskandidaten verwendet werden. Diese genomische Information besteht aus sogenannten __Single Nucleotide Polymorphisms__ (SNP), welche als Informationsquelle für die Schätzung von genomischen Zuchtwerten (GZW) dienen. Je nach Zuchtprogramm werden die GZW zusammen mit traditionellen Zuchtwerten kombiniert und stehen so als Rangierungskriterium für die Selektionskandidaten in einer Population zur Verfügung.
+
+Vom Standpunkt der statistischen Modellierung aus betrachtet, ist das einfache lineare Modell mit fixen Effektstufen für den Einsatz in der genomischen Selektion, wie auch in anderen Gebieten völlig ausreichend. Diese Art von Modellen werden auch als Regressionsmodelle bezeichnet. Die Problematik entsteht erst bei der Wahl der Technik zur Schätzung der unbekannten Parameter. Auf den Kontext der genomischen Selektion angewendet, entsprechen die unbekannten Parameter den genomischen Zuchtwerten. In der klassischen Regressionsanalyse werden die unbekannten Parameter meist mit der Methode der kleinsten Quadrate (Least Squares) geschätzt. Least Squares können wir aber für die Schätzung der GZW nicht verwenden, da die Anzahl unbekannter Parameter ($p$) meist grösser ist als die Anzahl Beobachtungen ($n$). 
+
+Mit der steigenden Grösse und Komplexität von aktuellen Datensätzen tritt das soeben beschriebene Problem nicht nur in der Tierzucht auf, sondern es gibt eine breite Palette von Anwendungen. In der Vorlesung beschrieben wir diese Problematik am Beispiel der Schätzung von genomischen Zuchttwerten und es werden alternative Techniken zur Parameterschätzung vorgeschlagen. Da die Methode der multiplen Regressionsanalyse in früheren Vorlesungen des Bachelorstudiums behandelt wurde, bietet diese ein idealer Ausgangspunkt für den in dieser Veranstaltung präsentierten Stoffinhalt.
+
+
+## Einordnung {-}
+Die Vorlesung __Angewandte Statistische Methoden in den Nutztierwissenschaften__ ist eine halb-semestrige Veranstaltung und wird im Masterstudiengang Agrarwissenschaften der ETH Zürich angeboten.
+
+
+## Lernziele {-}
+Für die Verwendung des hier präsentierten Stoffs schlagen wir die folgenden Lernziele vor. 
+
+Die Studierenden ...
+
+- kennen die Eigenschaften der multiplen linearen Regression und 
+- können einfache Datensätze mithilfe der Regressionsmethode analysieren 
+- wissen wieso Least Squares zur Schätzung von genomischen Zuchtwerten nicht brauchbar ist 
+- kennen die in der genomischen Zuchtwertschätzung verwendeten statistischen Verfahren, wie
+    + BLUP-basierte Verfahren, 
+    + Bayes'sche Verfahren 
+- kennen die LASSO Methode als Alternative zur den oben vorgestellten Methoden und 
+- können einfache Übungsbeispiele mit der Statistiksoftware R erfolgreich bearbeiten.
+

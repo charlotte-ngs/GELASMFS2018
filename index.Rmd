@@ -14,8 +14,8 @@ output:
 
 __Willkommen__ auf der Webseite von
 
-- [751-7602-00L	Angewandte statistische Methoden in den Nutztierwissenschaften](https://www.lehrbetrieb.ethz.ch/edoz/kommLehrveranstaltungPre.do?i=1&j=0)
-- [751-6212-00L Angewandte Zuchtwertschätzung für Nutztiere](https://www.lehrbetrieb.ethz.ch/edoz/kommLerneinheitPre.do?i=0)
+- [751-7602-00L	Angewandte statistische Methoden in den Nutztierwissenschaften](http://www.vvz.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?lerneinheitId=120670&semkez=2018S&ansicht=KATALOGDATEN&lang=de)
+- [751-6212-00L Angewandte Zuchtwertschätzung für Nutztiere](http://www.vvz.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?lerneinheitId=120134&semkez=2018S&ansicht=KATALOGDATEN&lang=de)
 
 ## Beschreibung
 Die Kursbeschreibung ist dem Vorlesungsverzeichnis entnommen.
@@ -28,7 +28,7 @@ Die nationalen Zuchtwertschätzungen bei Rind, Schwein, Schaf und Ziege in der S
 
 
 ## Information
-- Dozierende: Peter von Rohr
+- Dozent: Peter von Rohr
 - Datum: Montag 8-10
 - Ort: [LFW C11](http://www.mapsearch.ethz.ch/map/map.do?gebaeudeMap=LFW&lang=en)
 
@@ -76,8 +76,8 @@ vec_topics_schedule[which(Datum == format(as.Date("2018/03/19"), "%d.%m"))] <- "
 vec_topics_schedule[which(Datum == format(as.Date("2018/04/09"), "%d.%m"))] <- "Einführung angewandte Zuchtwertschätzung"
 vec_topics_schedule[which(Datum == format(as.Date("2018/04/16"), "%d.%m"))] <- "ZWS Rind I"
 vec_topics_schedule[which(Datum == format(as.Date("2018/04/23"), "%d.%m"))] <- "ZWS Rind II"
-vec_topics_schedule[which(Datum == format(as.Date("2018/04/30"), "%d.%m"))] <- "ZWS Rind III"
-vec_topics_schedule[which(Datum == format(as.Date("2018/05/07"), "%d.%m"))] <- "Braunvieh Schweiz und Qualitas"
+vec_topics_schedule[which(Datum == format(as.Date("2018/04/30"), "%d.%m"))] <- "Braunvieh Schweiz und Qualitas"
+vec_topics_schedule[which(Datum == format(as.Date("2018/05/07"), "%d.%m"))] <- "ZWS Rind III"
 vec_topics_schedule[which(Datum == format(as.Date("2018/05/14"), "%d.%m"))] <- "ZWS Schwein"
 
 # define dataframe for schedule table
