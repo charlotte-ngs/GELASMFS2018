@@ -60,19 +60,19 @@ vec_topics[which(Datum == sEasterMon)] <- "__Ostermontag__"
 sPentMon <- format(as.Date("2018/05/21"), "%d.%m")
 vec_topics[which(Datum == sPentMon)] <- "__Pfingstmontag__"
 # exams
-vec_topics[which(Datum == format(as.Date("2018/03/26"), "%d.%m"))] <- "__Prüfung__ statistische Methoden"
-vec_topics[which(Datum == format(as.Date("2018/05/28"), "%d.%m"))] <- "__Prüfung__ angewandte Zuchtwertschätzung"
+vec_topics[which(Datum == format(as.Date("2018/05/28"), "%d.%m"))] <- "__Prüfungen__"
 ```
 
 ## Vorlesungsprogramm
 ```{r Schedule, echo=FALSE, results='asis'}
 # define vector of topics for course schedule
 vec_topics_schedule <- vec_topics
-vec_topics_schedule[which(Datum == format(as.Date("2018/02/19"), "%d.%m"))] <- "Einführung statistische Methoden"
-vec_topics_schedule[which(Datum == format(as.Date("2018/02/26"), "%d.%m"))] <- "Lineare Regression"
-vec_topics_schedule[which(Datum == format(as.Date("2018/03/05"), "%d.%m"))] <- "GBLUP"
-vec_topics_schedule[which(Datum == format(as.Date("2018/03/12"), "%d.%m"))] <- "LASSO"
-vec_topics_schedule[which(Datum == format(as.Date("2018/03/19"), "%d.%m"))] <- "Bayes"
+vec_topics_schedule[which(Datum == format(as.Date("2018/02/19"), "%d.%m"))] <- "Ausgefallen"
+vec_topics_schedule[which(Datum == format(as.Date("2018/02/26"), "%d.%m"))] <- "Ausgefallen"
+vec_topics_schedule[which(Datum == format(as.Date("2018/03/05"), "%d.%m"))] <- "Multiple Lineare Regression"
+vec_topics_schedule[which(Datum == format(as.Date("2018/03/12"), "%d.%m"))] <- "GBLUP"
+vec_topics_schedule[which(Datum == format(as.Date("2018/03/19"), "%d.%m"))] <- "LASSO"
+vec_topics_schedule[which(Datum == format(as.Date("2018/03/26"), "%d.%m"))] <- "Bayes"
 vec_topics_schedule[which(Datum == format(as.Date("2018/04/09"), "%d.%m"))] <- "Einführung angewandte Zuchtwertschätzung"
 vec_topics_schedule[which(Datum == format(as.Date("2018/04/16"), "%d.%m"))] <- "ZWS Rind I"
 vec_topics_schedule[which(Datum == format(as.Date("2018/04/23"), "%d.%m"))] <- "ZWS Rind II"
@@ -93,7 +93,9 @@ Die Folien zur Vorlesung, die Übungen und die Lösungen zu den Übungen können
 ### Unterlagen
 ```{r NotesTable, echo=FALSE, results='asis'}
 vec_topics_notes <- vec_topics
-
+# add links to the material
+vec_topics_notes[which(Datum == format(as.Date("2018/02/26"), "%d.%m"))] <- paste0("[Einführung](", sBaseUrl, "cn/01-intro.pdf", ")") 
+vec_topics_notes[which(Datum == format(as.Date("2018/03/05"), "%d.%m"))] <- paste0("[Lineare Regression](", sBaseUrl, "cn/02-linreg.pdf", ")") 
 # define dataframe for schedule table
 df_notes <- data.frame(Woche = Woche, Datum = Datum, Thema = vec_topics_notes, stringsAsFactors = FALSE)
 knitr::kable(df_notes)
