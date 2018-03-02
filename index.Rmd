@@ -34,8 +34,8 @@ Die nationalen Zuchtwertschätzungen bei Rind, Schwein, Schaf und Ziege in der S
 
 
 ## Prüfungen
-- Angewandte statistische Methode: 26.03 
-- Angewandte Zuchtwertschätzung: 28.05
+- Angewandte statistische Methode: 28.05, 08:15 - 09:00 
+- Angewandte Zuchtwertschätzung: 28.05, 09:15 - 10:00
 
 
 ## Fragen
@@ -124,20 +124,39 @@ vec_topics_slides <- vec_topics
 #Thema[which(Datum == format(as.Date("2017/05/15"), "%d.%m"))] <- paste0("QualitasAG ([slides](",sBaseUrl,"w13/ETH-Besuch_Qualitas_20170515.pdf))" )
 #Thema[which(Datum == format(as.Date("2017/05/22"), "%d.%m"))] <- paste0("ZWS Schwein ([slides](",sBaseUrl,"w14/Zuchtwertschätzung Vorlesung ETH Zürich Mai2017.pdf)) / ZWS Rind ([slides](",sBaseUrl,"w14/Slides_20170522.pdf))" )
 # define dataframe for schedule table
-df__slides <- data.frame(Woche = Woche, Datum = Datum, Thema = vec_topics_slides, stringsAsFactors = FALSE)
-knitr::kable(df__slides)
+df_slides <- data.frame(Woche = Woche, Datum = Datum, Thema = vec_topics_slides, stringsAsFactors = FALSE)
+knitr::kable(df_slides)
+```
+
+
+### Übungen
+```{r ExTable, echo=FALSE, results='asis'}
+vec_topics_ex <- vec_topics
+vec_topics_ex[which(Datum == format(as.Date("2018/03/05"), "%d.%m"))] <- paste0("[Lineare Regression](", sBaseUrl, "ex/w2/asmas_w2_u1.pdf", ")") 
+df_ex <- data.frame(Woche = Woche, Datum = Datum, Thema = vec_topics_ex, stringsAsFactors = FALSE)
+knitr::kable(df_ex)
 ```
 
 
 
-### Übungen
-
-
-
 ### Lösungen
+```{r SolTable, echo=FALSE, results='asis'}
+vec_topics_sol <- vec_topics
+# vec_topics_sol[which(Datum == format(as.Date("2018/03/05"), "%d.%m"))] <- paste0("[Lineare Regression](", sBaseUrl, "sol/w2/asmas_w2_l1.pdf", ")")
+df_sol <- data.frame(Woche = Woche, Datum = Datum, Thema = vec_topics_sol, stringsAsFactors = FALSE)
+#knitr::kable(df_sol)
+```
+
 
 
 ### Weiteres Material
+```{r AdditionalMaterial, echo=FALSE, results='asis'}
+vec_topics_addmat <- vec_topics
+vec_topics_addmat[which(Datum == format(as.Date("2018/03/05"), "%d.%m"))] <- paste0("[Datensatz Übung 1](", sBaseUrl, "ex/w2/zl_w7_u5_DataLmm.csv", ")") 
+df_addmat <- data.frame(Woche = Woche, Datum = Datum, Thema = vec_topics_addmat, stringsAsFactors = FALSE)
+knitr::kable(df_addmat)
+```
+
 
 
       
