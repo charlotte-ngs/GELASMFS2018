@@ -9,16 +9,18 @@
 
 #Set Script Name variable
 SCRIPT=`basename ${BASH_SOURCE[0]}`
-echo "Start cloning with $SCRIPT ..."
+echo " *** Start cloning with $SCRIPT ..."
 
 ### # define a few constants
 BRANCH=r4tea-platform
 PROJDIR=GELASMFS2018
-GITHUBURL= https://github.com/charlotte-ngs/${PROJDIR}.git
+GITHUBURL=https://github.com/charlotte-ngs/${PROJDIR}.git
 ADMIN=`whoami`
 CURWD=/home/${ADMIN}
-echo " * Project dir: $PROJDIR"
-echo " * Current working dir: $CURWD"
+echo " *** * Project dir: $PROJDIR"
+echo " *** * Current working dir: $CURWD"
+echo " *** * Branch: $BRANCH"
+echo " *** * GITHUB: $GITHUBURL"
 
 ### # functions
 usage () {
