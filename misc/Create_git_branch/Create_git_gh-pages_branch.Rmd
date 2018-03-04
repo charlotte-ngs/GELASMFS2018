@@ -1,0 +1,103 @@
+---
+title: "Create gh-pages branch in git"
+author: "Peter von Rohr"
+date: "9/17/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Disclaimer
+This document shows how to clone an existing master branch into a gh-pages branch in a separate directory.
+
+## Background
+
+## Branch for exercise platform
+### Step 1
+The following shows the set of bash commands to create a new empty branch for the exercise platform called `r4tea-platform`. First we change into the parent directory of all branches, and we create a new subdirectory called `r4tea-platform`.
+
+```
+PARDIR=/Users/peter/Data/Projects/GitHub/charlotte-ngs/GELASMFS2018
+BRANCH=r4tea-platform
+cd $PARDIR
+mkdir $BRANCH
+cd $BRANCH
+```
+
+### Step 2
+Clone the master branch into the newly created directory
+
+```
+PROJ=GELASMFS2018
+GITHUBURL="https://github.com/charlotte-ngs/${PROJ}.git"
+echo $GITHUBURL
+git clone $GITHUBURL
+```
+
+### Step 3
+Change into the directory that has been cloned and change from master branch to new branch
+
+```
+cd $PROJ
+git checkout -b $BRANCH
+# check
+git branch
+```
+
+### Step 4
+Remove master branch from current working dir
+
+```
+MASTER=master
+git branch -d $MASTER
+# check
+git branch
+```
+
+### Step 5
+Remove all unwanted material from working directory
+
+```
+git rm -rf cn sl sol index.Rmd
+```
+
+### Step 6
+Committing and pushing the current material
+
+```
+git add .
+git commit -m"First commit of new branch $BRANCH"
+git push origin $BRANCH
+git status
+```
+
+## Older version of implementation
+This is just a few commands out of a bash history that should show how to do this.
+
+```
+# change into the directory where you want to have your gh-pages branch
+cd <gh-pages_dir>
+# get a clone of the material in the master branch
+git clone https://github.com/charlotte-ngs/LBGHS2017.git
+# change into the subdirectory with the RStudio project 
+cd LBGHS2017/
+# create gh-pages branch
+git checkout -b gh-pages
+# check whether it got created, result should be branches gh-pages and master
+git branch
+# delete master branch, we do not use it in here
+git branch -d master
+# check, result should be only gh-pages branch
+git branch
+# remove all unwanted material from master branch
+git rm -rf ex
+# add, commit and push to gh-pages
+git add .
+git commit -m"First commit of gh-pages branch"
+git push origin gh-pages
+# check status
+git status
+```
+
