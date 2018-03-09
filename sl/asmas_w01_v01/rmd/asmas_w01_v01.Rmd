@@ -1,7 +1,7 @@
 --- 
 title: "Angewandte Statistische Methoden in den Nutztierwissenschaften" 
 author: "Peter von Rohr" 
-date: "19 Februar 2018" 
+date: "05 März 2018" 
 output: beamer_presentation
 output_file: asmas_w01_v01.pdf
 ---
@@ -18,7 +18,7 @@ knitr::knit_hooks$set(odg.conv = rmddochelper::odg.graphics.conv.hook)
 - Plan: 2 V $\rightarrow$ 1 U + 1V 
 - Übungen: Beispiele in R 
 - Unterlagen: Skript, Folien, Übungen, Lösungen 
-- Prüfung: schriftlich, Termin: 26.03.2018, Dauer: 1 Stunde 
+- Prüfung: schriftlich, Termin: 28.05.2018, 08:15-09:00 
 - Prüfungsstoff: Skript, Lösungen der Übungen, Folien
 
 
@@ -64,15 +64,15 @@ Woche <- 1:nNrSemesterWeeks
 Datum <- format(seq(dCourseStart, by = "week", length.out = nNrSemesterWeeks), "%d.%m") 
 
 # assign subjects 
-vec_topics <- addSubjectOnDate(psSubject  ="Einführung in statistische Methoden und Genomik", 
-                          pdSubjDate = format(as.Date("2018/02/19"), "%d.%m"), 
-                          pvSubject  = vec_topics, 
-                          pvDate = Datum) 
-vec_topics <- addSubjectOnDate(psSubject  = "Multiple Lineare Regression", 
-                          pdSubjDate = format(as.Date("2018/02/26"), "%d.%m"), 
-                          pvSubject  = vec_topics, 
-                          pvDate = Datum) 
-vec_topics <- addSubjectOnDate(psSubject  = "Alternativer Ansatz - LASSO", 
+# vec_topics <- addSubjectOnDate(psSubject  ="Einführung in statistische Methoden und Genomik", 
+#                           pdSubjDate = format(as.Date("2018/02/19"), "%d.%m"), 
+#                           pvSubject  = vec_topics, 
+#                           pvDate = Datum) 
+# vec_topics <- addSubjectOnDate(psSubject  = "Multiple Lineare Regression", 
+#                           pdSubjDate = format(as.Date("2018/02/26"), "%d.%m"), 
+#                           pvSubject  = vec_topics, 
+#                           pvDate = Datum) 
+vec_topics <- addSubjectOnDate(psSubject  = "Einführung und Lineare Regression", 
                           pdSubjDate = format(as.Date("2018/03/05"), "%d.%m"), 
                           pvSubject = vec_topics, 
                           pvDate = Datum) 
@@ -80,13 +80,13 @@ vec_topics <- addSubjectOnDate(psSubject  = "GBLUP",
                           pdSubjDate = format(as.Date("2018/03/12"), "%d.%m"), 
                           pvSubject  = vec_topics, 
                           pvDate = Datum) 
-vec_topics <- addSubjectOnDate(psSubject  = "Bayes'sche Verfahren in der Genomik", 
+vec_topics <- addSubjectOnDate(psSubject  = "LASSO", 
                           pdSubjDate = format(as.Date("2018/03/19"), "%d.%m"), 
                           pvSubject  = vec_topics, 
                           pvDate = Datum) 
 
 # exam 
-vec_topics <- addSubjectOnDate(psSubject  = "__Prüfung__ statistische Methoden", 
+vec_topics <- addSubjectOnDate(psSubject  = "Bayes'sche Verfahren in der Genomik", 
                           pdSubjDate = format(as.Date("2018/03/26"), "%d.%m"), 
                           pvSubject  = vec_topics, 
                           pvDate = Datum)

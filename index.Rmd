@@ -111,24 +111,9 @@ knitr::kable(df_notes)
 ```{r SlidesTable, echo=FALSE, results='asis'}
 vec_topics_slides <- vec_topics
 # links zu slides
-#Thema[which(Datum == format(as.Date("2017/02/20"), "%d.%m"))] <- paste0("Einführung ([slides](", sBaseUrl,"w1/asmas_w1_v1.pdf))([notes](", 
-#                                                                        sBaseUrl, "w1/bookdown-asmas.pdf))")
-#Thema[which(Datum == format(as.Date("2017/02/27"), "%d.%m"))] <- paste0("Lineare Regression ([slides](", sBaseUrl,"w2/asmas_w2_v2.pdf))")
-#Thema[which(Datum == format(as.Date("2017/03/06"), "%d.%m"))] <- paste0("Lineare Regression II ([slides](", sBaseUrl,"w3/asmas_w3_v3.pdf))([notes](", 
-#                                                                        sBaseUrl, "w3/bookdown-asmas_ch2.pdf))")
-#Thema[which(Datum == format(as.Date("2017/03/13"), "%d.%m"))] <- paste0("GBLUP ([slides](",sBaseUrl,"w4/asmas_qu_w4_v4.pdf))([paper](",sBaseUrl, "w4/2013_CW_GBLUP.pdf))([notes](",sBaseUrl, "w4/bookdown-asmas_ch3.pdf))")
-#Thema[which(Datum == format(as.Date("2017/03/20"), "%d.%m"))] <- paste0("LASSO ([slides](",sBaseUrl,"w5/asmas_w5_v5.pdf))([notes](", 
-#                                                                        sBaseUrl, "w5/bookdown-asmas_ch4.pdf))")
-#Thema[which(Datum == format(as.Date("2017/03/27"), "%d.%m"))] <- paste0("Bayes ([slides](",sBaseUrl,"w6/asmas_w6_v6.pdf))")
-#Thema[which(Datum == format(as.Date("2017/03/27"), "%d.%m"))] <- paste0("Bayes ([slides](",sBaseUrl,"w6/asmas_w6_v6.pdf))([notes](", 
- #                                                                       sBaseUrl, "w6/bookdown-asmas_ch5.pdf))")
-#Thema[which(Datum == format(as.Date("2017/04/03"), "%d.%m"))] <- paste0("Einführung ([slides](",sBaseUrl,"w7/Slides_20170403_Upload.pdf))([Heritabilität](",sBaseUrl, "w7/Heritabilität.pdf))" )
-#Thema[which(Datum == format(as.Date("2017/04/10"), "%d.%m"))] <- paste0("ZWS Rind ([slides](",sBaseUrl,"w8/Slides_20170410_Upload.pdf))" )
-#Thema[which(Datum == format(as.Date("2017/04/24"), "%d.%m"))] <- paste0("ZWS Rind ([slides](",sBaseUrl,"w10/Slides_20170424_Upload.pdf))([Modell FBK](",sBaseUrl, "w10/Modell_FBK.pdf))" )
-#Thema[which(Datum == format(as.Date("2017/05/08"), "%d.%m"))] <- paste0("ZWS Rind ([slides](",sBaseUrl,"w12/Slides_20170508_Upload.pdf))" )
-#Thema[which(Datum == format(as.Date("2017/05/15"), "%d.%m"))] <- paste0("QualitasAG ([slides](",sBaseUrl,"w13/ETH-Besuch_Qualitas_20170515.pdf))" )
-#Thema[which(Datum == format(as.Date("2017/05/22"), "%d.%m"))] <- paste0("ZWS Schwein ([slides](",sBaseUrl,"w14/Zuchtwertschätzung Vorlesung ETH Zürich Mai2017.pdf)) / ZWS Rind ([slides](",sBaseUrl,"w14/Slides_20170522.pdf))" )
-# define dataframe for schedule table
+vec_topics_slides[which(Datum == format(as.Date("2018/02/26"), "%d.%m"))] <- paste0("[Einführung](", sBaseUrl, "sl/w2/asmas_w01_v01.pdf", ")") 
+vec_topics_slides[which(Datum == format(as.Date("2018/03/05"), "%d.%m"))] <- paste0("[Lineare Regression](", sBaseUrl, "sl/w2/asmas_w02_v02.pdf", ")") 
+# create data frame and convert it to table
 df_slides <- data.frame(Woche = Woche, Datum = Datum, Thema = vec_topics_slides, stringsAsFactors = FALSE)
 knitr::kable(df_slides)
 ```

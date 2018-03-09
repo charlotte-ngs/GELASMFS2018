@@ -30,7 +30,16 @@ Dieses Dokument enthält Notizen zur Vorlesung asmas_w01_v01.
 # Notizen
 
 ## Begrüssung
-Ich begrüsse sie herzlich zu dieser Vorlesung mit dem Titel "Angewandte Statistische Methoden in den Nutztierwissenschaften". 
+Es freut mich sehr, dass ich sie endlich begrüssen darf zur Vorlesung mit dem Titel "Angewandte Statistische Methoden in den Nutztierwissenschaften". DAs Ziel der heutigen Doppelstunde ist es ihnen eine kurze Einführung zu geben, was wir für dieses Semester so geplant haben. Dann möchte ich auch für alle die noch nicht vertraut sind mit der Übungsplatform kurz dazu etwas sagen.
+
+Also beginnen wir mit dem organisatorischne Teil. An diesem Termin Montag 8-10 finden in diesem Semester zwei Vorlesungen statt. Es sind dies 
+
+* Angewandte Statistische Methoden in den Nutztierwissenschaften und 
+* Angewandte Zuchtwertschätzung.
+
+Auf der Webseite ist das Programm über beide Vorlesungen ersichtlich. Wir beginnen also mit den angewandten Statistischen Methoden in der ersten Hälfte des Semesters. Danach wechseln wir das Thema zur angewandten Zuchtwertschätzung. Beim zweiten Teil ist der Termin des 30.04 wichtig. Da laden wir sie zu einer Exkursion nach Zug ein ins Verbandshaus von Braunvieh Schweiz und von Qualitas. Ich bitte sie, dass sie sich diesen Termin reservieren, damit sie nach Zug kommen können. 
+
+Wenn keine Fragen mehr sind, dann beginnen wir mit der Vorlesung der angewandten Statistischen Methoden bei den Nutztierwissenschaften. =
 
 ```{r slide01, fig.margin = TRUE, odg.conv=TRUE, odg.path="../odg", odg.out.dir="../png", odg.graph.cache=TRUE, fig.width=3, fig.height=2.5, cache=TRUE}
 knitr::include_graphics(path = "../png/slide01.pdf")
@@ -56,6 +65,16 @@ knitr::include_graphics(path = "../png/slide02.pdf")
 
 ## Thema
 * Nun wollen wir ins Thema dieser Vorlesung einsteigen. 
+* Als erstes geht es mir darum, dass ich sie in den Kontext dieser Vorlesung einführen kann. Wir werden in dieser Vorlesung nicht aus der Sicht eines einzelnen Betriebs sondern aus der Sicht einer Zuchtorganisation heraus operieren. Die Aufgabe der Zuchtorganisation besteht darin eine bestimmte Nutztierpopulation in eine günstige Weise zu verändern. Als Beispiele für solche Zuchtorganisationen können wir die folgenden Beispiele aufzählen
+
+* Braunvieh Schweiz, Swissherdbook, Holstein Switzerland im Milchviehsektor
+* Mutterkuh Schweiz im Bereich Mutterkuhhaltung
+* Suisag im Bereich Schweinezucht.
+
+Alle diese Zuchtorganisationen betreuuen eine bestimmte Nutztierpopulation und haben Betriebe, welche Tiere aus dieser Population halten als Kunden. Das Ziel der Zuchtorganisationen ist es, dass durch züchterische Massnahmen und Werkzeuge der Nutzen der gehaltenen Tiere für alle Kundenbetriebe erhöht werden kann. Da es sich wie schon gesagt um Nutztiere handelt ist der Nutzen für die Betriebe sehr oft durch wirtschaftliche Kriterien definiert.
+
+
+
 * Die Quelle für den Stoff dieser Vorlesung ist ein Paradigmenwechsel in der Tierzucht, welcher mit einem Paper im Jahr 2001 ausgelöst wurde. 
 * Was haben die Autoren dieses Papers untersucht und welche Resultate haben Veränderungen geführt, welche heute im Prozess der __genomischen Selektion__ ihren Niederschlag gefunden haben.
 
