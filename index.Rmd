@@ -97,10 +97,14 @@ Die Folien zur Vorlesung, die Übungen und die Lösungen zu den Übungen können
 
 ### Unterlagen
 ```{r NotesTable, echo=FALSE, results='asis'}
+# url for course notes
+s_cn_url <- paste0(sBaseUrl, "cn/")
 vec_topics_notes <- vec_topics
 # add links to the material
-vec_topics_notes[which(Datum == format(as.Date("2018/02/26"), "%d.%m"))] <- paste0("[Einführung](", sBaseUrl, "cn/01-intro.pdf", ")") 
-vec_topics_notes[which(Datum == format(as.Date("2018/03/05"), "%d.%m"))] <- paste0("[Lineare Regression](", sBaseUrl, "cn/02-linreg.pdf", ")") 
+vec_topics_notes[which(Datum == format(as.Date("2018/02/26"), "%d.%m"))] <- paste0("[Einführung](", s_cn_url, "01-intro.pdf", ")") 
+vec_topics_notes[which(Datum == format(as.Date("2018/03/05"), "%d.%m"))] <- paste0("[Lineare Regression](", s_cn_url, "02-linreg.pdf", ")") 
+vec_topics_notes[which(Datum == format(as.Date("2018/03/12"), "%d.%m"))] <- paste0("[GBLUP](", s_cn_url, "03-gblup.pdf", ")") 
+vec_topics_notes[which(Datum == format(as.Date("2018/03/19"), "%d.%m"))] <- paste0("[LASSO](", s_cn_url, "04-lasso.pdf", ")") 
 # define dataframe for schedule table
 df_notes <- data.frame(Woche = Woche, Datum = Datum, Thema = vec_topics_notes, stringsAsFactors = FALSE)
 knitr::kable(df_notes)
@@ -109,10 +113,13 @@ knitr::kable(df_notes)
 
 ### Folien
 ```{r SlidesTable, echo=FALSE, results='asis'}
+# url for slides
+s_sl_url <- paste0(sBaseUrl, "sl/")
 vec_topics_slides <- vec_topics
 # links zu slides
-vec_topics_slides[which(Datum == format(as.Date("2018/02/26"), "%d.%m"))] <- paste0("[Einführung](", sBaseUrl, "sl/w2/asmas_w01_v01.pdf", ")") 
-vec_topics_slides[which(Datum == format(as.Date("2018/03/05"), "%d.%m"))] <- paste0("[Lineare Regression](", sBaseUrl, "sl/w2/asmas_w02_v02.pdf", ")") 
+vec_topics_slides[which(Datum == format(as.Date("2018/02/26"), "%d.%m"))] <- paste0("[Einführung](", s_sl_url, "w2/asmas_w01_v01.pdf", ")") 
+vec_topics_slides[which(Datum == format(as.Date("2018/03/05"), "%d.%m"))] <- paste0("[Lineare Regression](", s_sl_url, "w2/asmas_w02_v02.pdf", ")") 
+vec_topics_slides[which(Datum == format(as.Date("2018/03/12"), "%d.%m"))] <- paste0("[Regression (Teil 2)](", s_sl_url, "w2/asmas_w02_v03.pdf", "), [GBLUP](", s_sl_url, "w03/asmas_w03_v03.pdf", ")") 
 # create data frame and convert it to table
 df_slides <- data.frame(Woche = Woche, Datum = Datum, Thema = vec_topics_slides, stringsAsFactors = FALSE)
 knitr::kable(df_slides)
@@ -121,8 +128,13 @@ knitr::kable(df_slides)
 
 ### Übungen
 ```{r ExTable, echo=FALSE, results='asis'}
+# url for exercises
+s_ex_url <- paste0(sBaseUrl, "ex/")
 vec_topics_ex <- vec_topics
-vec_topics_ex[which(Datum == format(as.Date("2018/03/05"), "%d.%m"))] <- paste0("[Lineare Regression](", sBaseUrl, "ex/w2/asmas_w2_u1.pdf", ")") 
+vec_topics_ex[which(Datum == format(as.Date("2018/03/05"), "%d.%m"))] <- paste0("[Lineare Regression](", s_ex_url, "w2/asmas_w2_u1.pdf", ")") 
+vec_topics_ex[which(Datum == format(as.Date("2018/03/12"), "%d.%m"))] <- paste0("[Deregression](", s_ex_url, "w03/asmas_w03_u02.pdf", ")") 
+vec_topics_ex[which(Datum == format(as.Date("2018/03/19"), "%d.%m"))] <- paste0("[Regression und GBLUP](", s_ex_url, "w04/asmas_w04_u03.pdf", ")") 
+# create dataframe and table
 df_ex <- data.frame(Woche = Woche, Datum = Datum, Thema = vec_topics_ex, stringsAsFactors = FALSE)
 knitr::kable(df_ex)
 ```
@@ -131,10 +143,14 @@ knitr::kable(df_ex)
 
 ### Lösungen
 ```{r SolTable, echo=FALSE, results='asis'}
+s_sol_url <- paste0(sBaseUrl, "sol/")
 vec_topics_sol <- vec_topics
-# vec_topics_sol[which(Datum == format(as.Date("2018/03/05"), "%d.%m"))] <- paste0("[Lineare Regression](", sBaseUrl, "sol/w2/asmas_w2_l1.pdf", ")")
+vec_topics_sol[which(Datum == format(as.Date("2018/03/05"), "%d.%m"))] <- paste0("[Lineare Regression](", s_sol_url, "w2/asmas_w2_l1.pdf", ")")
+vec_topics_sol[which(Datum == format(as.Date("2018/03/12"), "%d.%m"))] <- paste0("[Deregression](", s_sol_url, "w03/asmas_w03_l02.pdf", ")")
+# vec_topics_sol[which(Datum == format(as.Date("2018/03/19"), "%d.%m"))] <- paste0("[Regression und GBLUP](", s_sol_url, "w04/asmas_w04_l03.pdf", ")")
+# create dataframe and table
 df_sol <- data.frame(Woche = Woche, Datum = Datum, Thema = vec_topics_sol, stringsAsFactors = FALSE)
-#knitr::kable(df_sol)
+knitr::kable(df_sol)
 ```
 
 
@@ -143,12 +159,12 @@ df_sol <- data.frame(Woche = Woche, Datum = Datum, Thema = vec_topics_sol, strin
 ```{r AdditionalMaterial, echo=FALSE, results='asis'}
 vec_topics_addmat <- vec_topics
 vec_topics_addmat[which(Datum == format(as.Date("2018/03/05"), "%d.%m"))] <- paste0("[Datensatz Übung 1](", sBaseUrl, "ex/w2/zl_w7_u5_DataLmm.csv", ")") 
+vec_topics_addmat[which(Datum == format(as.Date("2018/03/19"), "%d.%m"))] <- paste0("[Genotypen Übung 3](", sBaseUrl, "ex/w04/asmas_w04_u03_genotypes.txt", ")") 
+# dataframe and table with additional material
 df_addmat <- data.frame(Woche = Woche, Datum = Datum, Thema = vec_topics_addmat, stringsAsFactors = FALSE)
 knitr::kable(df_addmat)
 ```
 
 
-
-      
 ## Letzte Änderung
 _`r paste(Sys.time(),paste0("(", Sys.info()[["user"]],")" ))`_

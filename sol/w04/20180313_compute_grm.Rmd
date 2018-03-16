@@ -1,0 +1,176 @@
+---
+title: "Genomic Relationship Matrix"
+output:
+  html_document:
+    df_print: paged
+---
+
+
+## Disclaimer
+This document contains tests and ideas for creating an exercise task to compute the genomic relationship matrix (GRM). The computation is done according chapter three of the course notes.
+
+
+## Generate Input Data
+The input data to compute the GRM consists of the SNP-genotypes. Hence, we start by generating a matrix of SNP-genotypes at a given number of loci and for a given number of animals. In addition to that, we have to fix the minor allele frequency. For reasons of simplicity, we say that this frequency is constant across all SNP-positions. 
+
+```{r}
+# set the seed for reproducibility
+set.seed(6587)
+# generate the matrix at a given number of SNP-loci
+#  and for a given number of animals
+n_nr_snp <- 1000
+n_nr_animals <- 10
+n_min_allele_freq <- 0.01
+# generate the matrix using sample()
+mat_snp <- matrix(data = sample(c(0,1,2), 
+                               n_nr_snp*n_nr_animals, 
+                               replace = T, 
+                               prob = c((1-n_min_allele_freq)^2,
+                                        2*(1-n_min_allele_freq)*n_min_allele_freq,
+                                        n_min_allele_freq^2)), 
+                 nrow = n_nr_animals, 
+                 ncol = n_nr_snp)
+# check dimensions
+dim(mat_snp)
+### # write data to file
+s_genotypes_filename <- "asmas_w04_u03_genotypes.txt"
+write.table(mat_snp, file = s_genotypes_filename, quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
+file.info(s_genotypes_filename)
+```
+
+
+## Compute GRM
+The above generated data of genotypes is read and later used to compute the GRM $G$. 
+
+```{r}
+# reading the data
+mat_data <- matrix(scan(s_genotypes_filename), ncol = n_nr_snp, byrow = TRUE)
+# check dimensions
+dim(mat_data)
+```
+
+What type of coding was used for the input data. Check with the frequency table. 
+
+```{r}
+table(mat_data)
+```
+
+We have prepared a custom function to compute the GRM
+
+```{r}
+#' Compute genomic relationship matrix based on data matrix
+computeMatGrm <- function(pmatData) {
+  # Allele frequencies, column vector of P and sum of frequency products
+  freq <- apply(pmatData, 2, mean) / 2
+  P <- 2 * (freq - 0.5)
+  sumpq <- sum(freq*(1-freq))
+  # Changing the coding from (0,1,2) to (-1,0,1) and subtract matrix P
+  Z <- pmatData - 1 - matrix(P, nrow = nrow(pmatData), 
+                         ncol = ncol(pmatData), 
+                         byrow = TRUE)
+  # Z%*%Zt is replaced by tcrossprod(Z)
+  return(tcrossprod(Z)/(2*sumpq))
+}
+```
+
+Using the above function to get the GRM
+
+```{r}
+mat_grm <- computeMatGrm(pmatData = mat_data)
+dim(mat_grm)
+```
+
+One important property of the GRM is that it must be positive definite. This can be checked by the eigenvalues
+```{r}
+eigen_grm <- eigen(mat_grm)
+eigen_grm$values
+```
+
+The smallest eigenvalue of the GRM is `r min(eigen_grm$values)`. This value is very close to $0$. In order to make the resulting systems of equations more stable, we want to add small amounts to the diagonal and we want to subtract the same amounts from the off-diagnoal values.
+
+```{r}
+mat_grm[lower.tri(mat_grm)]
+```
+
+```{r}
+diag(mat_grm)
+```
+
+```{r}
+apply(mat_grm, 2, sum)
+```
+
+```{r}
+any(abs(mat_grm) < sqrt(.Machine$double.eps))
+```
+
+```{r}
+min(mat_grm)
+```
+
+```{r}
+sign(min(mat_grm))
+```
+
+## Bending
+We try to do the following adhoc-procedure to get to a positiv-definite GRM. We are adding $0.1$ times the minimum value of `mat_grm` to the diagonal and subtract the same value from all the offdiagonal elements. 
+
+```{r}
+# fix the adustment for the diagonal
+n_adj_diag <- .1 * abs(min(mat_grm))
+# the same value is subtracted from all offdiagonals
+n_adj_offdiag <- n_adj_diag / (ncol(mat_grm)-1)
+# assign a result matrix
+mat_bend_grm <- abs(mat_grm)
+diag(mat_bend_grm) <- diag(mat_bend_grm) + n_adj_diag
+# off diagonals via lower.tri and upper.tri
+mat_bend_grm[lower.tri(mat_bend_grm)] <- mat_bend_grm[lower.tri(mat_bend_grm)] - n_adj_offdiag
+mat_bend_grm[upper.tri(mat_bend_grm)] <- mat_bend_grm[upper.tri(mat_bend_grm)] - n_adj_offdiag
+(mat_bend_grm <- mat_bend_grm * sign(mat_grm))
+```
+
+Now we are ready to compare to the old matrix
+```{r}
+mat_grm
+```
+
+What happened to the properties of the column sums
+
+```{r}
+apply(mat_bend_grm, 2, sum)
+```
+
+What are the eigenvalues
+
+```{r}
+eigen_grm_bend <- eigen(mat_bend_grm)
+eigen_grm_bend$values
+```
+
+How reasonable is the inverse of `mat_bend_grm`
+
+```{r}
+solve(mat_bend_grm)
+```
+
+and 
+
+```{r}
+solve(mat_bend_grm) %*% mat_bend_grm
+```
+
+This looks much better than the original matrix.
+
+## Bending in a function
+We want to implement the bending procedure in a function. Given an original matrix we want to apply the bending procedure until, we get a positive definite matrix. What we have not yet looked at is that we do not want to change any off-diagonal elements that are close to 0. For this we have to find how we can get to elements in a matrix that fullfil a certain condition. 
+
+```{r}
+mat_grm[which(abs(mat_grm) < .1)]
+```
+
+
+```{r}
+str(eigen_grm_bend)
+```
+
+

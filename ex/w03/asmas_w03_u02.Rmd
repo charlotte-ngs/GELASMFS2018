@@ -27,9 +27,9 @@ knitr::include_graphics(path = "png/TrajectVarRedReg.pdf")
 bOnline <- FALSE
 sInputFileName <- "zl_w7_u5_DataLmm.csv"
 if (bOnline){
-  sInputDataPath <- "http://charlotte-ngs.github.io/LivestockBreedingAndGenomics/w7"
+  sInputDataPath <- "https://charlotte-ngs.github.io/GELASMFS2018/ex/w2"
 } else {
-  sInputDataPath <- "/Users/peter/Data/Projects/GitHub/charlotte-ngs/LivestockBreedingAndGenomics/gh-pages/w7"
+  sInputDataPath <- "/Users/peter/Data/Projects/GitHub/charlotte-ngs/GELASMFS2018/gh-pages/GELASMFS2018/ex/w2"
 }
 dfLmm <- read.csv2(file = file.path(sInputDataPath, sInputFileName))
 
@@ -56,6 +56,8 @@ nGenVar <- 25
 
 Für ein bestimmtes Merkmal sollen genomische Zuchtwerte geschätzt werden. Aus früheren Auswertungen wurde die genetische Varianz auf $`r nGenVar`$  geschätzt. Wir nehmen diesen Wert als eine Approximation für die wahre genetische Varianz $var(g)$. In der folgenden Tabelle sind für `r nAnzAnim` die geschätzten Zuchtwerte ($\hat{g}$) und die Bestimmtheitsmasse ($B$) angegeben. 
 
+\pagebreak
+
 ```{r BvRelTable, echo=FALSE}
 dfBvRelTable <- data.frame(Tier = c(1:nAnzAnim), ZW = round(vecPredBv, digits = 3), Rel = vecReliability, stringsAsFactors = FALSE)
 names(dfBvRelTable) <- c("Tier", "geschätzter Zuchtwert", "Bestimmtheitsmass")
@@ -70,6 +72,4 @@ $$\hat{g}_D = \lambda \times {1\over B} \times \hat{g}$$
 Berechnen Sie die deregressierten Zuchtwerte $\hat{g}_D$ und den Faktor $\lambda$. Bestimmen Sie $\lambda$ so, dass keine Varianzreduktion mehr auftritt. Es muss also gelten, dass 
 
 $$var(\hat{g}_D) = var(g)$$
-
-
 

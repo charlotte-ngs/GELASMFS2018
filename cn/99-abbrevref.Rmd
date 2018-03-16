@@ -147,7 +147,20 @@ bref <- c(bibentry(
        publisher = "Springer",
        doi       = "10.1007/978-1-62703-447-0_13",
        key       = "CV2013"
-     )
+     ),
+  bibentry(
+    bibtype = "Article",
+    title   = "An efficient exact method to obtain GBLUP and single-step GBLUP when the genomic relationship matrix is singular",
+    author  = c(as.person("Rohan Fernando"),
+                as.person("Hao Cheng"),
+                as.person("Dorian J. Garrick")
+                ),
+    year    = "2016",
+    journal = "Genetics Selection Evolution",
+    number  = "1",
+    pages   = "80",
+    key     = "FCD2016"
+  )
 )
 
 ### # Fixed assignmen of bib file

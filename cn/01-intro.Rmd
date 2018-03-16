@@ -78,7 +78,7 @@ Im Zusammenhang mit der genomischen Selektion besteht die Modellierung der Daten
 Die Umsetzung der beiden Komponenten wird in zwei verschiedenen Verfahren gemacht. Im Zwei-Schritt-Verfahren werden beide Komponenten einzeln an verschiedenen Teilen der Zuchtpopulation ausgeführt. Im Gegensatz dazu werden im Single-Step-Verfahren beide Komponenten im gleichen Schritt realisiert.
 
 
-### Zwei-Schritt-Verfahren
+### Zwei-Schritt-Verfahren {#two-step}
 Beim Zwei-Schritt-Verfahren wird die Population in ein Trainings- und ein Testset unterteilt. Im Trainingsset werden aufgrund von Typisierungsergebnissen und Beobachtungen die Gen-Wrkungseffekte ($a$) geschätzt. Sobald die Schätzwerte für die $a$-Effekte bekannt 
 sind können diese für die Schätzung der genomischen Zuchtwerte verwendet werden.
 

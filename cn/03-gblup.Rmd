@@ -1,9 +1,15 @@
 # Genomic Best Linear Unbiased Prediction (GBLUP) {#gblup}
-Die Methode GBLUP verwendet genomische Verwandtschaftsbeziehungen zur Schätzung des genetischen Potentials von Individuen. Die genomische Verwandtschaft wird aufgrund von DNA-Informationen geschätzt. Die genomische Verwandtschaftsmatrix $G$ definiert die Kovarianz zwischen Individuen aufgrund von Ähnlichkeiten auf dem Niveau der genomischen Information. Diese Definition der Kovarianz steht im Gegensatz zur Kovarianz aufgrund der erwarteten Ähnlichkeit aufgrund von Pedigrees in der traditionellen Verwandtschaftsmatrix $A$. 
+Wie in der Einführung im Kapitel \@ref(two-step) beschrieben wurde, werden genomische Zuchtwerte häufig in zwei Schritten geschätzt. Nicht so bei der Methode GBLUP. GBLUP ist ein sogenanntes __Single-Step__ Verfahren, in welchem die genomischen Zuchtwerte in einem Schritt geschätzt werden.
+
+Schon in der traditionellen Zuchtwertschätzung mit dem BLUP-Tiermodell werden mehr unbekannten Parameter (Zuchtwerte) geschätzt oder vorhergesagt, als dass wir Beobachtungen im Datensatz haben. Dies ist möglich, da wir die Covarianz-Matrix der zu schätzenden zufälligen Zuchtwerte aufgrund der als bekannt angenommenen additiv-genetische Verwandtschaftsmatrix $A$ modellieren. Über die Verknüpfung der zu schätzenden Zuchtwerte aufgrund der additiv-genetischen Verwandtschaftsmatrix werden Zuchtwerte von Tieren ohne Beobachtungen als Funktionen der Beobachtung von verwandten Tieren geschätzt. Somit eignen sich BLUP-basierte Schätzverfahren grundsätzlich für die Art von Datenanalysen, wie wir sie in der Schätzung von genomischen Zuchtwerten vorfinden. Daher ist es naheliegend ein BLUP-basiertes Schätzverfahren auch für die Schätzung der genomischen Zuchtwerte zu verwenden. Wie das gemacht wird, soll in diesem Kapitel beschrieben werden.
 
 
-## DNA Markers
-Die Verfügbarkeit von Markerkarten in genügender Dichte verteilt über das ganze Genom, ermöglicht die Schätzung des genetischen Potentials von Individuen basierend auf der beobachteten Markerinformation. Das aktuell am weitesten verbreitete Markermodell wird als `r r6objTableAbbrev$add_abbrev(psAbbrev = "SNP", psMeaning = "Single Nucleotide Polymorphism")` bezeichnet. Bei den SNPs handelt es sich um Positionen im Genom, an welchen Unterschiede zwischen Individuen einer Population bei einer einzelnen DNA-Base auftreten. Nehmen wir an, dass Genorte (QTL), welche wichtig sind für die Expression von interessanten phänotypischen Eigenschaften, sich in der Nähe von beobachteten SNPs befinden, können wir aufgrund von Kopplungsungleichgewichten zwischen SNPs und QTL eine statistische Beziehung zwischen phänotypischen Werten und SNP-Genotypen modellieren.
+## Einführung in GBLUP
+Die Methode GBLUP verwendet sogenannte __genomische Verwandtschaftsbeziehungen__ zur Schätzung des genetischen Potentials von Individuen. Die genomische Verwandtschaft wird aufgrund von DNA-Informationen geschätzt. Die genomische Verwandtschaftsmatrix $G$ definiert die Kovarianz zwischen Individuen aufgrund von Ähnlichkeiten auf dem Niveau der genomischen Information. Diese Definition der Kovarianz steht im Gegensatz zur Kovarianz aufgrund der erwarteten Ähnlichkeit aufgrund von Pedigrees in der traditionellen Verwandtschaftsmatrix $A$. 
+
+
+## DNA Marker
+Die Verfügbarkeit von Markerkarten in genügender Dichte verteilt über das ganze Genom, ermöglicht die Schätzung des genetischen Potentials (in Form von genomischen Zuchtwerten) von Individuen basierend auf der beobachteten Markerinformation. Das aktuell am weitesten verbreitete Markermodell wird als `r r6objTableAbbrev$add_abbrev(psAbbrev = "SNP", psMeaning = "Single Nucleotide Polymorphism")` bezeichnet. Bei den SNPs handelt es sich um Positionen im Genom, an welchen Unterschiede zwischen Individuen einer Population bei einer einzelnen DNA-Base auftreten. Nehmen wir an, dass Genorte (QTL), welche wichtig sind für die Expression von interessanten phänotypischen Eigenschaften, sich in der Nähe von beobachteten SNPs befinden, können wir aufgrund von Kopplungsungleichgewichten zwischen SNPs und QTL eine statistische Beziehung zwischen phänotypischen Werten und SNP-Genotypen modellieren.
 
 Für die Schätzung der SNP-Effekte auf phänotypische Ausprägungen stehen verschiedene statistische Verfahren zur Verfügung. Als einfachste Methode können wir die Regression auf einzelne SNP-Marker bezeichnen. Das Problem der Single-Marker Regression liegt in der im Vergleich zur Anzahl der Beobachtungen sehr grossen Anzahl an SNP-Markern. Eine Lösung dieses Problems besteht darin, dass die SNP-Effekte im linearen Modell als zufällige Effekte aufgefasst werden. Dadurch wird das einfache lineare Regressionsmodell in ein lineares gemischtes Modell verwandelt. Aus der traditionellen Zuchtwertschätzung ([@Hofer1990] und [@vonRohr2016]) kennen wir die Mischmodellgleichungen, welche uns Schätzwerte für fixe und zufällige Effekte mit BLUE- und BLUP-Eigenschaften liefern. Bei diesem Verfahren werden aber allen SNPs der gleiche Varianzanteil zugesprochen. Die totale genetische Varianz wird somit auf alle SNPs gleichmässig aufgeteilt. Bayes'sche Methoden, wie sie in Kapitel \@ref(bayes) beschrieben sind, erlauben es verschiedenen genomischen Regionen verschiedene Varianzanteile zuzuordnen.
 
@@ -60,6 +66,8 @@ GBLUP hat drei wichtige Vorteile im Vergleich zu RR-BLUP.
 1. Die Dimension der genetischen Effekte in GBLUP beträgt $n\times n$, wobei $n$ die Anzahl Tiere sind. In RR-BLUP beträgt diese Dimension $m\times m$, wobei $m$ der Anzahl an SNP-Markern entspricht. Somit ist GBLUP effizienter im Hinblick auf Rechenresourcen.
 2. Die Genauigkeiten der genomischen Zuchtwerte können bei GBLUP analog zu den Genauigkeiten der Zuchtwerte im BLUP-Tiermodell berechnet werden.
 3. GBLUP kann mit Pedigree-basierten Informationen zu den sogenannten __single step__ Verfahren kombiniert werden [@MLA2009]. 
+
+In [@FCD2016] haben die Autoren gezeigt, dass wenn die Anzahl typisierter Tiere grösser ist als die Anzahl SNP-Loci, die GBLUP-Modelle gewisse Nachteile aufweisen, welche bei den RR-BLUP-Modellen nicht existieren.
 
 
 ## Genomische Verwandtschaftsmatrix (GRM)
@@ -122,6 +130,8 @@ $(G_2G_2)_j$  &  $(2-2p_j)q_j$   &  $2-2p_j$\\
 \end{center}
 
 \vspace{2ex}
+Hier ist es wichtig zu bemerken, dass $q_j$ für die $j$-te Komponente im Vektor $q$ aus dem Model (\ref{eq:VecGSumOfVecQ}) steht.
+
 Unter der Annahme des Hardy-Weinberg-Gleichgewichts für die Genotypen am SNP-Locus $j$ können wir den Erwartungswert für den genetischen Effekt $g$ am SNP-Locus $j$ berechnen. Der Erwartungswert wird über alle Komponenten des Vektors $g$ der genetischen Effekte berechnet.
 
 \begin{equation}
@@ -252,7 +262,6 @@ matSnp <- matrix(data = sample(c(0,1,2),
                  ncol = nNrSnp)
 ### # write data to file
 write.table(matSnp, file = "genotypes.txt", quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
-
 ```
 
 ```{r ComputeGrmOriginal}
@@ -319,9 +328,9 @@ computeMatGrm <- function(pmatData) {
   P <- 2 * (freq - 0.5)
   sumpq <- sum(freq*(1-freq))
   # Changing the coding from (0,1,2) to (-1,0,1) and subtract matrix P
-  Z <- data - 1 - matrix(P, nrow = nrow(pmatData), 
-                         ncol = ncol(pmatData), 
-                         byrow = TRUE)
+  Z <- pmatData - 1 - matrix(P, nrow = nrow(pmatData), 
+                             ncol = ncol(pmatData), 
+                             byrow = TRUE)
   # Z%*%Zt is replaced by tcrossprod(Z)
   return(tcrossprod(Z)/(2*sumpq))
 }
@@ -341,7 +350,7 @@ file.remove("genotypes.txt")
 ```
 
 
-## Wie GBLUP funktioniert
+## Wie GBLUP funktioniert {#how-gblup-works}
 Die genomischen Verwandtschaftsmatrix erlaubt es uns die Daten der Tiere mit Beobachtung mit den Tieren ohne Beobachtungen aber mit SNP-Genotypen zu verlinken. Die Inverse $G^{-1}$ der genomischen Verwandtschaftsmatrix wird zur Modellierung der Kovarianzstruktur zwischen den genetischen Effekten und somit zwischen den genomischen Zuchtwerten verwendet. Wie schon beim BLUP-Tiermodell werden auch bei GBLUP die unbekannten Effekte mit Mischmodellgleichungen geschätzt. Für das GBLUP-Modell in (\ref{eq:GblupModel}) lauten die Mischmodellgleichungen, wie folgt.
 
 
@@ -374,3 +383,122 @@ Aufgrund der letzten Zeile der GBLUP-Mischmodellgleichungen ist ersichtlich, das
 \end{equation}
 
 Die Beziehung in (\ref{eq:GenomicBvAnimalNoPhen}) wird auch als genomische Regression der Zuchtwerte der Tiere ohne Beobachtung auf die genomischen Zuchtwerte der Tiere mit Beobachtung bezeichnet.
+
+
+## Ein Beispiel für die Verwendung von GBLUP
+Nehmen wir an, dass wir fünf Tiere haben in einem Pedigree. Von diese fünf Tieren haben nur vier eine phänotypische Beobachtung. Wir wollen genomische Informationen aller fünf Tiere verwenden, damit wir den genomischen Zuchtwert des fünften Tieres schätzen können. Das folgende Pedigree symbolisiert die Verwandtschaftsbeziehungen zwischen den fünf Tieren und wird als gegeben angenommen. 
+
+```{r GblupExPed, echo=FALSE}
+n_nr_ani <- 5
+suppressPackageStartupMessages(require(pedigreemm))
+ped_gblup <- pedigree(sire = c(NA,1,1,NA,1), dam = rep(NA, n_nr_ani), label = as.character(1:n_nr_ani))
+print(ped_gblup)
+```
+
+Aus dem oben gezeigten Pedigree können wir die folgenden genetisch-additive Verwandtschaftsmatrix $A$ ableiten.
+
+```{r, echo=FALSE, results='asis'}
+mat_A <- as.matrix(getA(ped = ped_gblup))
+cat("$$A = \\left[\n")
+cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = mat_A), 
+          collapse = "\n"))
+cat("\\right]$$\n")
+```
+
+Unter der Annahme, dass die fixen Effekte bekannt sind und dass die Beobachtungen $y$ als Abweichungen von einem Mittel definiert sind, dann kann der Vektor $\hat{u}$ der geschätzten Zuchtwerte aus den Mischmodellgleichungen berechnet werden als
+
+$$\hat{u} = (Z^TZ + A^{-1})^{-1} Z^Ty$$
+
+Für unser Beispiel ist die Designmatrix $Z$, welche die Zuchtwerte $u$ zu den Beobachtungen $y$ verlinkt, wie folgt definiert. 
+
+```{r, echo=FALSE, results='asis'}
+mat_Z <- diag(1, nrow = (n_nr_ani-1), ncol = n_nr_ani)
+cat("$$Z = \\left[\n")
+cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = mat_Z, pnDigits = 0), 
+          collapse = "\n"))
+cat("\\right]$$\n")
+```
+
+Somit beträgt die Projektionsmatrix $P$, welche die Beobachtungen $y$ auf die geschätzten Zuchtwerte $\hat{u}$ abbildet
+
+$$P = (Z^TZ + A^{-1})^{-1} Z^T$$
+```{r, echo=FALSE, results='asis'}
+mat_P <- solve(crossprod(mat_Z) + solve(mat_A)) %*% t(mat_Z)
+cat("$$P = \\left[\n")
+cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = mat_P, pnDigits = 4), 
+          collapse = "\n"))
+cat("\\right]$$\n")
+```
+
+Schaut man sich die erste Zeile der Matrix $P$ an, so können wir sehen, aus welchen Beobachtungen der geschätzte Zuchtwert $\hat{u}_1$ des Tieres $1$ aus den Beobachtungen zusammengesetzt ist. Auf der fünften Zeile können wir sehen, wie der geschätzte Zuchtwert $\hat{u}_5$ zusammengesetzt ist. Vergleicht man die beiden geschätzten Zuchtwerte so resultiert, dass 
+
+$$\hat{u}_5 = 0.5 \hat{u}_1$$
+
+Nehmen wir die folgende genomische Verwandtschaftsmatrix $G$ als bekannt an und setzen den Ansatz aus dem Kapitel \@ref(how-gblup-works) so erhalten wir das folgende Resultat.
+
+```{r, echo=FALSE, results='asis'}
+mat_G <- matrix(data = c(1.0,0.50,0.50,0.02,0.50,
+                         0.50,1.0,0.20,0.015,0.20,
+                         0.5,0.20,1.0,0.025,0.30,
+                         0.02,0.015,0.025,1.0,0.20,
+                         0.5,0.20,0.30,0.02,1.0),
+                nrow = n_nr_ani, byrow = TRUE)
+cat("$$G = \\left[\n")
+cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = mat_G, pnDigits = 3), 
+          collapse = "\n"))
+cat("\\right]$$\n")
+```
+
+Für die Schätzung des genomischen Zuchtwertes $g_5$ für das Tier $5$ mit der Formel (\ref{eq:GenomicBvAnimalNoPhen}) brauchen wir die Matrizen $G^{22}$ und $G^{21}$, welche wir aus der Inversen $G^{-1}$ von $G$ herauslesen können. Als erstes berechnen wir also $G^{-1}$
+
+```{r, echo=FALSE, results='asis'}
+mat_G_inv <- solve(mat_G)
+cat("$$G^{-1} = \\left[\n")
+cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = mat_G_inv, pnDigits = 4), 
+          collapse = "\n"))
+cat("\\right]$$\n")
+```
+
+Somit ist
+
+```{r, echo=FALSE, results='asis'}
+n_G_22 <- mat_G_inv[n_nr_ani,n_nr_ani]
+mat_G_22 <- as.matrix(n_G_22, nrow = 1)
+cat("$$G^{22} = \\left[\n")
+cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = mat_G_22, pnDigits = 4), 
+          collapse = "\n"))
+cat("\\right]$$\n")
+```
+
+
+und 
+
+```{r, echo=FALSE, results='asis'}
+vec_G_21 <- mat_G_inv[n_nr_ani,1:(n_nr_ani-1)]
+mat_G_21 <- as.matrix(vec_G_21, nrow = 1)
+cat("$$(G^{21})^T = \\left[\n")
+cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = mat_G_21, pnDigits = 4), 
+          collapse = "\n"))
+cat("\\right]$$\n")
+
+```
+
+Somit sind die Koeffizienten für die Schätzung von $g_5$
+
+```{r, echo=FALSE}
+(vec_coeff_g5 <- -vec_G_21 / n_G_22)
+
+```
+
+
+Somit beträgt 
+
+$$\hat{g}_5 = `r vec_coeff_g5[1]` \hat{g}_1
+              + (`r vec_coeff_g5[2]` \hat{g}_2)
+              + (`r vec_coeff_g5[3]` \hat{g}_3)
+              + (`r vec_coeff_g5[4]` \hat{g}_4)
+$$
+
+
+
+
