@@ -28,12 +28,12 @@ knitr::include_graphics(path = "png/TrajectVarRedRegSol.pdf")
 
 ## Aufgabe 3 - Einfaches Beispiel
 ```{r PrepareBvResult, echo=FALSE, results='hide'}
-bOnline <- FALSE
+bOnline <- TRUE
 sInputFileName <- "zl_w7_u5_DataLmm.csv"
 if (bOnline){
   sInputDataPath <- "https://charlotte-ngs.github.io/GELASMFS2018/ex/w2"
 } else {
-  sInputDataPath <- "/Users/peter/Data/Projects/GitHub/charlotte-ngs/GELASMFS2018/gh-pages/GELASMFS2018/ex/w2"
+  sInputDataPath <- "../../ex/w2"
 }
 dfLmm <- read.csv2(file = file.path(sInputDataPath, sInputFileName))
 
