@@ -10,7 +10,7 @@ vignette: >
 ---
 
 ```{r SetUp, echo=FALSE, results='hide'}
-bOnline <- FALSE
+bOnline <- TRUE
 ```
 
 ## Kontrollfrage 1
