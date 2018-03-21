@@ -1,0 +1,344 @@
+---
+title: "LASSO. Example"
+output:
+  html_document:
+    df_print: paged
+---
+
+This document shows some examples using LASSO. The content shown is based on ISLR. 
+
+## Example given in ISLR
+The example uses the `Hitters` dataset to show parameter estimation using LASSO. We start by loading the following two packages.
+
+```{r}
+require(ISLR)
+require(glmnet)
+```
+
+The dataset is obtained by the following command
+
+```{r}
+data(Hitters)
+Hitters <- na.omit(Hitters)
+dim(Hitters)
+```
+
+The structure of the `Hitters` dataframe 
+
+```{r}
+str(Hitters)
+```
+
+The above output shows that for the example of the `Hitters` data, we still have $n>p$ and still we are using LASSO, to determine which variables are important for a given response variable.
+
+The parameter $\lambda$ will be determined using crossvalidation, hence we have to create a training and a test set.
+
+```{r TrainTestSet}
+set.seed (1)
+train <- sample (c(TRUE ,FALSE), nrow(Hitters), rep=TRUE)
+test  <- (! train )
+```
+
+Explanatory variables are assigned to $x$ and repsonse variable is assigned to $y$. 
+
+```{r LassoModelPrep}
+x <- model.matrix (Salary ~ ., Hitters)[,-1]
+y <- Hitters$Salary
+```
+
+Possible values of $\lambda$ are given on a grid between $10^{10}$ and $10^{-2}$. 
+
+```{r GridLambda}
+grid <- 10^ seq (10,-2, length =100)
+```
+
+The following statements fits the model using LASSO with the training data. 
+
+```{r LassoModel}
+lasso.mod <- glmnet (x[train ,],y[train],alpha =1, lambda = grid)
+str(lasso.mod)
+```
+
+Plots showing the different coefficients and their values as a function of the $L_1$-norm is shown below. 
+
+```{r}
+plot(lasso.mod, label = TRUE)
+```
+
+Alternatively, we can also plot the coefficients as a function of the value of $\lambda$. 
+
+```{r}
+plot(lasso.mod, xvar = "lambda", label = TRUE)
+```
+
+To find the best $\lambda$, we run a cross-validation
+
+```{r CrossValidation}
+set.seed (1)
+cv.out <- cv.glmnet (x[train ,],y[train],alpha =1)
+str(cv.out)
+```
+
+The best value is obtained by 
+
+```{r}
+(bestlam <- cv.out$lambda.min)
+```
+
+Doing the fit on all the data using the best $\lambda$ shows us which coefficients will be set to $0$. 
+
+```{r LassoCoeff}
+out <- glmnet(x, y, alpha = 1, lambda = grid)
+lasso.coef <- predict(out, type = "coefficients", s=bestlam ) [1:20,]
+lasso.coef
+```
+
+
+## Example taken from vignette of `glmnet`
+The vignette is opened using the command
+
+```{r, eval=FALSE}
+browseVignettes(package = "glmnet")
+```
+
+and from the website that is shown, we open the vignette entitled `An Introduction to Glmnet`. Inside that vignette, the dataset `QuickStartExample` is used
+
+```{r}
+data(QuickStartExample)
+```
+
+The above call to `data` assignes the matrix `x` with dimensions
+
+```{r}
+dim(x)
+```
+
+as explanatory variables and the matrix `y` with dimensions
+
+```{r}
+dim(y)
+```
+
+as response variables. 
+
+The following call to `glmnet` fits a GLM to the data
+
+```{r}
+fit <- glmnet(x=x, y=y)
+```
+
+The result is an object of class `glmnet` and is quite complicated. Hence, we best make use of the provided methods to inspect our results. 
+
+
+### Plots
+One method is the method `plot` to show the values of the coefficients.
+
+```{r}
+plot(fit, label = TRUE)
+```
+
+Each curve corresponds to a variable. The labels of the variables are shown towards the right-hand side border. The curves show the path of the coefficients against the $L_1$-norm, as $\lambda$ varies. The numbers above show the numbers of non-zero coefficients at the current $\lambda$. 
+
+### Summary
+A summary of the results can be produced using the `print`-method
+
+```{r}
+print(fit)
+```
+
+Although by default `glmnet` will produce $100$ values, the results are ommitted, if the deviance does not change anymore. 
+
+### Coefficients
+Coefficients can be obtained for at one or more $\lambda$-values. 
+
+```{r}
+coef(fit, s = .1)
+```
+
+
+### Predictions
+Predictions can be made for new input data for a range of $\lambda$-values
+
+```{r}
+nx <- matrix(rnorm(10*20), 10, 20)
+predict(fit, newx = nx, s = c(.1, .05))
+```
+
+
+### Cross validation
+When the user just wants one model, cross validation is one possibility to get to that. For that the function `cv.glmnet` is used.
+
+```{r}
+cvfit <- cv.glmnet(x = x, y = y)
+```
+
+The result can be plotted
+
+```{r}
+plot(cvfit)
+```
+
+This plot contains the cross-validation curve (red dots) and upper and lower standard deviation curves along the $\lambda$-sequence. Two selected $\lambda$-values are indicated by the vertical dotted lines. The selected $\lambda$-values can be seen by 
+
+```{r}
+cvfit$lambda.min
+```
+where `lambda.min` corresponds to the $\lambda$-value that gives the minimum cross-validation error. The other selected $\lambda$-value is saved under the name of `lambda.1se` 
+
+```{r}
+cvfit$lambda.1se
+```
+which gives the most regularized model such that the error is within one standard error of the error minimum. 
+
+Coefficients can be generated using these selected $\lambda$-values
+
+```{r}
+coef(cvfit, s = "lambda.1se")
+```
+or analogously 
+
+```{r}
+coef(cvfit, s = "lambda.min")
+```
+
+Prediction can be made on the `cv.glmnet` object for new `x`-values
+
+```{r}
+predict(cvfit, newx = x[1:5,], s = "lambda.min")
+```
+
+```{r}
+predict(cvfit, newx = x[1:5,], s = "lambda.1se")
+```
+
+
+## Application of LASSO to genomics data
+This section tries to use the LASSO for genomics data. That means we want to test whether the LASSO can handle the situation where $p > n$. Let us start with a moderate example of simulated data.
+
+```{r}
+# set the seed for reproducibility
+set.seed(8789)
+# generate the matrix at a given number of SNP-loci
+#  and for a given number of animals
+n_nr_snp <- 100
+n_nr_animals <- 50
+n_min_allele_freq <- 0.1
+# generate the matrix using sample()
+mat_snp <- matrix(data = sample(c(0,1,2), 
+                               n_nr_snp*n_nr_animals, 
+                               replace = T, 
+                               prob = c((1-n_min_allele_freq)^2,
+                                        2*(1-n_min_allele_freq)*n_min_allele_freq,
+                                        n_min_allele_freq^2)), 
+                 nrow = n_nr_animals, 
+                 ncol = n_nr_snp)
+# check dimensions
+dim(mat_snp)
+```
+
+Für die Simulation der Beobachtungen wählen wir die SNP-Kolonnen mit der meisten Variabilität.
+
+```{r}
+n_nr_sign_snp <- 5
+vec_snp_sd <- apply(mat_snp, 2, sd)
+vec_ord_sd <- order(vec_snp_sd, decreasing = TRUE)
+(vec_sign_snp_idx <- vec_ord_sd[1:n_nr_sign_snp])
+```
+
+Generating the effects for the SNPs
+
+```{r}
+n_snp_a_min <- .1
+n_snp_a_max <- 13
+(vec_snp_eff <- runif(n = n_nr_sign_snp, min = n_snp_a_min, max = n_snp_a_max))
+```
+
+Generating the phenotypes
+
+```{r}
+n_true_inter <- -12.4
+n_true_sd <- 3.41
+vec_y <- crossprod(t(mat_snp[,vec_sign_snp_idx]), vec_snp_eff) + 
+  rnorm(n = n_nr_animals, mean = n_true_inter, sd = n_true_sd)
+```
+
+### Fitting the model to the data
+Now we try to fit a model using LASSO
+
+```{r}
+fit_snp <- glmnet(x = mat_snp, y = vec_y)
+```
+
+### Visualisations
+The visualisation gives 
+
+```{r}
+plot(fit_snp, label = TRUE)
+```
+
+Coefficients as a function of $\lambda$
+
+```{r}
+plot(fit_snp, xvar = "lambda", label = TRUE)
+```
+
+### Results
+The results are obtained by
+
+```{r}
+print(fit_snp)
+```
+
+### Cross-validation
+The cross-validation is done to get an estimate of $\lambda$. 
+
+```{r}
+cvfitsnp <- cv.glmnet(x = mat_snp, y = vec_y)
+```
+
+CV-results are plotted by
+
+```{r}
+plot(cvfitsnp)
+```
+
+### Coefficients based on special $\lambda$
+The two marked $\lambda$-values are 
+
+```{r}
+cvfitsnp$lambda.min;cvfitsnp$lambda.1se
+```
+
+The coefficients for the two marked $\lambda$-values are obtained by
+
+```{r}
+coefmin <- coef(cvfitsnp, s = "lambda.min")
+(cofminnz <- coefmin[coefmin[, 1] != 0,])
+```
+
+and
+
+```{r}
+coef1se <- coef(cvfitsnp, s = "lambda.1se")
+(coef1senz <- coef1se[coef1se[, 1] != 0, ])
+```
+
+### Comparison to true values
+Since we are working with simulated data, we can compare the above listed results to the true values. The significant SNPs were chosen to be 
+
+```{r}
+vec_sign_snp_idx
+```
+
+There effect was 
+
+```{r}
+vec_snp_eff
+```
+
+The variable names that relate to the SNP-positions can be extracted from the result as
+
+```{r}
+names(coef1senz)
+```
+

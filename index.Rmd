@@ -117,9 +117,10 @@ knitr::kable(df_notes)
 s_sl_url <- paste0(sBaseUrl, "sl/")
 vec_topics_slides <- vec_topics
 # links zu slides
-vec_topics_slides[which(Datum == format(as.Date("2018/02/26"), "%d.%m"))] <- paste0("[Einführung](", s_sl_url, "w2/asmas_w01_v01.pdf", ")") 
-vec_topics_slides[which(Datum == format(as.Date("2018/03/05"), "%d.%m"))] <- paste0("[Lineare Regression](", s_sl_url, "w2/asmas_w02_v02.pdf", ")") 
-vec_topics_slides[which(Datum == format(as.Date("2018/03/12"), "%d.%m"))] <- paste0("[Regression (Teil 2)](", s_sl_url, "w2/asmas_w02_v03.pdf", "), [GBLUP](", s_sl_url, "w03/asmas_w03_v03.pdf", ")") 
+vec_topics_slides[which(Datum == format(as.Date("2018/02/26"), "%d.%m"))] <- paste0("[Einführung](", s_sl_url, "w2/asmas_w01_v01.pdf)") 
+vec_topics_slides[which(Datum == format(as.Date("2018/03/05"), "%d.%m"))] <- paste0("[Lineare Regression](", s_sl_url, "w2/asmas_w02_v02.pdf)") 
+vec_topics_slides[which(Datum == format(as.Date("2018/03/12"), "%d.%m"))] <- paste0("[Regression (Teil 2)](", s_sl_url, "w2/asmas_w02_v03.pdf", "), [GBLUP](", s_sl_url, "w03/asmas_w03_v03.pdf)") 
+vec_topics_slides[which(Datum == format(as.Date("2018/03/19"), "%d.%m"))] <- paste0("[LASSO](", s_sl_url, "w04/asmas_w04_v04.pdf)") 
 # create data frame and convert it to table
 df_slides <- data.frame(Woche = Woche, Datum = Datum, Thema = vec_topics_slides, stringsAsFactors = FALSE)
 knitr::kable(df_slides)

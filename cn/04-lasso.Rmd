@@ -126,7 +126,7 @@ x <- model.matrix (Salary ~ ., Hitters)[,-1]
 y <- Hitters$Salary
 ```
 
-Die vorgegebenen Werte für $\lambda$ werden in der Variablen `grid` abgelegt. Es handelt sich um $100$ Werte zwischen $10^10$ und $10^{-2}$. 
+Die vorgegebenen Werte für $\lambda$ werden in der Variablen `grid` abgelegt. Es handelt sich um $100$ Werte zwischen $10^{10}$ und $10^{-2}$. 
 
 ```{r GridLambda}
 grid <- 10^ seq (10,-2, length =100)
