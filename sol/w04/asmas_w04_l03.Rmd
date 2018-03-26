@@ -152,7 +152,7 @@ Da wir die Matrix $G$ anschliessend in den Mischmodellgleichungen von GBLUP verw
 
 ```{r}
 # store name of genotype inputfile in a variable
-s_genotypes_filename <- "asmas_w04_u03_genotypes.txt"
+s_genotypes_filename <- "../../ex/w04/asmas_w04_u03_genotypes.txt"
 # fix the number of snp locations
 n_nr_snp <- 1000
 # reading the data
