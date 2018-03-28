@@ -1,0 +1,194 @@
+---
+title: "Bayes'scher Ansatz"
+author: "Peter von Rohr"
+date: "26 März 2018"
+output: beamer_presentation
+output_file: asmas_w05_v05.pdf
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, results = 'asis')
+knitr::knit_hooks$set(conv.odg = rmddochelper::odg.graphics.conv.hook)
+```
+
+## Frequentisten und Bayesianer
+
+Unterschiede zwischen Frequentisten und Bayesianern bestehen hauptsächlich in 
+
+- deren Verständnis von Wahrscheinlichkeiten
+- deren Unterteilung von Modell- und Datenkomponenten
+- deren Techniken zur Schätzung von Parametern
+
+
+## Bekannte und Unbekannte Grössen
+
+Angenommen: einfaches lineares Regressionsmodell
+
+\begin{equation}
+y_i = \beta_0 + \beta_1 x_{i1} + \epsilon_i
+\label{eq:BayLinMod}
+\end{equation}
+
+```{r BayesianUnKnowsTab}
+Was <- c("$y_i$", "$x_{i1}$", "$\\beta_0$", "$\\beta_1$", "$\\sigma^2$")
+bekannt <- c("X", "X", "", "", "")
+unbekannt <- c("", "", "X", "X", "X")
+knitr::kable(data.frame(Was = Was,
+                        bekannt = bekannt,
+                        unbekannt = unbekannt, 
+                        row.names = NULL,
+                        stringsAsFactors = FALSE))
+```
+
+## Schätzung Unbekannter Grössen 
+
+- Parameterschätzung
+- a posteriori Verteilung der unbekannten Grössen gegeben die bekannten Grössen
+
+```{r AprioriAposteriori, conv.odg=TRUE, odg.path="../odg", odg.out.dir="../png", odg.graph.cache=TRUE,fig.align='center', out.width='8cm'}
+knitr::include_graphics(path = "../png/AprioriAposteriori")
+```
+
+
+## A Posteriori Verteilung
+
+- Für unser Regressionsmodell
+    + Annahme: $\sigma^2$ sei bekannt $\rightarrow$ weggelassen in Herleitung
+    + a posteriori Verteilung für $\beta$: $f(\beta | y)$
+- Berechnung durch __Satz von Bayes__, dieser basiert auf der Definition der bedingten Wahrscheinlichkeit
+
+\begin{eqnarray}
+f(\beta | y) & = & \frac{f(\beta, y)}{f(y)} \nonumber \\
+             & = & \frac{f(y | \beta)f(\beta)}{f(y)} \nonumber \\
+             & \propto &  f(y | \beta) f(\beta)
+\label{LinModAPostProb}
+\end{eqnarray}
+
+
+## Komponenten der A Posteriori Verteilung
+
+- $f(y | \beta)$: Likelihood
+- $f(\beta)$: a priori Verteilung von $\beta$,  oft als konstant angenommen, d.h. uninformative a priori Verteilung
+- $f(y)$: Normalisierungskonstante
+
+$\rightarrow$ uninformative a priori Verteilungen führen 
+
+$$f(\beta | y) \propto f(y | \beta)$$
+
+$\rightarrow$ Annahme, dass $y$ normalverteilt:
+
+$$ f(y | \beta) = (2\pi\sigma^2)^{-n/2}\ exp\left\{-{1\over2}\frac{(y-X\beta)^T(y-X\beta)}{\sigma^2}\right\}$$
+
+## Zwei-dimensionale Normalverteilung
+
+```{r TwoDimNorm, eval=TRUE, fig.show=TRUE, fig.align='center', out.width='10cm'}
+### # the following code is copied from http://www.ejwagenmakers.com/misc/Plotting_3d_in_R.pdf
+mu1<-0 # setting the expected value of x1
+mu2<-0 # setting the expected value of x2
+s11<-10 # setting the variance of x1
+s12<-15 # setting the covariance between x1 and x2
+s22<-10 # setting the variance of x2
+rho<-0.5 # setting the correlation coefficient between x1 and x2
+x1<-seq(-10,10,length=41) # generating the vector series x1
+x2<-x1 # copying x1 to x2
+
+f<-function(x1,x2)
+{
+  term1<-1/(2*pi*sqrt(s11*s22*(1-rho^2)))
+  term2<--1/(2*(1-rho^2))
+  term3<-(x1-mu1)^2/s11
+  term4<-(x2-mu2)^2/s22
+  term5<--2*rho*((x1-mu1)*(x2-mu2))/(sqrt(s11)*sqrt(s22))
+  term1*exp(term2*(term3+term4-term5))
+} # setting up the function of the multivariate normal density
+#
+z<-outer(x1,x2,f) # calculating the density values
+#
+persp(x1, x2, z,
+      main="Two dimensional Normal Distribution",
+#      sub=expression(italic(f)~(bold(x)) ==
+#                      frac(1,2~pi~sqrt(sigma[11]~sigma[22]~(1-rho^2))) ~
+#                       phantom(0)^bold(.)~exp~bgroup("{",
+#                                                     list(-frac(1,2(1-rho^2)),
+#                                                      bgroup("[", frac((x[1]~-~mu[1])^2, sigma[11])~-~2~rho~frac(x[1]~-~mu[1],                                                                                                                                                                                 sqrt(sigma[11]))~ frac(x[2]~-~mu[2],sqrt(sigma[22]))~+~
+#                                                      frac((x[2]~-~mu[2])^2, sigma[22]),"]")),"}")),
+      col="lightgreen",
+      theta=30, phi=20,
+      r=50,
+      d=0.1,
+      expand=0.5,
+      ltheta=90, lphi=180,
+      shade=0.75,
+      ticktype="detailed",
+      nticks=5) # produces the 3-D plot
+#
+mtext(expression(list(mu[1]==0,
+                      mu[2]==0,
+                      sigma[11]==10,
+                      sigma[22]==10,
+                      sigma[12]==15,
+                      rho==0.5)),
+      side=3) # adding a text line to the graph
+
+```
+
+
+## Problem
+
+- A Posteriori Verteilung häufig nicht explizit als Verteilung darstellbar
+- Lösung durch
+    1. Julian Besag 1974:  A Posteriori Verteilung ist bestimmt durch vollbedingte Verteilungen
+    2. Gute Pseudozufallszahlen-Generatoren in Software   
+- A Posteriori Verteilung für Regression: $f(\beta | y)$
+- Vollbedingte Verteilungen für Regression: 
+    + $f(\beta_0 | \beta_1, y)$
+    + $f(\beta_1 | \beta_0, y)$
+    
+wobei $\beta$ der Vektor bestehen aus $\beta^T = \left[\begin{array}{cc}\beta_0 & \beta_1 \end{array} \right]$    
+
+
+## Ablauf einer Analyse: Vorbereitung
+
+- Schritt 1: Festlegung der a priori Verteilungen
+- Schritt 2: Bestimmung der Likelihood aufgrund von Daten und Modell
+- Schritt 3: Berechnung der a posteriori Verteilung
+- Schritt 4: Bestimmung der vollbedingten Verteilungen
+
+
+## Ablauf einer Analyse: Umsetzung
+
+Beispiel der Regression
+
+- Schritt 5: Initialisierung aller unbekannten Grössen ($\beta_0$, $\beta_1$) auf einen Startwert
+- Schritt 6: Bestimme neuen Wert für $\beta_0$ durch Ziehen einer Zufallszahl aus $f(\beta_0 | \beta_1, \mathbf{y})$
+- Schritt 7: Bestimme neuen Wert für $\beta_1$ durch Ziehen einer Zufallszahl aus $f(\beta_1 | \beta_0, \mathbf{y})$
+- Schritt 8: Loop viele Wiederholungen über Schritte 6-7 und speichere alle gezogenen Zahlen
+- Schritt 9: Parameterschätzungen als Mittelwerte der gespeicherten Zufallszahlen
+
+
+## R-Programm
+
+```{r BayesExample, echo=TRUE, eval=FALSE}
+beta = c(0, 0); meanBeta = c(0, 0)
+niter = 10000 # number of samples
+for (iter in 1:niter) {# loop for Gibbs sampler
+  # sampling intercept
+  w = y - X[, 2] * beta[2]; x = X[, 1]
+  xpxi = 1/(t(x) %*% x); betaHat = t(x) %*% w * xpxi
+  # using residual var = 1
+  beta[1] = rnorm(1, betaHat, sqrt(xpxi))
+  # sampling slope
+  w = y - X[, 1] * beta[1]; x = X[, 2]
+  xpxi = 1/(t(x) %*% x)
+  betaHat = t(x) %*% w * xpxi
+  # using residual var = 1
+  beta[2] = rnorm(1, betaHat, sqrt(xpxi))
+  meanBeta = meanBeta + beta
+}
+```
+
+
+## Fragen und Dank
+
+- Fragen?
+- Vielen Dank!!

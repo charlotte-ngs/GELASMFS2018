@@ -212,7 +212,7 @@ predict(cvfit, newx = x[1:5,], s = "lambda.1se")
 ```
 
 
-## Application of LASSO to genomics data
+## Application of LASSO to Genomics Data
 This section tries to use the LASSO for genomics data. That means we want to test whether the LASSO can handle the situation where $p > n$. Let us start with a moderate example of simulated data.
 
 ```{r}
@@ -232,6 +232,8 @@ mat_snp <- matrix(data = sample(c(0,1,2),
                                         n_min_allele_freq^2)), 
                  nrow = n_nr_animals, 
                  ncol = n_nr_snp)
+# change the coding
+mat_snp <- mat_snp - 1
 # check dimensions
 dim(mat_snp)
 ```
@@ -261,6 +263,25 @@ n_true_sd <- 3.41
 vec_y <- crossprod(t(mat_snp[,vec_sign_snp_idx]), vec_snp_eff) + 
   rnorm(n = n_nr_animals, mean = n_true_inter, sd = n_true_sd)
 ```
+
+### Writing data to a file
+In order to have the genotypes and the phenotypes ready for later analysis, we write them to a file. The format of the file is that the first column consists of the phenotypes and all other columns are genotypes. First the phenotypes and the genotypes are bound into one matrix
+
+```{r}
+### # bind columns of phenotypes and genotypes together
+mat_data <- cbind(vec_y, mat_snp)
+dim(mat_data)
+```
+
+Combined data is written to the file.
+
+```{r}
+### # write data to file
+s_lasso_data_filename <- "asmas_w05_u04_lasso.txt"
+write.table(mat_data, file = s_lasso_data_filename, quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
+file.info(s_lasso_data_filename)
+```
+
 
 ### Fitting the model to the data
 Now we try to fit a model using LASSO
@@ -336,9 +357,47 @@ There effect was
 vec_snp_eff
 ```
 
+The number of true significant SNP positions is `r length(vec_sign_snp_idx)`. Because this number is closer to the number of non-zero effects found in the more regularized result, we are comparing the true values to the coefficients in `coef1senz`. 
+
+### SNP-positions with non-zero effect
 The variable names that relate to the SNP-positions can be extracted from the result as
 
 ```{r}
-names(coef1senz)
+(s_snp_pos <- gsub(pattern = "V", replacement = "", setdiff(names(coef1senz), "(Intercept)"), fixed = TRUE))
+```
+
+The positions found that match the true values are 
+
+```{r}
+(vec_match_snp <- intersect(s_snp_pos, as.character(vec_sign_snp_idx)))
+```
+
+That means we get `r length(vec_match_snp)` out of a total of `r length(vec_sign_snp_idx)` true significant SNP-positions. This corresponds to a detection rate of `r round(length(vec_match_snp)/length(vec_sign_snp_idx), digits = 2)`. 
+
+### SNP-effects
+When comparing the estimated SNP-effects to the true values, the picture is less clear. We are first preparing a dataframe that allows to do the plots.
+
+```{r}
+(df_true <- dplyr::data_frame(true_snp_pos = vec_sign_snp_idx[order(vec_sign_snp_idx)],
+                                  true_snp_eff = vec_snp_eff[order(vec_sign_snp_idx)]))
+```
+ 
+ The same is done for the estimated effects
+ 
+```{r}
+(df_est <- dplyr::data_frame(est_snp_pos = as.integer(s_snp_pos), est_snp_eff = as.vector(coef1senz[-1])))
+```
+ 
+Now we are joining those which are present in both
+
+```{r}
+require(magrittr)
+(df_comp_eff <- dplyr::inner_join(df_est, df_true, by = c('est_snp_pos' = 'true_snp_pos')))
+```
+
+Showing the comparison in a simple plot
+
+```{r}
+ggplot2::qplot(x = true_snp_eff, y = est_snp_eff, data = df_comp_eff, colour = as.factor(est_snp_pos))
 ```
 

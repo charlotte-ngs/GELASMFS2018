@@ -29,15 +29,15 @@ h3 { /* Header 3 */
 </style>
 
 ## Hintergrund
-Mit der Routine-Zuchtwertschätzung im Sommer 2018 bei Mutterkuh Schweiz (VMS) werden Änderungen bei den Schlachtmerkmalen eingeführt. Vor dieser Änderung wurden vor allem die Merkmale Nettozuwachs und  Fleischigkeit berücksichtigt. Aufgrund der relativ starken Gewichtung der Fleischigkeit in der Zucht konnte ein Rückgang der Fettabdeckung beobachtet werden (persönliche Mitteilungen VMS und MA Andrea Hospental?). Dieser Rückgang wirkt sich negativ auf die Frühreife aus.
+Mit der Routine-Zuchtwertschätzung im Sommer 2018 für Mutterkuh Schweiz (VMS) werden Änderungen bei den Schlachtmerkmalen eingeführt. Vor dieser Änderung wurden vor allem die Merkmale Nettozuwachs und  Fleischigkeit berücksichtigt. Gewisse Gruppierungen in der Fleischrinderzucht vermuten, dass aufgrund der relativ starken Gewichtung der Fleischigkeit, bei gewissen Rassen eine Abnahme der  Fettabdeckung beobachtet werden kann. Als mögliche Quelle wird hier auf die  Masterarbeit von Andrea Hospental verwiesen. Eine abnehmende Fettabdeckung würde sich negativ auf die Frühreife auswirken. Für die Mäster oder Mutterkuhhalter hat die Frühreife eine hohe wirtschaftliche Bedeutung. Aufgrund der Bezahlungssysteme in den Schlachthöfen müssen die Schlachtkörper der gemästeten Tiere bezüglich Fleischigkeit und Fettabdeckung bestimmte Anforderungen erfüllen, damit keine Preisabzüge gemacht werden. Wenn ein Tier früher geschlachtet werden kann und trotzdem die Anforderungen des Schlachthofs erfüllt, entstehen für den Mäster oder den Mutterkuhhalter weniger Kosten. Auf dieser Kosteneinsparung basiert die wirtschaftliche Bedeutung der Frühreife. 
 
 
 ## Ziel
-Das Ziel dieser Arbeit ist es verschiedene züchterische Massnahmen vorzuschlagen, diese zu beschreiben und die Vorschläge zu vergleichen. 
+Das Ziel dieser Arbeit ist es verschiedene züchterische Massnahmen zur Verbesserung der Frühreife in der Fleischrinderzucht vorzuschlagen, diese zu beschreiben und die Vorschläge miteinadner zu vergleichen. 
 
 
 ## Massnahmen
-In diesem Abschnitt werden verschiedene Massnahmen zur Verbesserung der Frühreife aufgelistet. Ziel dieser Arbeit ist es diese zu beschreiben und deren Brauchbarkeit für die Zucht auf Frühreife zu beurteilen.
+In diesem Abschnitt werden verschiedene Massnahmen zur Verbesserung der Frühreife aufgelistet. Abgesehen von der Einführung des Zuchtwerts für das Merkmal Fettabdeckung, ist bei keiner der vorgeschlagenen Massnahmen eine Umsetzung in der Schweizer Fleischrinderzucht geplant. Ziel dieser Arbeit ist es die vorgeschlagenen Massnahmen zu beschreiben und deren Brauchbarkeit für die Zucht auf Frühreife zu beurteilen.
 
 ### Zuchtwert Fettabdeckung
 Ab der Routine-Zuchtwertschätzung im Sommer 2018 werden Zuchtwerte für das Merkmal Fettabdeckung (Klassen 1 bis 5) geschätzt und publiziert. Diese Einzelzuchtwerte im Merkmal Fettabdeckung sind ein erstes Werkzeug zur züchterischen Verbesserung der Frühreife. Hier geht es darum, wie der Einzelzuchtwert der Fettabdeckung in der Zuchtarbeit eingesetzt werden kann. 
@@ -46,7 +46,7 @@ Ab der Routine-Zuchtwertschätzung im Sommer 2018 werden Zuchtwerte für das Mer
 Da in der Zuchtarbeit selten nur ein Merkmal von Bedeutung ist, müssen wir eine Strategie finden, wie eine Anzahl von Merkmalen gemeinsam für die Auswahl der Elterntiere der nächsten Generation berücksichtigt werden können. Der optimale Ansatz für dieses Problem ist die Indexselektion, wobei ein Index als Schätzung des Gesamtzuchtwertes aufgestellt wird. Die für den Gesamtzuchtwert benötigten wirtschaftlichen Gewichte können aufgrund der Bezahlungssysteme im Schlachthof abgeleitet werden (siehe dazu Diss Peter von Rohr).
 
 ### Ansatz von Berry
-In einer Arbeit von Berry et al (2017?) wird ein Merkmal "differential age" (DAGE) definiert und die genetische Variation für dieses Merkmal wird geschätzt. Diese Merkmal soll quantifizieren, ob es bei konstanter Fleischigkeit und konstanter Fettabdeckung genetische Unterschiede beim Alter der Tiere gibt. Ziel ist es bei optimalen Schlachtleistungsmerkmalen möglichst junge, das heisst, möglichst frühreife Tiere zu selektieren.
+In einer Arbeit von Berry et al (2017?) wird ein Merkmal "differential age" (DAGE) definiert und die genetische Variation für dieses Merkmal wird geschätzt. Dieses Merkmal soll quantifizieren, ob es bei konstanter Fleischigkeit und konstanter Fettabdeckung genetische Unterschiede beim Schlachtalter der Tiere gibt. Ziel ist es bei optimalen Schlachtleistungsmerkmalen möglichst junge, das heisst, möglichst frühreife Tiere zu selektieren.
 
 
 ### Wachstumskurven
@@ -58,10 +58,45 @@ Wir schlagen vor die Arbeiten aufgrund der folgenden Schritte umzusetzen
 
 * __Schritt 1__: Beschreibung der Problemstellung und der Relevanz der Zucht auf Frühreife bei den Fleischrindern.
 * __Schritt 2__: Literaturübersicht zum gestellten Thema. Was wurde bereits gemacht und welche Ansätze sind im Ausland umgesetzt
-* __Schritt 3__: Beschreibung der vorgeschlagenen Massnahmen und eventuell Erarbeitung eigener Massnahmen
-* __Schritt 4__: Vergleich der Massnahmen untereinander im Bezug auf Einfachheit bei der Umsetzung, Verfügbarkeit der benötigten Informationen und Erfolgsaussichten der züchterischen Verbesserung der Frühreife. Dieser Teil beinhaltet die eigentlichen Resultate der Arbeit
+* __Schritt 3__: Beschreibung der vorgeschlagenen Massnahmen und eventuell Vorschlag eigener Massnahmen
+* __Schritt 4__: Vergleich der Massnahmen untereinander im Bezug auf Einfachheit bei der Umsetzung, Verfügbarkeit der benötigten Informationen und Erfolgsaussichten der züchterischen Verbesserung der Frühreife. Konkrete Ausarbeitung einer Umsetzung für den Index der Schlachtleistungsmerkmale. Dieser Teil beinhaltet die eigentlichen Resultate der Arbeit
 * __Schritt 5__: Diskussion der Resultate und Ausblick
 
+
+## Anforderungen und Unterstützungen
+Das gestellte Thema muss vom Studierenden selbstständig bearbeitet werden. Dabei wird sie/er von der Betreuung bei Qualitas unterstützt. Diese __Unterstützung__ umfasst die folgenden Punkte 
+
+* Einführung in das Thema der Frühreife bei den Fleischrindern
+* Erklärung der Zuchtwertschätzung der Fettabdeckung
+* Vermittlung der Grunlagen der Indexzucht
+* Unterstützung bei der Aufbereitung von Daten
+* Anleiten bei der Gliederung und dem Verfassen der Arbeit
+* Weitere Unterstützung je nach Bedarf
+
+Die Studentin oder der Student soll für einen erfolgreichen Abschluss der Arbeit die folgenden __Anforderungen__ erfüllen 
+
+1. Erstellen einer Literaturübersicht zum Thema Frühreife in der Fleischrinderzucht
+2. Beschreibung der Relevanz der Frühreife in der Fleischrinderzucht
+3. Beschreibung der vorgeschlagenen Massnahmen zur züchterischen Verbesserung der Frühreife bei Fleischrindern
+4. Umsetzung der Eigenschaft der Frühreife in messbare Merkmale gemäss der vorgeschlagenen Massnahmen
+5. Ausarbeitung einer Umsetzungsvariante für einen Index der Schlachtleistungsmerkmale 
+6. __Erster Zusatz__: Umsetzung eines Indexes für Schlachtleistungsmerkmale mit konkreten Daten aus der Routinezuchtwertschätzung von VMS
+7. __Zweiter Zusatz__: Umsetzungen des Ansatzes von Berry et al und von Wachstumsmodellen
+
+
+## Bewertung
+Dieser Abschnitt beschreibt die Bewertung der eingereichten Masterarbeit. 
+
+* Für das Bestehen der Arbeit müssen die Punkte 1 - 3 zwingend voranden sein. 
+* Sofern die Punkte 1 - 5 gut umgesetzt sind, wird die Arbeit als sehr gut bewertet werden. 
+* Die Zusatzpunkte 6 und 7 können je nach Kapazitäten realisiert werden und fliessen, falls vorhanden positiv in die Bewertung ein.
+
+
+---
+
+_Letzte Änderung_
+
+_`r paste(Sys.time(),paste0("(", Sys.info()[["user"]],")" ))`_
 
 
 

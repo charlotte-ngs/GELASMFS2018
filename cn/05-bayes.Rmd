@@ -12,14 +12,14 @@ r6objTableAbbrev$add_abbrev(psAbbrev = "MCMC", psMeaning = "Markov Chain Monte C
 
 
 ## Einführung
-In der Statistik gibt es zwei verschiedene Lehrmeinungen. StatistikerInnen, welche den Lehrmeinungen folgen werden als *Es sind dies 
+In der Statistik gibt es zwei verschiedene Lehrmeinungen. Diese unterscheiden sich vor allem in deren philosophischen Verständnis des Begriffs der __Wahrscheinlichkeit__. 
 
-* __Frequentisten__ oder als
-* __Bayesianer__ bezeichnet. 
+* Für die __Frequentisten__ ist die Wahrscheinlichkeit im wesentlichen ein Häufigkeitsmass, welche angibt welches Ereignis wie häufig oder mit welcher Frequenz auftritt.
+* __Bayesianer__ verwenden die Wahrscheinlichkeit um die Sicherheit oder die Unsicherheit für ein Ereignis zu quantifizieren. Dabei sind diese Einschätzungen von Sicherheit oder Unsicherheit auch immer subjektiv, was ein sehr starker Kritikpunkt der Bayes'schen Methoden darstellt. 
 
 Alle bisher \footnote{Hier ist nicht nur diese Vorlesung sondern auch die Züchtungslehre und die angewandet Zuchtwertschätzung gemeint} vorgestellten statistischen Konzepte, so zum Beispiel `Least Squares`, `Maximum Likelihood`, `REML` und `BLUP` stammen aus dem Lager der Frequentisten.
 
-Die Unterschiede zwischen Frequentisten und Bayesianern bestehen hauptsächlich in 
+Die für die praktischen Analysen relevanten Unterschiede zwischen Frequentisten und Bayesianern bestehen hauptsächlich in 
 
 - deren Verständnis von Wahrscheinlichkeiten
 - deren Unterteilung von Modell- und Datenkomponenten
@@ -52,7 +52,7 @@ y_i = \beta_0 + \beta_1 x_{i1} + \epsilon_i
 \label{eq:BayLinMod}
 \end{equation}
 
-wobei $y_i$ die $i$-te Beobachtung einer Zielgrösse ist, $\beta_0$ für den Achsenabschnitt steht, $x_1$ eine erklärende Variable ist und $\epsilon_i$ für den Restterm steht. Für den Restterm nehmen wir an, dass deren Varianz konstant gleich $\sigma^2$ ist.
+wobei $y_i$ die $i$-te Beobachtung einer Zielgrösse ist, $\beta_0$ für den Achsenabschnitt steht, $x_1$ eine erklärende Variable ist und $\epsilon_i$ für den Restterm steht. Für die Restterme nehmen wir an, dass deren Varianz konstant gleich $\sigma^2$ ist.
 
 
 ### Bekannte und Unbekannte
@@ -61,8 +61,8 @@ Unter der Annahme, dass wir für die Zielgrösse $y_i$ und die erklärende Varia
  und  als __bekannte__ Grössen
 ```{r BayesianUnKnowsTab, eval=FALSE, echo=FALSE}
 Was <- c("$y_i$", "$x_1$", "$\\beta_0$", "$\\beta_1$", "$\\sigma^2$")
-bekannt <- c("X", "X", "", "", "")
-unbekannt <- c("", "", "X", "X", "X")
+bekannt <- c("X", "X", "", "", "X")
+unbekannt <- c("", "", "X", "X", "")
 knitr::kable(data.frame(Was = Was,
                         bekannt = bekannt,
                         unbekannt = unbekannt, 
@@ -97,20 +97,20 @@ Für unser Beispiel des einfachen linearen Modells, definieren wir zuerst den Ve
 
 $$\beta = \left[\begin{array}{c} \beta_0  \\  \beta_1 \end{array} \right].$$
 
-Die Beobachtungen $y_i$ fassen wir ebenfalls zu einem Vektor $y$ zusammen. Für den Moment nehmen wir an, dass $\sigma^2$ bekannt sei. Eine Bayes'sche Parameterschätzung für $\beta$ basiert dann auf der a posteriori Verteilung $f(\beta | y, \sigma^2)$ der Unbekannten $\beta$ gegeben die Bekannten $y$ und $\sigma^2$. Diese a posteriori Verteilung lässt sich mit dem Satz von Bayes, wie folgt berechnen
+Die Beobachtungen $y_i$ fassen wir ebenfalls zu einem Vektor $y$ zusammen. Für unser aktuelles Beispiel nehmen wir an, dass $\sigma^2$ bekannt sei. Deshalb lassen wir die Restvarianz auch bei der folgenden Herleitung weg. Eine Bayes'sche Parameterschätzung für $\beta$ basiert dann auf der a posteriori Verteilung $f(\beta | y)$ der Unbekannten $\beta$ gegeben die Bekannte Grösse $y$. Diese a posteriori Verteilung lässt sich mit dem Satz von Bayes, wie folgt berechnen
 
 \begin{eqnarray}
-f(\beta | y, \sigma^2) & =       & \frac{f(\beta, \sigma^2, y)}{f(y, \sigma^2)} \nonumber \\
-                       & =       & \frac{f(y | \beta, \sigma^2)f(\beta)f(\sigma^2)}{f(y, \sigma^2)} \nonumber \\
-                       & \propto & f(y | \beta, \sigma^2)f(\beta)f(\sigma^2)
+f(\beta | y) & =       & \frac{f(\beta, y)}{f(y)} \nonumber \\
+             & =       & \frac{f(y | \beta)f(\beta)}{f(y)} \nonumber \\
+                       & \propto & f(y | \beta)f(\beta)
 \label{LinModAPostProb}
 \end{eqnarray}
 
-In Gleichung (\ref{LinModAPostProb}) konnten wir die a posteriori Verteilung $f(\beta | y, \sigma^2)$ als Produkt der a priori Verteilungen ($f(\beta)$ und $f(\sigma^2)$) der unbekannten Grössen $\beta$ und $\sigma^2$ und der Likelihood $f(y | \beta, \sigma^2)$ ausdrücken. Der Faktor $f(y, \sigma^2)^{-1}$ (Term im Nenner) entspricht der sogenannten Normalisierungskonstanten und ist nicht weiter von Interesse. Somit wird die a posteriori Verteilung oft als Proporzionalitätsbeziehung angegeben. 
+In Gleichung (\ref{LinModAPostProb}) konnten wir die a posteriori Verteilung $f(\beta | y)$ als Produkt der a priori Verteilung ($f(\beta)$) der unbekannten Grösse $\beta$ und der Likelihood $f(y | \beta)$ ausdrücken. Der Faktor $f(y)^{-1}$ (Term im Nenner) entspricht der sogenannten Normalisierungskonstanten und ist nicht weiter von Interesse. Somit wird die a posteriori Verteilung oft als Proporzionalitätsbeziehung angegeben. 
 
-Die a posteriori Verteilung $f(\beta | y, \sigma^2)$ ist in vielen Fällen nicht explizit darstellbar. Das war lange ein Problem, welches die Anwendung von Bayes'schen Analysen sehr einschränkte. Zwei Entwicklungen haben dieses Problem beseitigt.
+Die a posteriori Verteilung $f(\beta | y)$ ist in vielen Fällen nicht explizit darstellbar. Das war lange ein Problem, welches die Anwendung von Bayes'schen Analysen sehr einschränkte. Zwei Entwicklungen haben dieses Problem beseitigt.
 
-1. Im Paper (@Besa1974) zeigte Julian Besag, dass jede a posteriori Verteilung durch eine Serie von Zufallszahlen aus den voll-bedingten Verteilungen bestimmt ist. Für unser Beispiel lauten die voll-bedingten Verteilungen: Bedingte Verteilung von $\beta_0$ gegeben alle anderen Grössen: $f(\beta_0 | \beta_1, \sigma^2, y)$, bedingte Verteilung von $\beta_1$ gegeben alle anderen Grössen: $f(\beta_1 | \beta_0, \sigma^2, y)$.
+1. Im Paper (@Besa1974) zeigte Julian Besag, dass jede a posteriori Verteilung durch eine Serie von Zufallszahlen aus den voll-bedingten Verteilungen bestimmt ist. Für unser Beispiel lauten die voll-bedingten Verteilungen: Bedingte Verteilung von $\beta_0$ gegeben alle anderen Grössen: $f(\beta_0 | \beta_1, y)$, bedingte Verteilung von $\beta_1$ gegeben alle anderen Grössen: $f(\beta_1 | \beta_0, y)$.
 2. Die Entwicklung von effizienten Pseudo-Zufallszahlen-Generatoren auf dem Computer.
 
 
@@ -122,13 +122,13 @@ Die Umsetzung der beiden oben aufgelisteten Punkte führt zu einer Prozedur, wel
 3. Bestimmung der voll-bedingten Verteilungen
 
 ### A priori Verteilungen
-In unserem Bespiel handelt es sich dabei um $f(\beta)$ und $f(\sigma^2)$. In den meisten Fällen, wenn man das erste Mal eine bestimmte Art von Daten analysisern soll, empfielt es sich eine sogenannte uniformative a priori Verteilung zu wählen. Eine uninformative a priori Verteilung bedeutet einfach, dass deren Dichtewert überall gleich, also eine Konstante ist. Wenden wir zum Beispiel für die Unbekannte $\beta$  eine uninformative a priori Verteilung an, dann bedeutet das, dass wir $f(\beta) = c$. 
+In unserem Bespiel handelt es sich dabei um $f(\beta)$. In den meisten Fällen, wenn man das erste Mal eine bestimmte Art von Daten analysisern soll, empfielt es sich eine sogenannte uniformative a priori Verteilung zu wählen. Eine uninformative a priori Verteilung bedeutet einfach, dass deren Dichtewert überall gleich, also eine Konstante ist. Wenden wir zum Beispiel für die Unbekannte $\beta$  eine uninformative a priori Verteilung an, dann bedeutet das, dass wir $f(\beta) = c$. 
 
-Alternativ zu der uniformativen a priori Verteilung gibt es auch a priori Verteiungen für bestimmte unbekannte Grössen, welche als de-facto Standard aktzeptiert sind. Ein Bespiel dafür ist die a priori Verteilung der unbekannten Restvarianz, welche üblicherweise als Inverse-Chi-Quadrat Verteilung angenommen wird.   
+Alternativ zu der uniformativen a priori Verteilung gibt es auch a priori Verteiungen für bestimmte unbekannte Grössen, welche als de-facto Standard aktzeptiert sind. Ein Bespiel dafür wäre, wenn die Restvarianz unbekannt ist, würde man deren a priori Verteilung mit einer Inversen-Chi-Quadrat Verteilung modellieren.   
 
 
 ### Likelihood
-Die Likelihood ist wie bei den Frequentisten als begingte Verteilung ($f(y | \beta, \sigma^2)$) der Daten $y$ gegeben die Parameter ($\beta$ und $\sigma^2$). Falls keine Daten fehlen, dann ist die Bayes'sche Likelihood und die frequentistische Likelihood gleich.
+Die Likelihood ist wie bei den Frequentisten als begingte Verteilung ($f(y | \beta)$) der Daten $y$ gegeben die Parameter ($\beta$). Falls keine Daten fehlen, dann ist die Bayes'sche Likelihood und die frequentistische Likelihood gleich.
 
 
 ### Vollbedingte Verteilungen
@@ -152,8 +152,8 @@ knitr::kable(dfFullCond)
 \hline
 unbekannte Grösse  &  unbekannte Grösse                    &  resultierende Verteilung \\
 \hline
-$\beta_0$          &  $f(\beta_0 | \beta_1, \sigma^2, y)$  &  $\mathcal{N}\left(\hat{\beta}_0, var(\hat{\beta}_0)\right)$ \\
-$\beta_1$          &  $f(\beta_1 | \beta_0, \sigma^2, y)$  &  $\mathcal{N}\left(\hat{\beta}_1, var(\hat{\beta}_1)\right)$ \\
+$\beta_0$          &  $f(\beta_0 | \beta_1, y)$  &  $\mathcal{N}\left(\hat{\beta}_0, var(\hat{\beta}_0)\right)$ \\
+$\beta_1$          &  $f(\beta_1 | \beta_0, y)$  &  $\mathcal{N}\left(\hat{\beta}_1, var(\hat{\beta}_1)\right)$ \\
 \hline
 \end{tabular}
 \end{center}

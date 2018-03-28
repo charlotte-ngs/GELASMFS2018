@@ -1,0 +1,84 @@
+---
+title: "Gibbs Sampler"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+## Disclaimer
+This document shows an example of the Gibbs sampler for a simple linear model.
+
+## Generate data
+```{r}
+n = 20 # number of observations
+k = 1 # number of covariates
+x = matrix(sample(c(0, 1, 2), n * k, replace = T), nrow = n, ncol = k)
+X = cbind(1, x)
+head(X)
+
+betaTrue = c(1, 2)
+y = X %*% betaTrue + rnorm(n, 0, 1)
+head(y)
+```
+
+## Computations
+* From chapter 2.3.2, we know that given the linear model 
+
+$$y = X\beta + \epsilon$$ 
+assuming $\epsilon_i \sim \mathcal{N}(0,\sigma^2)$, we know that 
+
+$$\hat{\beta}_{LS} \sim  \mathcal{N}(\beta, \sigma^2(X^TX)^{-1})$$
+ wobei
+ $$\hat{\beta}_{LS} = (X^TX)^{-1}X^Ty$$
+ 
+* Assume, $\beta_0$ as a general mean and $\beta_1$ as a fixed effect, we get
+
+$$y = 1\beta_0 + x\beta_1 + \epsilon $$
+
+* Estimate $\beta_0$ by setting $w_0 = y - x^T\beta_1$
+
+$$ w_0 = 1\beta_0 + \epsilon$$
+We can treat the above formula as a linear model with $w_0$ as response variable and $\beta_0$ as the only fixed effect. Assuming for the moment that we know $\beta_1$, the least squares estimate for $\beta_0$ is
+
+$$\hat{\beta}_{0,LS} = (1^T1)^{-1}1^Tw_0$$
+Using our knowledge about the distribution of least-squares estimates, we can state the full-conditional distribution of $\beta_0$ given all other quantities as 
+
+$$\hat{\beta}_{0, Bayes} \sim \mathcal{N}(\beta_{0, LS}, \sigma^2 (1^T1)^{-1})$$
+* Estimate $\beta_1$ by setting $w_1 = y - 1^T\beta_0$
+
+$$w_1 = x\beta_1 + \epsilon$$
+* Estimate $\beta_1$ by setting $w_1 = y - 1\beta_0$
+
+$$w_1 = x\beta_1 + \epsilon$$
+Analogously to $\beta_0$, we get
+$$\hat{\beta}_{1,LS} = (x^Tx)^{-1}x^Tw_1$$
+And the full-conditional distribution to sample from
+
+$$\hat{\beta}_{1,Bayes} \sim \mathcal{N}(\beta_{1,LS}, \sigma^2(x^Tx)^{-1})$$
+
+## Run the analysis
+```{r BayesExample, echo=TRUE, eval=TRUE}
+beta = c(0, 0); meanBeta = c(0, 0)
+niter = 10000 # number of samples
+for (iter in 1:niter) {# loop for Gibbs sampler
+  # sampling intercept
+  w = y - X[, 2] * beta[2]; x = X[, 1]
+  xpxi = 1/(t(x) %*% x); betaHat = t(x) %*% w * xpxi
+  # using residual var = 1
+  beta[1] = rnorm(1, betaHat, sqrt(xpxi))
+  # sampling slope
+  w = y - X[, 1] * beta[1]; x = X[, 2]
+  xpxi = 1/(t(x) %*% x)
+  betaHat = t(x) %*% w * xpxi
+  # using residual var = 1
+  beta[2] = rnorm(1, betaHat, sqrt(xpxi))
+  meanBeta = meanBeta + beta
+}
+# ### Ausgabe der Ergebnisse
+cat(sprintf("Achsenabschnitt = %6.3f \n", meanBeta[1]/iter))
+cat(sprintf("Steigung = %6.3f \n", meanBeta[2]/iter))
+```
+
+
+## Code improvement
