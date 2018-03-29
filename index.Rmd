@@ -12,10 +12,36 @@ output:
     highlight: tango
 ---
 
+```{r CourseSetup, echo=FALSE, results='hide'}
+# BaseUrl of course website
+sBaseUrl <- "https://charlotte-ngs.github.io/GELASMFS2018/"
+# define course start date
+dCourseStart <- as.Date("2018/02/19")
+# set number of weeks in semester
+nNrSemesterWeeks <- 15
+# define columns for weaks and dates which remain constant
+Woche <- 1:nNrSemesterWeeks
+Datum <- format(seq(dCourseStart, by = "week", length.out = nNrSemesterWeeks), "%d.%m")
+# empty vector for topics
+vec_topics <- vector(mode = "character", length = nNrSemesterWeeks)
+# set subject for special dates
+# holiday
+sEasterMon <- format(as.Date("2018/04/02"), "%d.%m")
+vec_topics[which(Datum == sEasterMon)] <- "__Ostermontag__"
+sPentMon <- format(as.Date("2018/05/21"), "%d.%m")
+vec_topics[which(Datum == sPentMon)] <- "__Pfingstmontag__"
+# exams
+vec_topics[which(Datum == format(as.Date("2018/05/28"), "%d.%m"))] <- "__Prüfungen__"
+```
+
 __Willkommen__ auf der Webseite von
 
 - [751-7602-00L	Angewandte statistische Methoden in den Nutztierwissenschaften](http://www.vvz.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?lerneinheitId=120670&semkez=2018S&ansicht=KATALOGDATEN&lang=de)
 - [751-6212-00L Angewandte Zuchtwertschätzung für Nutztiere](http://www.vvz.ethz.ch/Vorlesungsverzeichnis/lerneinheit.view?lerneinheitId=120134&semkez=2018S&ansicht=KATALOGDATEN&lang=de)
+
+
+## Themen für Masterarbeiten
+Themen für Masterarbeiten von Qualitas AG in Zusammenarbeit mit der ETHZ sind [hier](`r paste0(sBaseUrl, "misc/ThemenMasterArbeiten_FS2018.html")`)  erhältlich.
 
 ## Beschreibung
 Die Kursbeschreibung ist dem Vorlesungsverzeichnis entnommen.
@@ -46,27 +72,6 @@ Der Benutzername entspricht dem Teil Ihrer Email-Adresse vor dem `@`. Das Passwo
 ## Fragen
 Fragen können jederzeit während der Vorlesung und während der Übungsstunde oder via Email an (peter.vonrohr `at` gmail.com) gestellt werden.
 
-```{r CourseSetup, echo=FALSE, results='hide'}
-# BaseUrl of course website
-sBaseUrl <- "https://charlotte-ngs.github.io/GELASMFS2018/"
-# define course start date
-dCourseStart <- as.Date("2018/02/19")
-# set number of weeks in semester
-nNrSemesterWeeks <- 15
-# define columns for weaks and dates which remain constant
-Woche <- 1:nNrSemesterWeeks
-Datum <- format(seq(dCourseStart, by = "week", length.out = nNrSemesterWeeks), "%d.%m")
-# empty vector for topics
-vec_topics <- vector(mode = "character", length = nNrSemesterWeeks)
-# set subject for special dates
-# holiday
-sEasterMon <- format(as.Date("2018/04/02"), "%d.%m")
-vec_topics[which(Datum == sEasterMon)] <- "__Ostermontag__"
-sPentMon <- format(as.Date("2018/05/21"), "%d.%m")
-vec_topics[which(Datum == sPentMon)] <- "__Pfingstmontag__"
-# exams
-vec_topics[which(Datum == format(as.Date("2018/05/28"), "%d.%m"))] <- "__Prüfungen__"
-```
 
 ## Vorlesungsprogramm
 ```{r Schedule, echo=FALSE, results='asis'}
