@@ -41,7 +41,7 @@ __Willkommen__ auf der Webseite von
 
 
 ## Themen für Masterarbeiten
-Themen für Masterarbeiten von Qualitas AG in Zusammenarbeit mit der ETHZ sind [hier](`r paste0(sBaseUrl, "misc/ThemenMasterArbeiten_FS2018.html")`)  erhältlich.
+Themen für Masterarbeiten von Qualitas AG in Zusammenarbeit mit der ETHZ sind [hier](`r paste0(sBaseUrl, "misc/ThemenMasterarbeiten/ThemenMasterArbeiten_FS2018.html")`)  erhältlich.
 
 ## Beschreibung
 Die Kursbeschreibung ist dem Vorlesungsverzeichnis entnommen.
@@ -172,11 +172,13 @@ vec_topics_addmat <- vec_topics
 vec_topics_addmat[which(Datum == format(as.Date("2018/03/05"), "%d.%m"))] <- paste0("[Datensatz Übung 1](", sBaseUrl, "ex/w2/zl_w7_u5_DataLmm.csv", ")") 
 vec_topics_addmat[which(Datum == format(as.Date("2018/03/19"), "%d.%m"))] <- paste0("[Genotypen Übung 3](", sBaseUrl, "ex/w04/asmas_w04_u03_genotypes.txt", ")") 
 vec_topics_addmat[which(Datum == format(as.Date("2018/03/26"), "%d.%m"))] <- paste0("[LASSO Übung 4](", sBaseUrl, "ex/w05/asmas_w05_u04_lasso.txt", ")") 
+vec_topics_addmat[which(Datum == format(as.Date("2018/04/09"), "%d.%m"))] <- paste0("[SVT Flyer](", sBaseUrl, "misc/SVT/SVT-Flyer-2017-web.pdf", ")") 
 # dataframe and table with additional material
 df_addmat <- data.frame(Woche = Woche, Datum = Datum, Thema = vec_topics_addmat, stringsAsFactors = FALSE)
 knitr::kable(df_addmat)
 ```
 
 
-## Letzte Änderung
-_`r paste(Sys.time(),paste0("(", Sys.info()[["user"]],")" ))`_
+```{r, echo=FALSE, results='asis'}
+cat(rmddochelper::get_latest_change(ps_msg = "Letzte Änderungen"), "\n")
+```
