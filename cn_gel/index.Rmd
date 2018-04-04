@@ -1,0 +1,24 @@
+---
+title: "Angewandte Zuchtwertschätzung"
+author: "Peter von Rohr"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+bibliography: ["GEL.bib"]
+biblio-style: apalike
+link-citations: yes
+description: "Unterlagen zur Vorlesung Angewandte Zuchtwertschätzung."
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::knit_hooks$set(conv.odg = rmddochelper::odg.graphics.conv.hook)
+r6objTableAbbrev <- rmddochelper::R6ClassTableAbbrev$new()
+```
+
+# Vorwort {-}
+Dieses Skript basiert auf den Unterlagen von [@Goetz2014]. Analog dazu wollen wir das Thema der angewandten Zuchtwertschätzung in einen breiteren Kontext stellen. 
+
+## Lernziele {-}
+

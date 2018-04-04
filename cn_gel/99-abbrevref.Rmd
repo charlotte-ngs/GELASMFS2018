@@ -1,0 +1,34 @@
+<!-- ------------------------------------------------------------------- --
+  -- END of document:  Below this must not be anything, except the stuff --
+  -- concerning the table of abbreviations                               --> 
+  
+
+```{r WriteTableOfAbbreviations, echo=FALSE, results='hide'}
+if (!r6objTableAbbrev$is_empty_abbr())
+  r6objTableAbbrev$writeToTsvFile()
+```
+
+```{r AbrTableToDocument, echo=FALSE, results='asis'}
+r6objTableAbbrev$include_abbr_table(psAbbrTitle = "# Abkürzungen {-}")
+```
+
+
+```{r Bibliography, echo=FALSE, results='hide'}
+bref <- c(bibentry(
+    bibtype = "Unpublished",
+    title = "Quantitative Genetik und Zuchtplanung",
+    author = as.person("K-U. Götz [aut]"),
+    year = "2014",
+    note = "Bayerische Landesanstalt für Landwirtschaft, Institut für Tierzucht",
+    key = "Goetz2014"
+  )
+)
+
+### # Fixed assignmen of bib file
+sBibFile <- "GEL.bib"
+if(!file.exists(sBibFile))
+  cat(paste(toBibtex(bref), collapse = "\n"), "\n", file = sBibFile)
+```
+
+
+`r if (knitr:::is_html_output()) '# References {-}'`
