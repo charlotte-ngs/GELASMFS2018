@@ -16,12 +16,37 @@ r6objTableAbbrev$include_abbr_table(psAbbrTitle = "# Abkürzungen {-}")
 ```{r Bibliography, echo=FALSE, results='hide'}
 bref <- c(bibentry(
     bibtype = "Unpublished",
-    title = "Quantitative Genetik und Zuchtplanung",
-    author = as.person("K-U. Götz [aut]"),
-    year = "2014",
-    note = "Bayerische Landesanstalt für Landwirtschaft, Institut für Tierzucht",
-    key = "Goetz2014"
+    title   = "Quantitative Genetik und Zuchtplanung",
+    author  = as.person("K-U. Götz [aut]"),
+    year    = "2014",
+    note    = "Bayerische Landesanstalt für Landwirtschaft, Institut für Tierzucht",
+    key     = "Goetz2014"
+  ),
+  bibentry(
+    bibtype   = "Book",
+    title     = "Tierzucht — Grundwissen Bachelor",
+    author    = c(as.person("A. Willam"), as.person("H. Simianer")),
+    year      = "2011",
+    publisher = "Ulmer UTB 3526",
+    key       = "WS2011"
+  ),
+  bibentry(
+    bibtype = "Book",
+    title = "Introduction To Quantitative Genetics",
+    author = c(as.person("D.F. Falconer"), as.person("T.F.C. Mackay")),
+    year = "1996",
+    publisher = "Addison Wesley Longman",
+    key = "FM1996"
+  ),
+  bibentry(
+    bibtype = "Book",
+    title = "Linear Models for the Prediction of Animal Breeding Values",
+    author = c(as.person("R Mrode")),
+    year = "2005",
+    publisher = "CABI Publishing",
+    key = "Mrode2005"
   )
+  
 )
 
 ### # Fixed assignmen of bib file

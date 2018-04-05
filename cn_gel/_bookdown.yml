@@ -1,4 +1,5 @@
-book_filename: "bookdown-asmas"
+book_filename: "cn-gel"
+clean: ["GEL.bib"]
 language:
   ui:
     chapter_name: "Kapitel "

@@ -18,7 +18,16 @@ r6objTableAbbrev <- rmddochelper::R6ClassTableAbbrev$new()
 ```
 
 # Vorwort {-}
-Dieses Skript basiert auf den Unterlagen von [@Goetz2014]. Analog dazu wollen wir das Thema der angewandten Zuchtwertschätzung in einen breiteren Kontext stellen. 
+Dieses Skript basiert auf den Unterlagen von [@Goetz2014]. Wir wollen das Thema der angewandten Zuchtwertschätzung nicht alleine für sich betrachten, sondern die ganze Thematik soll in einen breiteren Kontext gestellt werden. Das hier präsentierte Material ist der Inhalt einer halb-semestrigen Vorlesung mit dem gleichnamigen Titel. Die Vorlesung ist auf zwei Wochenstunden angesetzt, wobei eine Stunde für praktische Übungen und eine Stunde für die Vorlesung eingesetzt wird.
+
+Als weiterführendes Material seien hier die folgenden Bücher empfohlen
+
+* Willam und Simianer: Tierzucht - Grundwissen Bachelor (Ulmer, UTB 3526 2011) [@WS2011]. Dieses Buch gibt eine hervorragende Einführung in die Gebiete der Evolution, der Rassenkunden, der Bedeutung der Tierproduktion und der Zuchtprogramme.
+* Falconer und Mackay: Introduction to Quantitative Genetics (Longman) [@FM1996]. Das ist das de-facto Standardwerk auf dem Gebiet der quantitativen Genetik.
+* Mrode: Linear Models for the Prediction of Animal Breeding Values (CABI Publishing, 2005) [@Mrode2005]. Dieses Buch bietet einen detaillierten Einblick in verschiedene Aspekte der Zuchtwertschätzung
+
+Für diese Vorlesung empfehle ich, die Übungen mit dem Softwaresystem R und der integrierten Entwicklungsumgeben RStudio zu bearbeiten. Damit für die Studierenden kein technischer Aufwand mit der Installation von Programmen entsteht wird eine Übungsplattform mit einer vorgegebenen Installation eines RStudio-Servers zur Verfügung gestellt. 
+
 
 ## Lernziele {-}
 
