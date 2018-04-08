@@ -1,0 +1,178 @@
+# Zuchtprogramme
+## Einführung
+Wie schon im vorangegangenen Kapitel erwähnt, ist die angewandte oder die praktische Zuchtwertschätzung ein integraler Bestandteil von Zuchtprogrammen. Die nachfolgende Abbildung (\@ref(fig:BestandteileZuchtprg)) zeigt die Zusammenhänge zwischen den Bestandteilen eines Zuchtprogrammes graphisch auf. Bei der Planung und der Umsetzung von Zuchtprogrammen stehen die folgenden beiden Fragestellungen im Zentrum. 
+
+1. Welche Ziele sollen mit dem Zuchtprogramm erreicht werden?
+2. Welche Massnahmen müssen ergriffen werden, um das Zuchtziel zu erreichen?
+
+In beiden Fragestellungen ist das Zuchtziel ein zentraler Punkt und somit muss bei der Erstellung eines Zuchtprogrammes unbedingt vorher ein Zuchtziel festgelegt werden. Zuchtziele können auf verschiedenen Ebenen festgelegt und auch verschieden formuliert werden. Als Beispiele sind _ökonomische_, _biologische_, _ethische_ oder _taktische_ Ziele denkbar. Ökonomisch ausgerichtete Zuchtziele streben einen möglichst grossen Züchtungsgewinn an. Biologische Ziele werden berücksichtigt, sobald Merkmale keinen Messbaren Marktwert haben. Dies wird häufig bei den so genannten Sekundärmerkmalen ^[Gesundheitsmerkmale, Exterieur und Nutzungsdauer sind typische Sekundärmerkmale] in der Rinderzucht angewendet. Ethische Ziele finden erst seit relativ kurzer Zeit eine gewisse Beachtung. Darunter fallen auch die sehr sinnvollen Bestrebungen zur Verhinderung von Qualzuchten. Einzelne Züchter können taktische Ziele in Erwägung ziehen um im Geschäft bleiben zu können, obwohl dies ökonomisch vielleicht nicht mehr optimal ist.
+
+
+
+Grundsätzlich sind zwei Arten von Zuchtprogrammen zu unterscheiden
+
+* Zuchtprogramme, welche auf die Erzielung von __Zuchtfortschritt__ ausgerichtet sind
+* Zuchtprogramme, bei welchen der __Verkauf__ von Zuchtprodukten und Dienstleistungen im Zentrum stehen.
+
+Bei einer oberflächliche Betrachtung der verschiedenen Zuchtprogramme, könnte man meinen, dass alle Zuchtprogramme der Erzielung von Zuchtfortrschritt dienen sollten. Trotzdem ist es wichtig diese Unterscheidung zu machen. Die erste Kategorie ist typisch für Länder mit knappen Nahrungsmittel für die Bevölkerung und auch knappem Futterangebot für die Tiere ^[Diese Bedingungen herrschten auch in Europa im frühen 20. Jahrhunderts.]. In diesen Ländern existieren keine züchterischen Infrastruktur und der Fokus der Zuchtarbeit liegt ganz klar auf der Steigerung der Produktion, welche aufgrund der knappen Ressourcen nur über die Realisierung von Zuchtfortschritt möglich ist. Diese erste Art von Zuchtprogrammen ist auch in Ländern mit grossen Betriebsstrukturen verbreitet. Die grossen Produktionsbetriebe können autonome Zuchtprogramme betreiben und das ökonomische Ergebnis der Betriebe hängt direkt vom realisierten Zuchtfortschritt ab. Beispiele dafür sind grosse Fleischrinderbetriebe in Australien und Argentinien, die Legehennenzucht und die Schweinezucht, welche weltweit in wenigen globalen Betrieben konzentriert ist. Eine ähnliche Entwicklung beginnt sich in der Rinderzucht abzuzeichnen. Dort übernehmen grosse KB-Organisationen immer grössere Teile des Zuchtgeschäfts.
+
+```{r BestandteileZuchtprg, echo=FALSE, fig.cap="Bestandteile eines Zuchtprogrammes", odg.conv=TRUE, odg.path="odg", odg.graph.cache=TRUE}
+knitr::include_graphics(path = "png/BestandteileZuchtprg.pdf")
+```
+
+Die zweite Kategorie finden wir in der Rinder- und Schweinezucht in den entwickelten Ländern. In dieser Situation ist die Zucht in der Hand von wenigen Betrieben und von KB-Organisationen. Die wirtschaftlichen Interessen der beteiligten Betriebe bestimmen das Geschehen im Zuchtprogramm und stehen in der Prioritätenfolge über der Erzielung von Zuchtfortschritt. Zwar ist der genetische Fortschritt erwünscht, aber er dient nicht der Erreichung von Züchtungsgewinn, sondern er wird für die Maximierung des Gewinns der beteiligten Unternehmen oder Organisationen instrumentalisiert. Der Unterschied zwischen diesen beiden Arten von Zuchtprogrammen ist sehr subtil, aber es ist trotzdem sehr wichtig, dass wir uns dessen bewusst sind.
+
+## Bestandteile eines Zuchtprogrammes
+Abbildung \@ref(fig:BestandteileZuchtprg) zeigt die Bestandteile eines Zuchtprogrammes. Die Planung des Zuchtprogrammes mit der Festlegung des Zuchtziels ist in der blauen Wolke gezeigt. Die Leistungsprüfung, die Zuchtwertschätzung und die Ermittlung des Selektionserfolgs bilden die Informationsebene (grün). In rot sind die Bestandteile Reproduktionstechnologie und Selektion und Anpaarung als Teile der Umsetzung dargestellt. Die einzelnen Bestandteile werden jetzt noch etwas detaillierter dargestellt.
+
+### Leistungsprüfungen
+Seriöse Zuchtarbeit basiert immer auf Daten. Diese werden entweder direkt zur Selektion verwendet, oder sie dienen als Informationsquellen für die Zuchtwertschätzung. Die Qualität der Leistungsprüfungen bestimmt die Genauigkeit der aus den erhobenen Daten abgeleiteten Parametern, wie Erblichkeit oder geschätzte Zuchtwerte. Somit müssten in einem Zuchtprogramm für jedes Tier möglichst viele Merkmale gemessen werden. Das führt aber zu sehr hohen Kosten für die Leistungsprüfung. Also gibt es bei der Planung von Leistungsprüfungen ein Optimierungspotential zwischen der Menge an verfügbaren Daten und den entstehenden Kosten.
+
+Existierende Leistungsprüfungen wurde oft nicht im Hinblick auf die Verwendung im Zuchtprogramm eingeführt. Hier ein paar Beispiele. 
+
+* Die Milchleistungsprüfung wurde ursprünglich als Produktionskontrolle für die Abnehmer der Milch zur Sicherstellung der Qualität eingeführt. Für die Produzenten dienten die Ergebnisse aus dieser Kontrolle auch als Managementwerkzeug.
+* Stationsprüfungen bei den Schweinen ^[Im Ausland werden solche Prüfungen auch für Ziegen, Schafe und Fleischrinder durchgeführt.] dienten dazu die gemessenen Leistungsmerkmale besser vergleichbar zu machen. Diese Art der Leistungsprüfung wurde eingeführt vor der BLUP-Zuchtwertschätzung. Die vorher verwendeten Statistischen Zuchtwertschätzverfahren konnten die verschiedenen Umweltbedingungen nicht optimal korrigieren. 
+* Die Eigenleistung eines Tieres war und ist oft die wichtigste Informationsquelle für die Beurteilung des genetischen Potentials eines Tieres.
+* Vor allem in der Milchrinderzucht, wo die wichtigen Merkmale nur geschlechtsgebunden exprimiert werden, hatten bis vor der Einführung der genomischen Selektion eine sehr grosse Bedeutung.
+
+Die Leistungsprüfungen bestimmen zu welchem Zeitpunkt und für welche Tiere, welche Daten zur Verfügung stehen. Das Generationenintervall bestimmt unter anderem, ob ein Merkmal als Eigenleistung bei jungen Tieren gemessen werden kann oder ob gewisse Merkmalswerte erst nach vielen Jahren als Beobachtungen bei den Nachkommen erhoben werden können.
+
+#### Klassierung
+Beim Versuch die Leistungsprüfungen zu klassieren, lassen die sich einerseits nach dem _Prüfungsort_ in __Stations__- oder __Feldprüfungen__ einteilen. Bei Stationsprüfungen können die Prüfbedingungen einfacher kontrolliert und standardisiert werden. Auch können auf einer Prüfstation eine grössere Anzahl von Merkmale, welche aufwändiger zu erheben sind, bei den Prüftieren gemessen werden. Auch sind den Prüfstationen oft Labors angegliedert, welche auch die Erhebung von neuen Merkmalen erforschen. Die Stationsprüfungen können aber kostenintensiv sein und gelegentlich wird die Übertragbarkeit der Resultate in die Praxis in Frage gestellt. 
+
+Feldprüfungen sind preiswerter und finden unter Praxisbedingungen statt. Mit der Einführung des BLUP-Tiermodells für die Zuchtwertschätzung können die unterschiedlichen Umweltbedingungen korrigiert werden und die Resultate werden so untereinander vergleichbar gemacht. Die Feldprüfung ist aber anfälliger gegenüber von Sonderbehandlung von einzelnen Tieren. 
+
+In der Praxis werden sehr oft die Resultate von Stations- und Feldprüfungen kombiniert ausgewertet und so werden die verfügbaren Daten optimal genutzt. In periodischen Abständen werden auch mit Mischformen zwischen den beiden Prüfarten experimentiert. Beispiele dafür sind die so genannten Testherden in der Rinderzucht. Ende des 20. Jahrhunderts wurde in Deutschland mit der so genannten MOET-Herde ^[MOET steht für Multiple Ovulation und Embryo Transfer] in Osnabrück eine berühmte Testherde aufgebaut. In der Schweiz können die kürzlich eingeführten Zuchtprogrammoptionen bei Braunvieh Schweiz (Brunanet-Data) und Swissherdbook als erneuter Versuch mit Testherden betrachtet werden.
+
+Ein weiteres Klassierungskriterium der Leistungsprüfungen ist der _Verwandtschaftsgrad_ zwischen _Proband_ und _Informand_. Die folgenden Unterscheidungen sind denkbar
+
+* __Eigenleitsungsprüfungen__: Proband und Informant sind das gleiche Tier.
+* __Geschwisterprüfung__: Proband und die Tiere, welche Information liefern sind Halb- oder Vollgeschwister
+* __Nachkommenprüfung__: Proband ist ein Elternteil (meist der Vater) der Informanten
+
+#### Merkmale
+Leistungsprüfungen in einem Zuchtprogramm sollten alle wichtigen Merkmale umfassen. Dabei gilt zu beachten, dass die Merkmale die folgenden Anforderungen erfüllen
+
+* erfassbar mit grosser Sicherheit
+* wirtschaftlich bedeutsam
+* genügend grosse _genetische Varianz_ und auch eine ausreichende Erblichkeit aufweisen
+* Messverfahren müssen eine hohe Wiederholbarkeit aufweisen
+* Messverfahren sollten unverzerrte Ergebnisse liefern, unabhängig davon auf welchem Betrieb, in welcher Region und in welcher Jahreszeit die Erhebung stattfindet.
+* Gemessene Merkmale sollten möglichst engen Bezug zur physiologischen Basis der Merkmalsausprägung haben
+* Merkmale sollten, wann immer möglich _gemessen_ und nicht _bewertet_ sein.
+
+Bei gewissen Merkmalen ist die Erhebung zu teuer und deshalb wird auf ein so genanntes __Hilfsmerkmal__ ausgewichen. Das Hilfsmerkmal ist einfacher und billiger zu messen. Zwischen dem eigentlichen Merkmal und dem Hilfsmerkmal muss eine sehr enge Beziehung bestehen. Ein Beispiel ist das Hilfsmerkmal _Rückenspeckdicke_ beim Schwein, welches mit Ultraschall beim lebenden Tier erfasst werden kann und ein Mass für den Anteil an wertvollen Fleischstücken darstellt. In der Milchviehzucht wird die Zellzahl als Hilfsmerkmal für Mastitis verwendet. Bei der Verwendung von Hilfsmerkmalen muss immer gut beachtet werden was bei einer Änderung des Hilfsmerkmals mittels Selektion bei eigentlichen Merkmal passiert. Denkbar ist, dass sich die Beziehung zwischen dem eigentlichen Merkmal und dem Hilfsmerkmal im Laufe der Zeit ändert. Die Merkmalsbeziehung muss periodisch immer wieder überprüft werden.
+
+
+### Zuchtwertschätzung
+Die überwiegende Mehrheit der Zuchtprogramme führt Zuchtwertschätzungen durch. In der Schweiz gibt es dafür sogar eine gesetzliche Grundlage (siehe dazu Abschnitt \@ref(gesetzliche-grundlagen)). Der primäre Zweck der Zuchtwertschätzung ist die Vorhersage des genetischen Potentials der Selektionskandidaten. Diese Schätzung soll alle bekannten systematischen Umwelteffekte ausschalten. Besonders bei Merkmalen mit niedriger Heritabilität ist eine züchterische Bearbeitung ohne Zuchtwertschätzung nicht sinnvoll machbar.
+
+Die Erhebung der Merkmale in den Leistungsprüfungen ist in der Regel viel teurer als die Zuchtwertschätzung. Diese ist im grossen Stil in einem routine-mässigen Betrieb erst mit der breiten Verfügbarkeit von billiger Rechenkapazität möglich geworden. Somit verlief zum Beispiel der grosse realisierte Zuchtfortschritt parallel mit der Entwicklung der Prozessorleistung in den Rechnern. 
+
+Die Häufigkeit und der Umfang der Zuchtwertschätzung ist von der Tierart abhängig. Beim Rind werden die Zuchtwerte in der Schweiz vier Mal pro Jahr geschätzt. Beim Schwein werden die Zuchtwerte wöchentlich geschätzt. Beim Schwein kommen wöchentlich neue Leistungen und neue Selektionskandidaten hinzu. Aufgrund der langen Laktationsdauer ist dies beim Rind nicht der Fall. Dabei gilt es zu beachten, dass häufige Zuchtwertschätzungen nicht mit dem gleichen Aufwand betrieben werden können, wie seltene Routineauswertungen.
+
+### Reproduktionsbiotechniken
+Die Einführung biotechnischer Verfahren in der Tierzucht war verantwortlich für den grossen Zuchtfortschritt in der zweiten Hälfte des 20. Jahrhunderts. Die künstliche Besamung beim Rind und beim Schwein haben die Grenzen der Vermehrungsraten der männlichen Tiere fast vollständig aufgehoben. Bei allen Tierarten, bei welchen die künstliche Besamung eingeführt wurde, konnte die Zuchtwertschätzung massiv verbessert werden. Der betriebsübergreifende Einsatz von Vätern schafft genetische Verknüpfungen zwischen den Betrieben. So können die genetischen und die umweltbedingten Effekte besser von einander getrennt werden.
+
+In Zukunft werden Reproduktionsbiotechniken bei weiblichen Tieren eine grössere Bedeutung erlangen. Embryotransfer zur Erhöhung der Anzahl Nachkommen pro Mutter hat sich bis jetzt erst in Ansätzen durchgesetzt. Durch die Verbreitung dieser Techniken kann die Selektionsintensität gesteigert und das Generationeninterval gesenkt werden. Beides wird sich positiv auf den Zuchtfortschritt auswirken.
+
+### Zuchtziele
+Zuchtziele begegnen uns in zwei verschiedenen Formen
+
+1. _Politische Zuchtziele_: Verbale und ausführliche Beschreibung der Eigenschaften, welche sich die Mitglieder der Zuchtorganisationen für ihre Tiere wünschen. Sie sind meist Teil von Organisationsbestimmungen und können unerreichbare Idealbilder mit oft unvereinbaren Merkmalskombinationen enthalten. Typisch für diese Ziele sind, dass sie wissenschaftlich nicht bewertbar sind und ihre Erreichung nicht überprüfbar ist. 
+2. _Wissenschaftliche Zuchtziele_: Mathematische Funktionen, welche die Richtung und das Ausmass der gewünschten Zuchterfolge vorgeben. Sie definieren nicht ein Endziel, sondern eine gewünschte Entwicklung der einzelnen Merkmale. Aus einem wissenschaftlichen Zuchtziel und den Selektionsschritten lässt sich der erwartete Zuchtfortschritt pro Jahr bzw. pro Generation ausrechnen. 
+
+In den Schweizer Zuchtorganisationen werden die politischen Zuchtziele auch oft anhand von phänotypischen Merkmalswerten festgelegt. Im Verlauf dieser Vorlesung sollte aber klar werden, weshalb diese Art der Zuchtzielformulieren ähnlich problematisch ist, wie die oben beschriebenen politischen Zuchtziele.
+
+
+## Unterschiede zwischen Tierarten
+Zuchtprogramme bei verschiedenen Tieren unterscheiden sich in ihrem Aufbau. Es lassen sich grundsätzlich zwei Strukturarten unterscheiden
+
+1. __monolithische__ Zuchtprogramme mit breiter Beteiligung von vielen Betrieben
+2. Zuchtprogramme mit __hierarchischer__ Struktur
+
+Die erste Art ist typisch für Rinder und Pferde. Die zweite Art finden wir bei Schweinen und Geflügel. Diese Unterschiede sind einerseits biologisch und auf der anderen Seite ökonomisch zu begründen. Bei Schweinen und Geflügel gibt es sehr viele Tiere in der Produktion und dem einzelnen Tier wird ein nur geringer monetärer Wert zugewiesen. In dieser Situation ist eine flächendeckende Leistungsprüfung aller Tiere finanziell nicht möglich. Da beide Tierarten eine hohe Vermehrungsrate aufweisen, kann die Leistungsprüfung und somit die Zucht auf wenige Betriebe konzentriert werden. Die kurzen Generationenintervalle und die vielen Nachkommen pro Elterntieren erlauben eine rasche Weitergabe des Zuchtfortschritts von der Zucht in die Produktion. Auch werden gezielt Rassen miteinander gekreuzt damit die als Heterosis bekannten Kreuzungseffekte optimal ausgenützt werden können. Abbildung \@ref(fig:HierarchischeZuchtstruktur) zeigt eine typische hierarchische Zuchtstruktur beim Schwein. 
+
+```{r HierarchischeZuchtstruktur,echo=FALSE, fig.cap="Hierarchische Zuchtstruktur beim Schwein", odg.conv=TRUE, odg.path="odg", odg.graph.cache=TRUE}
+knitr::include_graphics(path = "png/HierarchischeZuchtstruktur.pdf")
+```
+
+Beim Rind und beim Pferd finden wir eine genau umgekehrte Situation vor. Die einzelnen Tiere haben einen hohen monetären Wert. Somit lohnt sich die aufwändige Leistungsprüfung für alle Tiere. Die geringe Vermehrungsrate und das lange Generationenintervall ermöglichen es nur bei intensiver Nutzung von Reproduktionsbiotechniken eine Nukleuszucht erfolgreich zu betreiben. Zudem werden die Resultate der Leistungsprüfungen nicht ausschliesslich züchterisch sondern auch noch zu Managementzwecken genutzt. Aus diesen Gründen ist es normal, dass beim Milchrind mehr als die Hälfte der Betriebe Mitglieder einer Zuchtorganisation sind.
+
+
+## Erfolg eines Zuchtprogramms
+In Abbildung \@ref(fig:BestandteileZuchtprg) sind Bestandteile und Einflussfaktoren eines Zuchtprogramms dargestellt. Alle diese Faktoren sollten bei der Zuchtplanung beachtet werden. Der Zuchtfortschritt wird aber nur von vier Elementen bestimmt, welche in der folgenden Formel \@ref(eq:Zuchtfortschritt) gegeben sind.
+
+\begin{equation}
+  \Delta G\ =\ \frac{i\cdot r_{TI}\cdot\sigma_T}{L}=\frac{SD}{L}
+  (\#eq:Zuchtfortschritt)
+\end{equation}
+
+\begin{tabular}{lll}
+wobei  &  &  \\
+       & $i$         &  Selektionsintensität \\
+       & $r_{TI}$    &  Genauigkeit der Zuchtwertschätzung \\
+       & $\sigma_T$  &  additiv-genetische Standardabweichung \\
+       & $L$         &  Generationenintervall \\
+\end{tabular}
+
+Diese vier Faktoren können in der Zucht geändert werden um den Zuchtfortschritt pro Jahr zu erhöhen. Der Zähler des Bruchs in \@ref(eq:Zuchtfortschritt) wird als Selektionsdifferenz $SD$ bezeichnet.
+
+### Selektionsintensität
+Die Selektionsintensität $i$ misst die Überlegenheit der selektierten Tiere gegenüber dem Populationmittel. Die Selektionsintensität kann aus der Selektionsgrenze berechnet werden, wenn wir die Eigenschaften der Normalverteilung zu Hilfe nehmen. Die Tiere rechts der Selektionsgrenze werden als _Remonte_ bezeichnet. Nur diese Tiere sind Eltern der nächsten Generation. Der Mittelwert der Remontentiere entspricht der _Selektionsdifferent_ (SD). Nehmen wir an, dass die Selektionsgrenze eine phänotypische Standardabweichung über dem Populationsdurchschnitt $M$ liegt, bedeutet diese nach den Gesetzen der Normalverteilung, dass rund $16\%$ der Tiere remontiert werden. Die Selektionsdifferenz beträgt dann $1.53$, d.h. die selektierten Tiere haben im Mittel eine Leistung, die $1.53$ Standardabweichungen über dem Durchschnitt liegt. 
+
+Die Selektionsintensität $i$ entspricht der Selektionsdifferenz $SD$ ausgedrückt in phänotypischen Standardabweichungen. 
+
+\begin{equation}
+  i = \frac{SD}{s_p}
+  (\#eq:SelInt)
+\end{equation}
+
+Theoretisch kann die Selektionsintensität nur durch die Selektionsgrenze ermittelt werden. Es gilt nämlich
+
+\begin{equation}
+  i = \frac{z}{p}
+  (\#eq:SelIntSelGrenze)
+\end{equation}
+
+\begin{tabular}{lll}
+wobei  &  &  \\
+       &  $z$  &  Höhe der Normalverteilung an der Selektionsgrenze \\
+       &  $p$  &  Remontierungsanteil \\
+\end{tabular}
+
+### Genauigkeit der Zuchtwertschätzung
+Die Genauigkeit der Zuchtwertschätzung wird über die Korrelation des wahren Zuchtwertes zur Informationsquelle, welche zur Schätzung der Zuchtwerte verwendet wurden. Intuitiv ist aber schon klar, dass eine ungenaue Zuchtwertschätzung dazu führt, dass ungewollt Tiere selektiert werden, welche eigentlich links der Selektionsgrenze anzusiedeln sind. Je ungenauer die Zuchtwertschätzung, desto häufiger treten solche Fehler auf.
+
+
+### Additiv-genetische Varianz
+Der Zuchtfortschritt wird zwar auf der phänotypischen Skala gemessen, findet aber auf der genetischen Skala statt. Die additiv-genetische Varianz bestimmt, um wieviel sich bei einem bestimmten züchterischen Aufwand der Phänotyp verändert. Dies erklärt auch, weshalb bei gewissen Merkmalen nur wenig Zuchtfortschritt erzielt wird, obwohl mit hohem Aufwand die Zuchtwerte genau geschätzt werden
+
+
+### Generationsintervall
+Das Generationsintervall ist das mittlere Alter der Eltern bei der Geburt der Nachkommen. Das Generationsintervall lässt sich durch Planung und durch den Einsatz von Biotechniken beeinflussen. Der Verkürzung des Generationsintervall stehen viele Praktiker kritisch gegenüber, da sich die verkürzte Nutzungsdauer betriebswirtschaftlich oft nicht lohnt. Da ist es wichtig zwischen den Interessen der Zucht und der Produktion zu unterscheiden.
+
+
+## Gesetzliche Grundlagen {#gesetzliche-grundlagen}
+In der Schweiz sind die Zuchtorganisationen aufgrund der [Tierzuchtverordnung](https://www.admin.ch/opc/de/classified-compilation/20121964/201601010000/916.310.pdf) vom 31.10.2012 (Stand 1.1.2016) zu einer Zuchtwertschätzung verpflichtet, sofern diese eine staatliche Unterstützung beantragen wollen. Diese Verordnung ist gestützt auf eine Reihe von Artikeln aus dem Landwirtschaftsgesetzt und regelt aufgrund der allgemeinen Bestimmungen in Abschnitt 1, die folgenden Punkte
+
+a. die Anerkennung von Zuchtorganisationen und privaten Zuchtunternehmen;
+b. die Beitragsgewährung an die Tierzucht;
+c. die Beitragsgewährung zur Erhaltung der Schweizer Rassen;
+d. die Beitragsgewährung an Forschungsprojekte;
+e. das Inverkehrbringen von Zuchttieren sowie von deren Samen, unbefruchteten Eizellen und Embryonen;
+f. die Einfuhr von Zucht- und Nutztieren sowie von Samen von Stieren im Rahmen der Zollkontingente. 
+
+In Artikel 2 wird neben anderen Begriffen auch definiert, was unter einer __Zuchtwertschätzung__ verstanden wird. 
+
+> "c. Zuchtwertschätzung: ein nach den geltenden Regeln der Tierzucht wissenschaftlich
+anerkanntes statistisches Verfahren zur Schätzung des genetischen
+Wertes eines Tieres im Vergleich zu Tieren derselben Population;"
+>
+> -- Art. 2 916.310 Tierzuchtverordnung.
+
+Wie im Zitat aus der Tierzuchtverordnung ersichtlich ist, müssen die Zuchtwerte nach einem wissenschaftlich anerkanntem statistischen Verfahren geschätzt werden. 
+
+
+
+

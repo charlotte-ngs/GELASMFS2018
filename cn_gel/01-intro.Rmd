@@ -1,4 +1,20 @@
 # Einführung {#intro}
-Die Begriffe __Tierzucht__ oder Zucht im allgemeinen werden mit sehr vielen verschiedenen Bedeutungen assoziiert. Sehr oft wird in der Umgangssprache nicht zwischen _Tierzüchtern_ oder _Tierhaltern_ unterschieden. 
+## Begriffe
+Die Begriffe __Tierzucht__ oder Zucht im allgemeinen werden mit sehr vielen verschiedenen Bedeutungen assoziiert. Sehr oft wird in der Umgangssprache nicht zwischen _Tierzüchtern_ oder _Tierhaltern_ unterschieden. Aus Sicht der Wissenschaft ist ein/e TierzüchterIn ein/e TierhalterIn, welche Tiere gezielt anpaart, um in den folgenden Nachkommengenerationen bestimmte Ziele zu erreichen. Bekannt für ein solches Vorgehen sind vor allem Einzelzüchter im Bereich der Haustierzucht.
 
-Dieses Kapitel enthält die Einführung in die angewandte Zuchtwertschätzung. 
+## Hintergrund
+In der Zucht von landwirtschaftlichen Nutztieren verfolgen die Züchter auch individuelle Ziele. Aufgrund der speziellen Gegebenheiten vor allem in der Rinderzucht, welche sich durch tiefe Bestandeszahlen, lange Generationsintervalle und tiefe Anzahl von Nachkommen pro Elternpaarung auszeichnet, haben Züchter schnell erkannt, dass sie sich zu so genannten Zuchtorganisationen (ZO) zusammenschliessen müssen. Anfangs fielen den ZOs vor allem administrative Aufgaben im Bereich der Führung von Herdebüchern und in der Ausstellung von Zuchtbescheinigungen zu. Für die Mitglieder boten die ZOs auch Unterstützung bei den Vermarktung ihrer Tiere bei den Produzenten an (siehe Abbildung \@ref(fig:SchemaZuchtOrganisation)).
+
+In der Krisenzeit anfangs des 20. Jahrhunderts herrschte eine schlimme Nahrungsmittelknappheit und als eine Massnahme wurden staatliche Regelungen zur Leistungssteigerung bei den Nutztieren erlassen. Aufgrund der staatlichen Bestimmungen wurden Zuchtziele auf die konsequente Steigerung der Leistungen ausgerechnet. In der Rinderzucht bedeutete das, dass die Steigerung der Milchleistung pro Kuh absolute Priorität hatte. Bei den Schweinen wurde auf ein schnelles Wachstum und ein frühes Erreichen eines optimalen Schlachtkörpers gezüchtet. Die ZO bildeten regionale Strukturen in Form von Genossenschaften, welche halfen die ersten __Zuchtprogramme__ zur Bereitstellung von Vatertieren zu entwickeln.
+
+Im weiteren Verlauf dieser ersten Entwicklung von Zuchtprogrammen zur Steigerung der Leistung der Nutztiere wurde die künstliche Besamung, anfänglich zwar noch aus hygienischen Gründen, später aber dann auch sehr gewinnbringend aus Sicht der Zucht, eingeführt. Damit war der Einsatz der besten männlichen Tiere völlig entkoppelt von deren Standort. In der Folge führte das dann auch zu einer Veränderung der Rassenverteilung vor allem beim Rind und beim Schwein. Lokal angepasste Rassen wurden oft durch Rassen mit einem höheren Leistungsniveau verdrängt.
+
+```{r SchemaZuchtOrganisation, echo=FALSE, fig.cap='Schematische Darstellung einer Zuchtorganisation', odg.conv=TRUE, odg.path="odg", odg.graph.cache=TRUE}
+knitr::include_graphics(path = "png/SchemaZuchtOrganisation.pdf")
+```
+
+## Zusammenfassung
+Aus den bisher gemachten Ausführungen wird klar, dass wir im Kontext dieses Textes den Begriff des __Tierzüchters__/der __Tierzüchterin__ als ein Mitglied einer Zuchtorganisation verstehen, welches sich mit seiner Herde an einem Zuchtprogramm der ZO beteiligt. Somit ist klar, dass ein Milchproduzent kein Rinderzüchter ist, ein Schweinemäster kein Schweinezüchter ist und ein Legehennenhalter kein Geflügelzüchter ist. 
+
+In dieser Vorlesung beschäftigen wir uns mit der praktischen Zuchtwertschätzung, welche als ein wichtiger Bestandteil in den Zuchtprogrammen eingebettet ist. Das Ziel dabei ist die Verbesserung der Population mit der Ausrichtung, welche im Zuchtziel gegeben ist.
+

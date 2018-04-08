@@ -104,6 +104,8 @@ Die Folien zur Vorlesung, die Übungen und die Lösungen zu den Übungen können
 ```{r NotesTable, echo=FALSE, results='asis'}
 # url for course notes
 s_cn_url <- paste0(sBaseUrl, "cn/")
+s_cn_gel_url <- paste0(sBaseUrl, "cn-gel/")
+
 vec_topics_notes <- vec_topics
 # add links to the material
 vec_topics_notes[which(Datum == format(as.Date("2018/02/26"), "%d.%m"))] <- paste0("[Einführung](", s_cn_url, "01-intro.pdf", ")") 
@@ -111,6 +113,10 @@ vec_topics_notes[which(Datum == format(as.Date("2018/03/05"), "%d.%m"))] <- past
 vec_topics_notes[which(Datum == format(as.Date("2018/03/12"), "%d.%m"))] <- paste0("[GBLUP](", s_cn_url, "03-gblup.pdf", ")") 
 vec_topics_notes[which(Datum == format(as.Date("2018/03/19"), "%d.%m"))] <- paste0("[LASSO](", s_cn_url, "04-lasso.pdf", ")") 
 vec_topics_notes[which(Datum == format(as.Date("2018/03/26"), "%d.%m"))] <- paste0("[Bayes](", s_cn_url, "05-bayes.pdf", ")") 
+
+vec_topics_notes[which(Datum == format(as.Date("2018/04/09"), "%d.%m"))] <- paste0("[Einführung und Zuchtprogramme](", s_cn_gel_url, "01-intro_breedprog.pdf", ")") 
+
+
 
 # define dataframe for schedule table
 df_notes <- data.frame(Woche = Woche, Datum = Datum, Thema = vec_topics_notes, stringsAsFactors = FALSE)
