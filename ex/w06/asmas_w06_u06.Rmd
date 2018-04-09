@@ -1,11 +1,11 @@
 ---
-title: "ASMNW - Lösung 6"
+title: "ASMNW - Übung 6"
 author: "Peter von Rohr"
 date: "`r Sys.Date()`"
 output: 
   pdf_document:
     keep_tex: FALSE
-output_file: asmas_w06_l06.pdf
+output_file: asmas_w06_u06.pdf
 ---
 
 ```{r DocumentSetup, echo=FALSE, results='hide'}
@@ -32,21 +32,6 @@ y = Xb + e
 
 a. Welche Anforderung bezüglich des Ranges der Matrix $\mathbf{X}$ besteht, damit Least Squares verwendet werden kann? 
 b. Aus welchem Grund besteht diese Anforderung aus 2a?
-
-
-### Lösung
-
-__Antwort 1__:
-
-a. Least Squares kann nur verwendet werden, wenn $n > p$ gilt, d.h. die Anzahl der Beobachtungen grösser ist als die Anzahl zu schätzender Parameter. Da es aber immer häufiger Anwendungen gibt, bei denen das nicht der Fall ist, brauchen wir Alternativen zu Least Squares. 
-
-b. Es wurden drei Alternativen vorgestellt: (1) Subset-Selection, (2) Regularisierung und (3) Dimensionsreduktion
-
-
-__Antwort 2__: 
-
-a. Matrix $\mathbf{X}$ muss vollen Kolonnenrang haben, d.h. $n > p$ sein
-b. Nur so ist die Inverse $(\mathbf{X}^T\mathbf{X})^{-1}$ berechenbar
 
 
 ## Aufgabe 2: Kontrollfragen Bayes
@@ -84,26 +69,6 @@ __Kontrollfrage 2__:
 
 Unter der Annahme, dass bei der Zielgrösse und der erklärenden Variablen keine Daten fehlen, welcher Einteilung bei den Frequentisten entspricht dann die Bayes'sche Einteilung in bekannte und unbekannte Grössen?
 
-
-
-### Lösung
-
-__Antwort 1__:
-
-```{r BayesianUnKnowsTabSol, results='asis'}
-Was <- c("$y_i$", "$x_1$", "$\\beta_0$", "$\\beta_1$", "$\\sigma^2$")
-bekannt <- c("X", "X", "", "", "")
-unbekannt <- c("", "", "X", "X", "X")
-knitr::kable(data.frame(Was = Was,
-                        bekannt = bekannt,
-                        unbekannt = unbekannt, 
-                        row.names = NULL,
-                        stringsAsFactors = FALSE))
-```
-
-__Antwort 2__:
-
-Die Einteilung in bekannte und unbekannte Grössen entspricht unter der Annahme, dass keine Daten fehlen, der frequentistischen Einteilung in Daten und Parameter. Dabei entsprechen die Daten den bekannten Grössen und die Parameter den unbekannten Grössen.
 
 ## Aufgabe 3: Vergleich zwischen Bayes und Least Squares
 Gegeben ist das Modell 
@@ -221,26 +186,4 @@ dfEstResult <- data.frame(Parameter = c("Achsenabschnitt", "Koeffizient"),
                           LeastSquares = c("","") )
 knitr::kable(dfEstResult)
 ```
-
-
-
-### Lösung
-Zur Schätzung der unbekannten Parameter mit Least Squares verwenden wir die Funktion `lm()`.
-
-```{r LeastSquaresSol, echo=TRUE, results='markup'}
-lmFitSimpleReg <- lm(dfDataRead$y ~ dfDataRead$x, data = dfDataRead)
-summary(lmFitSimpleReg)
-```
-
-Die Tabelle mit allen Lösungen sieht wie folgt aus. 
-
-```{r TableResultSol, echo=FALSE, results='markup'}
-dfEstResult <- data.frame(Parameter = c("Achsenabschnitt", "Koeffizient"), 
-                          Wahr = betaTrue, 
-                          Bayes = betaBayesRound2D,
-                          LeastSquares = round(coefficients(lmFitSimpleReg), digits = 2) )
-knitr::kable(dfEstResult)
-```
-
-Die gerundeten Resultate der Parameterschätzungen unterscheiden sich nicht zwischen den beiden Methoden `Bayes` und `Least Squares`. 
 
