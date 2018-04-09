@@ -150,6 +150,7 @@ vec_topics_ex[which(Datum == format(as.Date("2018/03/05"), "%d.%m"))] <- paste0(
 vec_topics_ex[which(Datum == format(as.Date("2018/03/12"), "%d.%m"))] <- paste0("[Deregression](", s_ex_url, "w03/asmas_w03_u02.pdf", ")") 
 vec_topics_ex[which(Datum == format(as.Date("2018/03/19"), "%d.%m"))] <- paste0("[Regression und GBLUP](", s_ex_url, "w04/asmas_w04_u03.pdf", ")") 
 vec_topics_ex[which(Datum == format(as.Date("2018/03/26"), "%d.%m"))] <- paste0("[Regression und LASSO](", s_ex_url, "w05/asmas_w05_u04.pdf", ")") 
+vec_topics_ex[which(Datum == format(as.Date("2018/04/09"), "%d.%m"))] <- paste0("[Bayes](", s_ex_url, "w06/asmas_w06_u06.pdf", ")") 
 # create dataframe and table
 df_ex <- data.frame(Woche = Woche, Datum = Datum, Thema = vec_topics_ex, stringsAsFactors = FALSE)
 knitr::kable(df_ex)
@@ -164,7 +165,8 @@ vec_topics_sol <- vec_topics
 vec_topics_sol[which(Datum == format(as.Date("2018/03/05"), "%d.%m"))] <- paste0("[Lineare Regression](", s_sol_url, "w2/asmas_w2_l1.pdf", ")")
 vec_topics_sol[which(Datum == format(as.Date("2018/03/12"), "%d.%m"))] <- paste0("[Deregression](", s_sol_url, "w03/asmas_w03_l02.pdf", ")")
 vec_topics_sol[which(Datum == format(as.Date("2018/03/19"), "%d.%m"))] <- paste0("[Regression und GBLUP](", s_sol_url, "w04/asmas_w04_l03.pdf", ")")
-# vec_topics_sol[which(Datum == format(as.Date("2018/03/26"), "%d.%m"))] <- paste0("[Regression und LASSO](", s_sol_url, "w05/asmas_w05_l04.pdf", ")")
+vec_topics_sol[which(Datum == format(as.Date("2018/03/26"), "%d.%m"))] <- paste0("[Regression und LASSO](", s_sol_url, "w05/asmas_w05_l04.pdf", ")")
+vec_topics_sol[which(Datum == format(as.Date("2018/04/09"), "%d.%m"))] <- paste0("[Bayes](", s_sol_url, "w06/asmas_w06_l06.pdf", ")")
 # create dataframe and table
 df_sol <- data.frame(Woche = Woche, Datum = Datum, Thema = vec_topics_sol, stringsAsFactors = FALSE)
 knitr::kable(df_sol)
