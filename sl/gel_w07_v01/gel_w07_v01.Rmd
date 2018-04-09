@@ -1,0 +1,182 @@
+---
+title: "Angewandte Zuchtwertschätzung"
+author: "Peter von Rohr"
+date: "4/9/2018"
+output: beamer_presentation
+output_file: gel_w07_v01.pdf
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, results = "asis")
+knitr::knit_hooks$set(odg.conv = rmddochelper::odg.graphics.conv.hook)
+```
+
+## Programm
+```{r}
+# define course start date
+dCourseStart <- as.Date("2018/04/09")
+# set number of weeks in semester
+nNrSemesterWeeks <- 8
+# define columns for weaks and dates which remain constant
+Woche <- 1:nNrSemesterWeeks
+Datum <- format(seq(dCourseStart, by = "week", length.out = nNrSemesterWeeks), "%d.%m")
+
+# empty vector for topics
+vec_topics <- vector(mode = "character", length = nNrSemesterWeeks)
+# set subject for special dates
+sPentMon <- format(as.Date("2018/05/21"), "%d.%m")
+vec_topics[which(Datum == sPentMon)] <- "__Pfingstmontag__"
+# exams
+vec_topics[which(Datum == format(as.Date("2018/05/28"), "%d.%m"))] <- "__Prüfungen__"
+# define vector of topics for course schedule
+vec_topics_schedule <- vec_topics
+vec_topics_schedule[which(Datum == format(as.Date("2018/04/09"), "%d.%m"))] <- "Einführung angewandte Zuchtwertschätzung"
+vec_topics_schedule[which(Datum == format(as.Date("2018/04/16"), "%d.%m"))] <- "ZWS Rind I"
+vec_topics_schedule[which(Datum == format(as.Date("2018/04/23"), "%d.%m"))] <- "ZWS Rind II"
+vec_topics_schedule[which(Datum == format(as.Date("2018/04/30"), "%d.%m"))] <- "Braunvieh Schweiz und Qualitas in Zug"
+vec_topics_schedule[which(Datum == format(as.Date("2018/05/07"), "%d.%m"))] <- "Suisag und Zuchtprogramm beim Schwein"
+vec_topics_schedule[which(Datum == format(as.Date("2018/05/14"), "%d.%m"))] <- "ZWS Rind III"
+# define dataframe for schedule table
+df_schedule <- data.frame(Woche = Woche, Datum = Datum, Thema = vec_topics_schedule, stringsAsFactors = FALSE)
+knitr::kable(df_schedule)
+```
+
+
+## Exkursion
+* Datum: 30.04.2018
+* Zeit: je nach Zugsankunft - 8-10 Uhr
+* Themen
+   + Lucas Casanova: Braunvieh Schweiz
+   + Jürg Moll: Qualitas AG
+
+
+## Lernziele
+* theoretischen Hintergrund von Zuchtwerten
+* Anwendung der Zuchtwertschätzung bei Rind, Schwein, Schaf und Ziege
+* Interpretation von Zuchtwerten
+
+$\rightarrow$ Was ist die Bedeutung, wenn eine Kuh einen Zuchtwert von $-900$ kg Milch hat
+
+
+## Weiterführendes Material
+* Willam und Simianer: Tierzucht - Grundwissen Bachelor (Ulmer, UTB 3526 2011). Dieses Buch gibt eine hervorragende Einführung in die Gebiete der Evolution, der Rassenkunden, der Bedeutung der Tierproduktion und der Zuchtprogramme.
+* Falconer und Mackay: Introduction to Quantitative Genetics (Longman). Das ist das de-facto Standardwerk auf dem Gebiet der quantitativen Genetik.
+* Mrode: Linear Models for the Prediction of Animal Breeding Values (CABI Publishing, 2005). Dieses Buch bietet einen detaillierten Einblick in verschiedene Aspekte der Zuchtwertschätzung
+
+
+## Begriffe
+* Tierzucht versus Tierhaltung - oft keine Unterscheidung
+* Zucht in verschiedenem Kontext - z. Bsp. Aufzucht von Jungtieren
+* Wissenschaft: Tierzucht - 
+
+> "Selektion und gezielte Anpaarung von Elterntieren damit Nachkommengeneration ein bestimmtes Ziel erreicht"
+
+* Abgrenzung von Tierzucht zu Milchproduktion, Ferkelerzeugung, Schweinemast und Legehennenhaltung
+
+
+## Geschichte
+* Zusammenschluss von Einzelzüchtern zu Zuchtorganisationen (ZO)
+* Aufgaben ZO anfangs administrativ - Herdebücher und Zuchtbescheinigungen
+* Krisenzeit Anfangs 20. Jht: Staatlich verordnete Produktionssteigerung wurden in Zuchtprogrammen umgesetzt
+* Einzug der technischen Entwicklung und deren Ausnutzung in Zuchtprogrammen für Leistungssteigerung
+    + Reproduktionstechniken
+    + Computerleistung
+    
+    
+## Zuchtorganisation
+```{r SchemaZuchtOrganisation, echo=FALSE, fig.cap='Schematische Darstellung einer Zuchtorganisation', odg.conv=TRUE, odg.path="odg", odg.graph.cache=TRUE}
+knitr::include_graphics(path = "png/SchemaZuchtOrganisation.pdf")
+```
+
+
+## Zuchtprogramme
+* Angewandte Zuchtwertschätzung ist Bestandteil von Zuchtprogrammen
+* Bestandteile von Zuchtprogrammen in folgender Abbildung gezeigt
+* Bei Planung und Umsetzung von Zuchtprogrammen sind folgende Fragen entscheidend
+    + Welche Ziele sollen mit Zuchtprogramm erreicht werden
+    + Mit welchen Massnahmen können Ziele erreicht werden
+
+
+## Arten von Zuchtprogrammen
+Generell können wir zwischen zwei Arten von Zuchtprogrammen unterscheiden
+
+1. Zuchtprogramme zur Erreichung von __Zuchtfortschritt__: 
+    + typisch in Ländern mit knappen Ressourcen oder Mangel an Ressourcen (Nahrungs- und Futtermittel). Keine oder nur wenig züchterische Infrastruktur. 
+    + Länder mit grossen Betrieben
+2. Zuchtprogramme für __Verkauf__ von Zuchtprodukten und Dienstleistungen: 
+    + Rinder- und Schweinezucht in entwickelten Ländern
+    + Wirtschaftliche Interessen der beteiligten Firmen/Betriebe/Organisationen im Zentrum
+
+
+## Bestandteile von Zuchtprogrammen
+```{r BestandteileZuchtprg, echo=FALSE, fig.cap="Bestandteile eines Zuchtprogrammes", odg.conv=TRUE, odg.path="odg", odg.graph.cache=TRUE}
+knitr::include_graphics(path = "png/BestandteileZuchtprg.pdf")
+```
+
+
+## Zuchtziel
+* ökonomisch
+* biologisch
+* taktisch
+* ethisch
+
+
+## Leistungsprüfungen
+* Grundsätzliche Fragen: Welche Merkmale sollen bei welchen Tieren erhoben werden
+* Zuchtarbeit basiert immer auf Daten. Qualität der aus Daten abgeleiteten Grössen (Parameter, Zuchtwerte, ...) kann nicht besser sein als Qualität der ursprünglichen Daten
+* Leistungsprüfungen nicht im Hinblick auf Zucht eingeführt
+    + Milchleistungsprüfung: Qualität, Management
+    + Stationsprüfung beim Schwein: Vereinheitlichung der Umwelt
+    
+
+## Klassierung der Leistungsprüfungen
+* Ort
+    + Stationsprüfung
+    + Feldprüfung
+* Verwandtschaftsgrad zwischen Informant und Proband
+    + Eigenleistung
+    + Geschwister
+    + Nachkommenprüfung
+* Merkmale
+    + genetisch-additive Varianz und Erblichkeit
+    + wirtschaftlich relevant
+    + genau erfassbar, besser Messung statt Bewertung
+    
+    
+## Zuchtwertschätzung
+* Wird in meisten Zuchtprogrammen gemacht
+* Gesetzliche Grundlagen in der Schweiz
+* Leistungsprüfung ist häufig viel teurer als Zuchtwertschätzung
+* Häufigkeit und Aufwand abhängig von Tierart
+    + Rind: 4 mal pro Jahr
+    + Schwein: wöchentlich
+    
+    
+## Reproduktionsbiotechniken
+* KB: Einführung aus hygienischen Überlegungen
+* Aufhebung der Beschränkung der Anzahl Nachkommen pro Vatertier
+* Verknüpfung zwischen Betrieben $\rightarrow$ Trennung zwischen Umwelt und Genetik
+* Zukunft: Biotechniken bei Muttertieren wichtiger
+
+
+## Zuchtziele
+* __politisch__: verbale Beschreibung von Idealvorstellungen, nicht überprüfbar
+* __wissenschaftlich__: mathematische Funktion, welche Richtung der Zucht vorgibt. Anhand des Selektionserfolgs messbar
+
+
+## Unterschiede zwischen Tierarten
+Struktur der Zuchtprogramme verschieden
+
+* __hierarchisch__: Schwein und Geflügel
+* __flach__: Rind und Pferd
+
+
+## Struktur von Zuchtprogrammen
+```{r HierarchischeZuchtstruktur,echo=FALSE, fig.cap="Hierarchische Zuchtstruktur beim Schwein", odg.conv=TRUE, odg.path="odg", odg.graph.cache=TRUE}
+knitr::include_graphics(path = "png/HierarchischeZuchtstruktur.pdf")
+```
+
+
+
+
+

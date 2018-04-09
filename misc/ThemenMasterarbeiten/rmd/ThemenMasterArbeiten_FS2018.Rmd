@@ -31,10 +31,6 @@ h3 { /* Header 3 */
 Bei Interesse, Fragen etc. bitte bei Peter von Rohr (Qualitas AG) Chamerstrasse 56, 6300 Zug; peter.vonrohr@qualitasag.ch, Tel 041 768 92 21 melden.
 
 
-### ZUCHT AUF FRÜHREIFE BEI FLEISCHRINDERN {#project_header .emphasized}
-
-Die Frühreife beim Fleischrind ist ein Merkmals von grosser wirtschaftlicher Bedeutung. Die züchterische Bearbeitung dieses Merkmals ist alles andere als trivial. In dieser Arbeit sollen mögliche Ansätze für eine Zucht auf Frühreife beschrieben und verglichen werden. Für eine detailierte Beschreibung der Aufgabestellung, bitte hier [weiterlesen](20180321_FruehreifeFleischrind.html) ... 
-
 
 ### GENOMIK IN POPULATIONEN MIT HOHEM NATURSPRUNGANTEIL – LANGFRISTIGE ENTWICKLUNG DER GENAUIGKEIT VON GENOMISCHEN ZUCHTWERTEN BEI VERZICHT AUF RETYPISIERUNG DER MÄNNLICHEN REMONTEN {#project_header .emphasized}
 
@@ -55,6 +51,16 @@ Die Heritabilitäten der einzelnen Merkmale stimmen mit Werten aus der Literatur
 ### ÜBERPRÜFUNG DER FORMEL ZUR SCHÄTZUNG DER STANDARDLAKTATIONSLEISTUNG
 
 In der Schweiz wird bei Kühen die Standardlaktationsleistung ab dem 80. Laktationstag mittels einer Regressionsformel hochgerechnet. Dabei wird nach Laktationsnummer (1. oder 2 ff.) und Abkalbemonat (1-12) unterschieden. Im Rahmen der Masterarbeit soll die Regressionsformel überarbeitet und bei Bedarf eine neue Schätzmethode für die Standardlaktationsleistung erarbeitet werden.
+
+--- 
+
+## Schon vergebene Themen
+
+### ZUCHT AUF FRÜHREIFE BEI FLEISCHRINDERN {#project_header .emphasized}
+Student: Silvan Wyss
+
+Die Frühreife beim Fleischrind ist ein Merkmals von grosser wirtschaftlicher Bedeutung. Die züchterische Bearbeitung dieses Merkmals ist alles andere als trivial. In dieser Arbeit sollen mögliche Ansätze für eine Zucht auf Frühreife beschrieben und verglichen werden. Für eine detailierte Beschreibung der Aufgabestellung, bitte hier [weiterlesen](20180321_FruehreifeFleischrind.html) ... 
+
 
 ---
 
