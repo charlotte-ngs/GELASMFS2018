@@ -1,0 +1,38 @@
+---
+title: "AZWS - Lösung 1"
+author: "Peter von Rohr"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document:
+    keep_tex: FALSE
+output_file: asmas_w06_l06.pdf
+---
+
+```{r DocumentSetup, echo=FALSE, results='hide'}
+knitr::opts_chunk$set(echo = FALSE, results = 'hide')
+# r6objTableAbbrev <- rmddochelper::R6ClassTableAbbrev$new()
+```
+
+
+
+## Aufgabe 1: Kontrollfragen Zuchtprogramm
+
+__Kontrollfrage 1__: 
+
+__Kontrollfrage 2__: 
+
+### Lösung
+
+__Antwort 1__:
+
+__Antwort 2__: 
+
+
+## Aufgabe 2:
+
+
+### Lösung
+
+## Aufgabe 3: 
+
+### Lösung
