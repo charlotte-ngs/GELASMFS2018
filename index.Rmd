@@ -104,7 +104,7 @@ Die Folien zur Vorlesung, die Übungen und die Lösungen zu den Übungen können
 ```{r NotesTable, echo=FALSE, results='asis'}
 # url for course notes
 s_cn_url <- paste0(sBaseUrl, "cn/")
-s_cn_gel_url <- paste0(sBaseUrl, "cn-gel/")
+s_cn_gel_url <- paste0(sBaseUrl, "cn_gel/")
 
 vec_topics_notes <- vec_topics
 # add links to the material

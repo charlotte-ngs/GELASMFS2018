@@ -17,22 +17,93 @@ knitr::opts_chunk$set(echo = FALSE, results = 'hide')
 
 ## Aufgabe 1: Kontrollfragen Zuchtprogramm
 
-__Kontrollfrage 1__: 
+__Kontrollfrage 1__: Nennen Sie die sechs Bestandteile eines Zuchtprogramms und teilen Sie diese in die Kategorien _Planung_ (P), _Informationsfluss_ (I) und _Ausführung_ (A) ein.
 
-__Kontrollfrage 2__: 
+__Kontrollfrage 2__: Welche Arten von Zuchtprogrammen gibt es und wo sind diese anzutreffen (Regionen, Struktureigentschaften) ?
+
+__Kontrollfrage 3__: Aus welchen Gründen wurden die Stationsprüfung beim Schwein und die Milchleistungsprüfung beim Rind eingeführt? 
 
 ### Lösung
 
 __Antwort 1__:
 
+1. Zuchtziel - (P)
+2. Leistungsprüfung (I)
+3. Zuchtwertschätzung (I)
+4. Reproduktionstechniken (A)
+5. Selektion und gezielte Anpaarung (A)
+6. Selektionserfolg (I)
+
 __Antwort 2__: 
 
+* Zuchtprogrammen, bei denen __Zuchtfortschritt im Zentrum steht. Verbreitung: Regionen mit knappen Ressourcen, wenig Züchtungsinfrastruktur oder grossen Betriebsstrukturen
+* Zuchtprogramme, bei denen wirtschaftliches Ergebnis der beteiligten Betriebe/Firmen/Organisationen im Zentrum steht.
 
-## Aufgabe 2:
+__Angwort 3__: 
+
+* Die Stationsprüfung beim Schwein wurde zur Vereinheitlichung und zur besseren Standardisierung der Umweltbedingungen eingeführt. So konnten die Leistungen zwischen Prüfgruppen in konstanter Umwelt miteinander verglichen werden.
+* Die Milchleistungsprüfung wurde zur Sicherung der Qualität und aus Managementgründen eingeführt.
+
+
+## Aufgabe 2: Einflussfaktoren Selektionserfolg
+Füllen Sie in der folgenden Tabelle aus, welche Einflüsse die einzelnen Komponenten des Zuchtprogramms auf den Selelektionserfolg haben.
+
+\renewcommand{\arraystretch}{3.0}
+ \renewcommand{\tabcolsep}{0.2cm}
+ \begin{tabular}{|p{4cm}|p{3.5cm}|p{3.5cm}|p{3.5cm}|}
+\hline
+           &   $i$  &  $r_{TI}$  &  $\sigma_a$ \\
+\hline
+Leistungsprüfung         &        &            &             \\  
+\hline
+Zuchtwertschätzung       &        &            &             \\
+\hline
+Reproduktionstechniken   &        &            &             \\
+\hline
+Selektion und Anpaarung  &        &            &             \\
+\hline
+\end{tabular}
 
 
 ### Lösung
 
+\renewcommand{\arraystretch}{3.0}
+ \renewcommand{\tabcolsep}{0.2cm}
+ \begin{tabular}{|p{4cm}|p{3.5cm}|p{3.5cm}|p{3.5cm}|}
+\hline
+           &   $i$  &  $r_{TI}$  &  $\sigma_a$ \\
+\hline
+Leistungsprüfung         &  bei vielen Tieren günstig messbar. Verteilung nahe an Normalverteilung
+                         &  möglichst hohe Genauigkeit der Messung. Messung besser als Bwertung          
+                         &  Merkmale mit ausreichender genetisch-additiver Varianz und Erblichkeit \\  
+\hline
+Zuchtwertschätzung       &  BLUP-Tiermodell, damit alle Tiere im Pedigree Zuchtwerte
+                         &  Verwendung aller Verfügbarer Information (Pedigree und Daten) in BLUP-Tiermodell, damit Genauigkeit möglichst hoch 
+                         &  Verwendung korrekt geschätzter Varianzkomponenten in Zuchtwerschätzverfahren   \\
+\hline
+Reproduktionstechniken   &  Erhöhung der Anzahl Nachkommen pro Elterntier erhöht Selektionsintensität
+                         &  überbetrieblicher Einsatz ermöglicht genauere Schätzung der Zuchtwerte, da Umwelt besser berücksichtigt
+                         &  bessere Schätzung der Umwelt erlaubt bessere Trennung zwischen genetisch-additiver Varianz und Restvarianz \\
+\hline
+Selektion und Anpaarung  &  Strenge Selektion und Anpaarung der besten Tiere erhöhen die Selektionsintensität
+                         &  Selektion vieler junger Tiere verkürzt Generationenintervall, aber Genauigkeit ist eher tiefer
+                         &  Gezielte Paarung über Betriebe hinweg verbessert Schätzung der genetisch-additiven Varianz \\
+\hline
+\end{tabular}
+
+
+
 ## Aufgabe 3: 
+In der nachfolgenden Tabelle sind Erblichkeiten ($h^2$) und phänotypische Varianz ($V_p$ oder $\sigma_p^2$) für eine Reihe von Merkmalen beim Schwein gegeben
+
+```{r}
+tbl_param_pigs <- dplyr::data_frame(
+  Merkmale = c("MTZ", "FV", "AwF", "ImF", "pH1", "pH30", "H30","FEZ"),
+  Erblichkeit = c(.32, .47, .6, .51, .29, .16, .22, .42),
+  Vp = c()
+)
+knitr::kable(tbl_param_pigs)
+```
+
 
 ### Lösung
