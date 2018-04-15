@@ -1,0 +1,414 @@
+# Zuchtwertschätzung
+## Einführung
+Die Züchtung von Nutztieren basiert auf der künstlichen __Selektion__ und auf der gezielten __Anpaarung__ von Elterntieren zur Erzeugung der nachfolgenden Generation. Selektion ist nur möglich, wenn ein Kriterium existiert, wonach die zu selektierenden Tiere rangiert werden können. 
+
+```{r, echo=FALSE, results='hide'}
+set.seed(543)
+n_sel_cand <- 10
+n_crit_mean <- 100
+n_crit_sd <- 8
+vec_crit_val <- floor(rnorm(10, mean = n_crit_mean, sd = n_crit_sd))
+tbl_sel_data <- dplyr::data_frame(Tier = paste("Tier", 1:n_sel_cand), Kriterium = vec_crit_val)
+```
+
+Nehmen wir, dass wir für eine Gruppe von `r n_sel_cand` Tiere je einen bestimmten Wert eines gemessenen Kriteriums beobachten. Dann sieht ein Plot (siehe Abbildung \@ref(fig:FigUnorderdCriterion)) davon wie folgt aus.
+
+```{r FigUnorderdCriterion, echo=FALSE, fig.show=TRUE, fig.cap="Ungeordnete Werte eines Kriteriums für 10 Tiere"}
+suppressPackageStartupMessages(require(ggplot2)) 
+qplot(Tier, Kriterium, data = tbl_sel_data)
+```
+
+Wenn wir die Werte des in Abbildung \@ref(fig:FigUnorderdCriterion) gezeigten Plots als Selektionskriterium verwenden wollen, dann müssen wir als erstes die Tiere gemäss den Werten des Kriteriums ordnen. Das Resultat dieser Rangierung sieht dann wie folgt aus
+
+```{r FigOrderedCriterion, echo=FALSE, results='asis'}
+tbl_sel_data_ordered <- tbl_sel_data[order(tbl_sel_data$Kriterium),]
+knitr::kable(tbl_sel_data_ordered, booktabs = TRUE, caption ="Rangierung der Tiere nach deren Werte des Kriteriums")
+```
+
+
+### Geschichte
+Zuerst wurden Tiere nach ihrer äusseren Erscheinung, d.h. also nach ihrem __Phänotyp__ ausgewählt. Für Typus- und Erscheinungsmerkmale funktionierte das gut, und dies führte zu einer Differenzierung in sehr viele verschiedene Nutztierrassen. Der Grund dafür ist, dass diese Merkmale oft nur monogen oder durch nur wenige Genorte beeinflusst werden. 
+
+Bei den Leistungsmerkmalen war diese Strategie weniger erfolgreich, da die Leistungen in der Vergangenheit nicht objektiv gemessen wurden, sondern nur geschätzt werden konnten. Erst mit der Einführung der __Leistungsprüfung__ und den Auswertungen anhand von modernen Zuchtwertschätzverfahren in der zweiten Hälfte des 20. Jahrhunderts konnte eine grosse Leistungssteigerung beobachtet werden. Dabei gibt es auch zu beachten, dass die grosse Leistungssteigerung auch mit der Verfügbarkeit von billigen __Rechenressourcen__  zusammenfällt. Die modernen Zuchtwertschätzverfahren verlangen das effiziente Lösen von sehr grossen Gleichungssystemen und das kann nur mit Hilfe des Computers gemacht werden. 
+
+
+### Zahlenbeispiel
+Die verschiedenen Zuchtwertschätzverfahren sollen anhand des Zahlenbeispiels in Tabelle \@ref(tab:TabBeefExample) aus dem Bereich der Fleischrinderzucht dargestellt werden. 
+
+```{r TabBeefExample, echo=FALSE, results='asis'}
+n_nr_sire <- 3
+n_nr_dam <- 8
+n_nr_parents <- n_nr_sire + n_nr_dam
+n_nr_offspring <- 16
+n_nr_animals <- n_nr_parents + n_nr_offspring
+dam_id <- rep(4:11,2)
+
+tbl_beef_data <- dplyr::data_frame(Tier = (n_nr_parents + 1):n_nr_animals,
+                                   Vater = c(rep(1,8), rep(2,6), rep(3,2)),
+                                   Mutter = dam_id[order(dam_id)],
+                                   Betrieb = c(rep(1,4), rep(2,4), rep(1,4), rep(2,4)),
+                                   Zunahme = c(1.26,1.32,1.4,1.44,1.52,1.5,1.42,1.46,1.34,1.32,1.24,1.28,1.44,1.4,1.54,1.56))
+
+knitr::kable(tbl_beef_data, 
+             booktabs = TRUE, 
+             caption = "Zahlenbeispiel für die Zuchtwertschätzung (tägliche Zunahmen bei Fleischrindern in kg/Tag)")
+```
+
+```{r BeefSireMean, echo=FALSE, results='hide'}
+suppressPackageStartupMessages( require(magrittr) )
+suppressPackageStartupMessages( require(dplyr) )
+tbl_beef_sire <- tbl_beef_data %>% group_by(Vater) %>% summarize(Mittelwert = round(mean(Zunahme), digits = 2)) %>% select(Vater, Mittelwert)
+```
+
+Werden die Väter nach den phänotypischen Mittelwerten ihrer Nachkommen geordnet lautet die Reihenfolge `r tbl_beef_sire$Vater[order(tbl_beef_sire$Mittelwert, decreasing = TRUE)]`. Die konkreten Mittelwerte sind in Tabelle \@ref(tab:TabBeefSire) gezeigt.
+
+```{r TabBeefSire, echo=FALSE, results='asis'}
+knitr::kable(tbl_beef_sire,
+             booktabs = TRUE,
+             caption = "Mittelwert der Zunahmen der Nachkommen pro Vater")
+```
+
+Bei der Rangierung aufgrund der phänotypischen Mittelwerte besteht eine gewisse Unsicherheit, da Vater 3 nur Nachkommen auf Betrieb 2 hat. Da das Management mit Fütterung und Haltung auf den Betrieben unterschiedlich ist, kann das zu Unterschieden in den phänotypischen Leistungen führen, welche nichts mit dem genetischen Potential der Väter zu tun haben. In unserem Zahlenbeispiel stellt der Betrieb ein sogenannter systematischer Umwelteinfluss oder -faktor dar. Damit wir unsere Rangierung der Selektionskandidaten (in unserem Beispiel sind das beispielsweise die Väter) rein auf ihrem genetischen Potential machen können, müssen wir einen Weg finden, um systematische Umwelteinflüsse zu korrigieren.
+
+Die Tiere haben auch eine unterschiedliche Anzahl an Informationen für die Zuchtwertschätzung verfügbar.
+
+```{r, echo=FALSE, results='hide'}
+n_offspring_count <- unlist(tbl_beef_data %>% group_by(Vater) %>% summarize(n = n()) %>% select(n)) 
+```
+
+* Die Väter haben `r n_offspring_count[1]`, `r n_offspring_count[2]`, bzw. `r n_offspring_count[3]` Nachkommen, welche Informationen liefern.
+* Jede Mutter hat 2 Nachkommen.
+* Die Nachkommen haben jeweils ein Vollgeschwister und zwischen 0 bis 6 Halbgeschwister.
+
+Im Folgenden werden verschiedene Zuchtwertschätzverfahren für die Väter und dann für die Mütter vorgestellt. Für die weiteren Berechnungen brauchen wir noch ein paar Parameter. 
+
+```{r, echo=FALSE, results='hide'}
+h2 <- .25
+n_var_p <- round(var(tbl_beef_data$Zunahme), digits = 4)
+n_var_g <- round(h2 * n_var_p, digits = 4)
+```
+
+
+* Für die phänotypischen Varianz nehmen wir einfach die aus den Daten berechnete empirische Varianz Diese beträgt $\sigma_p^2 = `r n_var_p` (kg/Tag)^2$
+* als Heritabilität nehmen wir einen Wert von $h^2 = `r h2`$ an
+* Die genetisch-additive Varianz berechnet sich als $\sigma_a^2 = h^2 * \sigma_p^2 = `r h2` * `r n_var_p` = `r n_var_g`(kg/Tag)^2$
+
+
+### Definition des Zuchtwerts
+Als erstes wollen wir den Begriff des __Zuchtwerts__ definieren. Aus den mehreren Definitionen verwenden wir diese, welche es uns erlaubt ein Schätzverfahren daraus abzuleiten. Eine anschauliche und praktisch Relevante Definition lautet
+
+```{definition, label="defzw", name = "Zuchtwert"}
+Der Zuchtwert eines Tieres $s$ entspricht der doppelten Leistungsabweichung der Nachkommen^[Diese Definition führt erst dann zu einem konsistenten Zuchtwert, wenn es sich hier um eine grosse Anzahl von Nachkommen handelt.] des Tieres $s$ im Vergleich mit dem Populationsdurchschnitt. 
+```
+
+Aus Definition \@ref(def:defzw) ergeben sich ein paar spannende Fakten. Diese sind im folgenden Abschnitt kurz zusammengefasst. 
+
+* In der Zuchtwertdefinition wird die doppelte Leistungsabweichung verwendet, da jedes Tier nur die Hälfte seiner Allele an die Nachkommen weitergibt. 
+* Die für den Zuchtwert verwendete Leistungsabweichung muss auf der Basis von _vielen Nachkommen_ erhoben werden. Es bekommt zwar jeder Nachkomme die Hälfte der Allele von den Eltern, aber es bekommt nicht jeder Nachkomme die gleichen Allele von den Eltern. Die Allele in einem Nachkommen stellen eine _Zufallsstichprobe_ der Elternallele dar. Deshalb braucht es viele Nachkommen, damit der Zuchtwert sich stabilisiert. Deshalb können weder Zuchtwerte noch Leistungen einzelner Nachkommen vorausgesagt werden.
+* Da der Zuchtwert als Abweichung von einem Populationsdurchschnitt definiert ist, gilt er auch nur in dieser Population. Zuchtwerte per-se lassen sich also nicht über Populationen hinweg vergleichen. Es gibt spezielle Verfahren, wie Zuchtwerte durch eine Umrechnung vergleichbar gemacht werden können. 
+* Aus der Definition des Zuchtwerts als Abweichung von einem Durchschnitt, muss der Durchschnitt der Zuchtwerte in einer Population wieder bei $0$ sein.
+
+
+## Prinzip der Zuchtwertschätzung
+In der Zuchtwertschätzung werden beobachtete Leistungen mit zwei Operationen verarbeitet. 
+
+1. Die Leistungen werden __relativiert__, d.h. sie werden mit anderen Leistungen, welche unter ähnlichen Bedingungen erbracht wurden, miteinander verglichen. Rechnerisch passiert das Relativieren durch die Subtraktion eines Vergleichswertes von den Leistungen.
+2. Die Leistungen werden __gewichtet__, da für verschiedene Tiere unterschiedlich viele Informationen zur Verfügung stehen. Intuitiv ist klar, dass wir einem Zuchtwert aufgrund von einer grossen Anzahl von Nachkommen mehr vertrauen, als einem der nur aufgrund von sehr wenigen Nachkommen geschätzt wurde. Mathematisch entspricht die Gewichtung einer Multiplikation mit einem Faktor.
+
+Fassen wir diese beiden Operationen in einer Formel zusammen so erhalten wir
+
+\begin{equation}
+\hat{u} = b * (y - \mu)
+(\#eq:zuchtwert)
+\end{equation}
+
+\begin{tabular}{lll}
+wobei &  & \\
+      & $\hat{u}$  &  Zuchtwert \\
+      & $b$        &  Gewichtungsfaktor \\
+      & $y$        &  Leistung \\
+      & $\mu$      &  Vergleichswert
+\end{tabular}
+
+Das hier vorgestellte Prinzip gilt für alle konventionellen Zuchtwertschätzungen. Sie unterscheiden sich nur, wie die Faktoren $b$ und die Vergleichswerte $\mu$ bestimmt werden.
+
+
+## Geschätzte Zuchtwerte aufgrund einer Eigenleistung {#zws-eigenleistung}
+Die Zuchtwertschätzung (ZWS) aufgrund einer Eigenleistung ist der einfachste Fall. Das Prinzip der ZWS lässt sich an diesem Fall sehr gut demonstrieren. Das Ziel ist, dass wir für die `r n_nr_offspring` Nachkommen in Tabelle \@ref(tab:TabBeefExample) einen Zuchtwert aufgrund der Eigenleistung im Merkmal Zunahme schätzen.
+
+### Schritt 1: Relativieren
+Im ersten Schritt relativieren wir die Leistungen, damit wir diese zwischen den beiden Betrieben vergleichen können. Als Vergleichswert $\mu$ der Betriebe verwenden wir deren Least Squares Lösungen. Deren Berechnung ist im Abschnitt \@ref(leastsquares-betrieb) gezeigt. Für das Relativieren berechnen wir
+
+\begin{equation}
+e = y - X \beta
+(\#eq:relativleistung)
+\end{equation}
+
+\begin{tabular}{lll}
+wobei  &  & \\
+       &  $y$  &   Vektor mit Leistungen \\
+       &  $\beta$  &  Vektor mit Least Squares Lösungen der Betriebe \\
+       &  $X$      &  Design-Matrix, welche Betrieb mit Beobachtungen verknüpft
+\end{tabular}
+
+Der Vektor $e$ entspricht eigentlich den Residuen aus dem Modell in \@ref(eq:regmodelfarm) und sind in der folgenden Tabelle gezeigt
+
+```{r TabBeefResiduals, echo=FALSE, results='asis'}
+tbl_beef_farm <- tbl_beef_data %>% select(Betrieb,Zunahme)
+tbl_beef_farm$Betrieb <- as.factor(tbl_beef_farm$Betrieb)
+lm_beef_farm <- lm(Zunahme ~ 0 + Betrieb, data = tbl_beef_farm)
+vec_res_farm <- residuals(lm_beef_farm)
+knitr::kable(data.frame(Tier = tbl_beef_data$Tier, Residuen = vec_res_farm), booktabs = TRUE)
+```
+
+
+### Schritt 2: Gewichtung der relativen Leistungen
+Für die Gewichtung der relativierten Leistungen müssen wir wisen, welcher Teil der phänotypischen Überlegenheit genetisch bedingt ist. Hierzu benötigen wir die Regression des Genotyps ($u$) auf den Phänotyp $y$ eines Individuums. Der Regressionskoeffizient $b_{u,y}$ des Genotyps auf den Phänotyp entspricht der Erblichkeit $h^2$. Es gilt also
+
+\begin{equation}
+b_{u,y} = \frac{\sigma_{u,y}}{\sigma_y^2} = h^2
+(\#eq:reggenonphen)
+\end{equation}
+
+\begin{tabular}{lll}
+wobei  &  & \\
+       &  $b_{u,y}$  &  Regressionskoeffizient des Genotyps auf den Phänotyp \\
+       &  $\sigma_{u,y}$  &  Covarianz zwischen Genotyp und Phänotyp \\
+       &  $\sigma_y^2$    &  Phänotypische Varianz
+\end{tabular}
+
+
+Als Resultat erhalten wir die geschätzten Zuchtwerte aufgrund von Eigenleistungen als
+
+\begin{equation}
+\hat{u} = h^2 * e = h^2 * (y - X\beta)
+(\#eq:ebvownperf)
+\end{equation}
+
+Für unser Zahlenbespiel haben wir dann
+
+```{r echo=FALSE, results='asis'}
+vec_ebv_op <- vec_res_farm * h2
+knitr::kable(data.frame(Tier = tbl_beef_data$Tier, Zuchtwert = vec_ebv_op), booktabs = TRUE)
+```
+
+Die Rangierung der Tiere aufgrund der Residuen und aufgrund der geschätzten Zuchtwerte ist die gleiche. Die Multiplikation mit einem konstanten Faktor ändert die Rangierung nicht. Die Streuung der geschätzten Zuchtwerte $\hat{u}$ ist aber geringer als jene der Residuen. Der Grund dafür ist, dass der Faktor ($h^2$) kleiner ist als 1. 
+
+Die Verwendung dieses einfachen Zuchtwertschätzverfahrens ist sehr eingeschränkt. Es bekommen nur Tiere mit einer Eigenleistung einen Zuchtwert. Die Tiere, wie die Väter oder die Mütter in unserem Zahlenbeispiel bekommen keinen geschätzten Zuchtwert, da sie keine Eigenleistung haben. Unser Ziel für die Entwicklung von anderen Verfahren soll sein, dass alle Tiere einen Zuchtwert bekommen und dass dafür alle verfügbare Information verwendet werden soll.
+
+\pagebreak
+
+## Selektionsindex zur Schätzung von Zuchtwerten
+Es bestehen zwei wesentliche Methoden für die Schätzung von Zuchtwerten. 
+
+1. __Selektionsindextheorie__ nach [@HL1943] und [@Hazel1943] und
+2. das wesentlich aufwändigere __BLUP__-Verfahren nach [@Henderson1973] 
+
+Beide Verfahren basieren auf der gleichen genetischen Theorie. Sie unterscheiden sich aber in der Art, wie sie die systematischen Umwelteffekte korrigieren. 
+
+
+### Einführung zur Selektionsindextheorie
+Grundsätzlich besteht die Zuchtwertschätzung darin, für einen Selektionskandidaten den auf additiver Genwirkung beruhenden Anteil der Leistungsüberlegenheit bei sich und den verwandten Tieren zu schätzen und so miteinander zu kombinieren, dass die Korrelation zwischen dem geschätzten und dem wahren Zuchtwert maximiert werden. Alternativ zur Maximierung der Korrelation kann auch die Varianz des Fehlers zwischen geschätzten und wahren Zuchtwert minimiert werden. Aufgrund der soeben formulierten Vorgaben wird klar, dass wir immer zwischen zwei verschiedenen Zuchtwerten unterscheiden müssen.
+
+1. Der __wahre Zuchtwert__ eines Individuums, welcher der Summe der Gensubstitutionseffekte des Selektionskandidaten entspricht und 
+2. Der __geschätzte Zuchtwert__, der mit statistischen Methoden aus verschiedenen Informationsquellen geschätzt wird und somit immer fehlerbehaftet ist. Die Grössenordnung des Fehlers lässt sich abschätzen, aber der Schätzfehler kann nicht vermieden werden.
+
+Der wahre Zuchtwert ist eine Funktion der durchschnittlichen Einzelgensubstitutionseffekten und ist somit von den Allelfrequenzen in einer Population abhängig. Der wahre Zuchtwert eines Tieres ist also keine konstante Grösse, sondern verändert sich mit den Änderungen einer Population. Dies ist mit ein Grund, weshalb Zuchtwerte nicht über Populationen hinweg vergleichbar sind. Da sich gewisse Rassen weltweit in Teilpopulationen entwickeln, wird von einer Organisation namens Interbull die Umrechnung der geschätzten Zuchtwerte zwischen den verschiedenen Populationen als Dienstleistung angeboten. 
+
+Zusammenfassend können wir die folgenden Zwecke der Zuchtwertschätzung identifizieren.
+
+1. Der hauptsächliche Zweck besteht in der Rangierung von Selektionskandidaten nach ihren Zuchtwerten, damit die besten unter ihnen ausgewählt werden können.
+2. Geschätzte Zuchtwerte sind auch wichtig für die Bedeutung für die Vorhersage des Zuchtfortschritts, welcher in der Zuchtplanung gebraucht wird.
+3. Die Resultate der Zuchtwertschätzung sind auch ein Verkaufsargument für Samendosen von männlichen Tieren. Sie können deshalb auch  als Verbraucherinformation betrachtet werden.
+
+Definition \@ref(def:defzw) des Zuchtwerts ist nur schwer in die Praxis umsetzbar, weil man nicht lange warten möchte bis die Anzahl Nachkommen eines Tieres genügend gross ist. In der praktischen Zuchtwertschätzung besteht immer der Zielkonflikt, dass die geschätzten Zuchtwerte möglichst _früh_ und auch möglichst _genau_ vorliegen sollen. Zur Auflösung dieses Konflikts bestehen verschiedene Methoden. Diese werden im Folgenden vorgestellt werden.
+
+
+#### Selektionsindex
+Beim Selektionsindex sollen die verfügbaren Informationsquellen so kombiniert werden, dass die Korrelation zwischen dem wahren Zuchtwert und dem konstruierten Index maximiert wird. Unter Informationsquellen versteht man alle Leistungen von Tieren, welche aufgrund der Verwandtschaft der Tiere mit dem Probanden zur Schätzung des Zuchtwerts des Probanden beitragen kann. Die Kombination der Informationsquellen wird mit der Konstruktion eines Indexes umgesetzt. Ein Index ($I$) entspricht einer linearen Kombination aus den Informationsquellen (Vektor $x$).
+
+\begin{equation}
+I = b_1x_1 + b_2x_2 + \ldots + b_nx_n = b^Tx
+(\#eq:selindex)
+\end{equation}
+
+\begin{tabular}{lll}
+wobei & & \\
+      &  $I$  &  konstruierter Index \\
+      &  $b$  &  Vektor der Gewichte \\
+      &  $x$  &  Vektor der Informationsquellen
+\end{tabular}
+
+Statistisch gesehen, entspricht der Selektionsindex, wie er in \@ref(eq:selindex) dargestellt ist, einer _multiplen linearen Regression_. Die Regressionskoeffizenten ($b_i$) sind abhängig von 
+
+* der Erblichkeit des Merkmals
+* der Art der Informationsquelle
+* der additiv-genetischen Verwandtschaft zwischen Probanden und Informationsquellen.
+
+Betreffend der __Terminologie__ muss an diesem Punkt nochmals betont werden, dass der __Selektionsindex__ (gemäss der Formel \@ref(eq:selindex)) zur Schätzung eines Zuchtwertes von Probanden für _ein bestimmtes Merkmal_ verwendet wird. Die Informationsquellen bestehen häufig aus phänotypischen Leistungen vom Probanden selber oder von verwandten Tieren. Die Informationen (Vektor $x$) müssen auch nicht notwendigerweise vom gleichen Merkmal sein, wie dasjenige für das wir den Zuchtwert schätzen wollen. Als Beispiel wird in der Schweinezucht oft die Rückenspeckdicke als Informationsquelle für die Schätzung des Zuchtwerts des Merkmals Fleischigkeit verwendet. Diese Verwendung des Begriffs _Selektionsindex_ hat nur noch eine historische Bedeutung und ist heute nicht mehr gebräuchlich, da heute andere Verfahren (BLUP-Tiermodell) für die Zuchtwertschätzung eingesetzt werden. Aktuell wird der Begriff des Selektionsindexes viel häufiger für die Schätzung des _Gesamtzuchtwerts_ verwendet. Die Bedeutung des Begriffs Gesamtzuchtwert wird im Abschnitt \@ref(gesamtzuchtwert) erklärt werden.
+
+Zurück zur Schätzung des Zuchtwerts aufgrund des Selektionsindexes. Wie wir im Abschnitt \@ref(zws-eigenleistung) gesehen hatten, müssen die Informationsquellen in einem ersten Schritt relativiert werden. Hier gehen wir davon aus, dass die Werte $x_i$ im Vektor $x$, bereits Abweichungen von geeigneten Vergleichswerten darstellen. Wir beschäftigen uns im folgenden Abschnitt mit der Berechnung der Faktoren $b_i$ im Vektor $b$. 
+
+
+#### Gesamtzuchtwert {#gesamtzuchtwert}
+Wir beginnen mit dem einfachen und nicht sehr realistischen Fall, dass das Zuchtziel nur aus einem Merkmal besteht. Die verschiedenen verfügbaren Informationsquellen werden zu einem Index $I$ kombiniert, wobei das Zuchtziel dem wahren Zuchtwert dieses einen Merkmals entspricht und dieser wahre Zuchtziel soll mit $I$ möglichst genau geschätzt werden. In der praktischen Tierzucht sollen aber meist mehrere Merkmale gleichzeitig verbessert werden. In diesem Fall sprechen wir von einem _komplexen Zuchtziel_. Bei komplexen Zuchtzielen entspricht die Zielgrösse der Zuchtwertschätzung einer linearen Funktion ($T$) der wahren Zuchtwerte $u_i$
+
+\begin{equation}
+T = a_1u_1 + a_2u_2 + \ldots + a_nu_n = a^Tu
+(\#eq:agggen)
+\end{equation}
+
+\begin{tabular}{lll}
+wobei & & \\
+      &  $T$  &  Gesamtzuchtwert \\
+      &  $a$  &  Vektor der wirtschaftlichen Gewichte \\
+      &  $u$  &  Vektor der wahren Zuchtwerte
+\end{tabular}
+
+Die in Formel \@ref(eq:agggen) gezeigte Funktion $T$ wird als __Gesamtzuchtwert__ oder auch als aggregierter Genotyp bezeichnet. Der Vektor $a$ enthält die _wirtschaftlichen Gewichte_, welche dem Grenznutzen bei einer kleinen Änderung des Merkmals entsprechen. An dieser Stelle nehmen wir an, dass die Werte im Vektor $a$ bekannt sind. Der Vektor $u$ enthält die wahren Zuchtwerte. 
+
+In einem komplexen Zuchtziel wird $T$ auf einer monetären Basis, d.h. in einer Währungseinheit ausgedrückt. Hat das Zuchtziel aber nur ein Merkmal, wird die Multiplikation mit den Grenznutzen oft unterlassen. Dann wird der Gesamtzuchtwert $T$ direkt dem wahren Zuchtwert $u$ gleichgesetzt. 
+
+
+#### Formen von Selektionsindizes
+Zusammengefasst haben wir es in der Selektionsindextheorie mit zwei linearen Funktionen zu tun, welche genau getrennt werden müssen. 
+
+1. Der eigentliche Selektionsindex ($I$), der den geschätzten Zuchtwert darstellt
+2. Der Gesamtzuchtwert ($T$), der eine lineare Kombination der wahren Zuchtwerte des Probanden darstellt
+
+Aufgrund dieser beiden Definitionen können die folgenden Fälle unterschieden werden.
+
+* Unterschiedliche Informationsquellen (Eigenleistung, Geschwister, Nachkommen) aber nur ein Merkmal im Zuchtziel
+* Eine Informationsquelle (Eigenleistung), aber mehrere Merkmale im Zuchtziel
+* Mehrere Informationsquellen und mehrere Merkmale im Zuchtziel
+
+Die folgenden Umstände können die Zuchtwertschätzung noch zusätzlich erschweren.
+
+* Informationsquellen können auch wiederholte Leistungen des gleichen Merkmals darstellen. Beispiele sind Töchter des gleichen Vaters oder Probewägungen bei der Milchleistung oder die Wurfgrösse bei der gleichen Sau.
+* Bei gewissen Merkmalen im Zuchtziel ist die Erhebung sehr umständlich oder sehr teuer. In diesem Fall wird oft auf sogenannte Hilfsmerkmale ausgewichen. Das Beispiel der Rückenspeckdicke als Hilfsmerkmal für die Fleischigkeit beim Schwein hatten wir schon früher erwähnt.
+
+
+#### Theorie der Indexkonstruktion
+Unter dem Begriff _Indexkonstruktion_ versteht man die Berechnung der Gewichtungsfakturen $b_i$ aus der Gleichung \@ref(eq:selindex). Unabhängig von den Informationsquellen müssen für die Konstruktion die folgenden Parameter bekannt sein. 
+
+* Erblichkeiten und phänotypische Standardabweichungen der Merkmale im Zuchtziel und im Index.
+* Phänotypische Korrelationen zwischen den Indexmerkmalen
+* genetische Korrelationen zwischen Zuchtziel- und Indexmerkmalen
+* genetische Korrelationen zwischen Zuchtzielmerkmalen
+* ökonomische Gewichte für Zuchtzielmerkmale
+
+Der Index wird mit dem Ziel konstruiert, dass die Korrelation ($r_{TI}$) zwischen dem wahren und geschätzten Zuchtwert maximiert wird. Da der Index ($I$) einer multiplen linearen Regression entspricht, wobei die gesuchten Gewichtungsfakturen $b_i$ den Parametern der Regression entsprechen und diese mit Least Squares geschätzt werden, gilt es folglich die mittlere quadrierte Abweichung zwischen den wahren Zuchtwerten und dem Index zu minimieren. 
+
+\begin{equation}
+\hat{b} = argmin_b E(T-I)^2
+(\#eq:tarfunindex)
+\end{equation}
+
+Die Gleichung \@ref(eq:tarfunindex) bedeutet, dass wir denjenigen Vektor von Indexgewichten $b$ als Lösung $\hat{b}$ verwenden, der den Erwartungswert (E) der quadrierten Abweichung zwischen $T$ und $I$ minimiert. Für die hier gezeigte Herleitung verwenden wir den einfachen Fall, dass das Zuchtziel nur aus einem Merkmal besteht und der Index nur eine Eigenleistung enthält. Somit gilt
+
+\begin{equation}
+T = u \text{ und } I = bx
+(\#eq:simplecond)
+\end{equation}
+
+Stellen wir daraus die zu minimierende Zielfunktion aus Gleichung \@ref(eq:tarfunindex) auf so erlaten wir
+
+\begin{eqnarray}
+E(T-I)^2  &=&  E(u - bx)^2 \nonumber \\
+          &=&  E(u^2 - 2bux + b^2x^2) \nonumber  \\
+          &=&  E(u^2) - 2bE(ux) + b^2E(x^2) \nonumber  \\
+          &=&  \sigma_u^2 - 2b\sigma_{ux} + b^2\sigma_x^2
+(\#eq:tarfunref)
+\end{eqnarray}
+
+Im Schritt von der dritten zur vierten Zeile verwenden wir, dass sowohl $u$ und $x$ als Abweichungen definiert sind. Aus diesem Grund dürfen die Erwartungswerte der Quadrate durch die Varianzen und der Erwartungswert des Produkts durch die Kovarianz ersetzt werden.
+
+Zur Minimierung der Zielfunktion aus \@ref(eq:tarfunindex) muss die erste Ableitung von \@ref(eq:tarfunref) $0$ gesetzt werden^[Die Überprüfung der höheren Ableitung, dass es sich beim gefundenen Extremum auch wirklich um ein Minimum handelt, wird hier weggelassen]. Somit erhalten wir
+
+\begin{eqnarray}
+0  &=&  - 2\sigma_{ux} + 2b\sigma_x^2 \nonumber \\
+2b\sigma_x^2  &=&  2\sigma_{ux} \nonumber \\
+          b   &=&  \frac{\sigma_{ux}}{\sigma_x^2} \nonumber \\
+              &=&  \frac{\sigma_u^2}{\sigma_x^2} = h^2
+(\#eq:vecbresult)
+\end{eqnarray}
+
+Schon früher hatten wir gesehen, dass die Regression des Zuchtwerts auf den Phänotyp bei einem Individuum zu einem Regressionskoeffizienten, welcher der Erblichkeit ($h^2$) entspricht, führt.
+
+
+#### Verallgemeinerung
+Für die Verallgemeinerung des gezeigten Prinzips braucht es noch die folgende neue Notation.
+
+\begin{tabular}{ll}
+$\sigma_{pxpy}$  &  phänotypische Kovarianz zwischen Informationsquellen $x$ und $y$ \\
+$\sigma_{pxgy}$  &  genetische Kovarianz zwischen Informationsquellen $x$ und Zuchtzielmerkmal $y$ \\
+$\sigma_{gxgy}$  &  genetische Kovarianz zwischen Zuchtzielmerkmalen $x$ und $y$
+\end{tabular}
+
+Varianzen von Merkmalen sind als Kovarianzen eines Merkmals mit sich selber in dieser Notation mit berücksichtigt. Analog zur zweiten Zeile in Gleichung \@ref(eq:vecbresult) können wir das Gleichungssystem zur Indexkonstruktion aufschreiben als
+
+\begin{eqnarray}
+\sigma_{p1p1}b_1 + \sigma_{p1p2}b_2 + \ldots + \sigma_{p1pn}b_n 
+  &=& \sigma_{p1g1}a_1 + \sigma_{p1g2}a_2 + \ldots + \sigma_{p1gm}a_m \nonumber \\
+\sigma_{p2p1}b_1 + \sigma_{p2p2}b_2 + \ldots + \sigma_{p2pn}b_n 
+  &=& \sigma_{p2g1}a_1 + \sigma_{p2g2}a_2 + \ldots + \sigma_{p2gm}a_m \nonumber \\
+  \ldots &=& \ldots \nonumber \\
+\sigma_{pnp1}b_1 + \sigma_{pnp2}b_2 + \ldots + \sigma_{pnpn}b_n 
+  &=& \sigma_{png1}a_1 + \sigma_{png2}a_2 + \ldots + \sigma_{pngm}a_m
+(\#eq:generalindexeqs)
+\end{eqnarray}
+
+
+
+
+\pagebreak
+
+## Anhang 1: Least Squares Lösungen für die Betriebe {#leastsquares-betrieb}
+Die Least Squares Lösungen der Betriebe werden aus dem einfachen Regressionsmodell mit dem Betrieb als einzigen fixen Effekt für die Beobachtungen. Das Modell für eine Beobachtung $y_{ij}$ lautet somit
+
+\begin{equation}
+y_{ij} = \beta_j + \epsilon_{ij}
+(\#eq:regmodelfarm)
+\end{equation}
+
+Die für das Relativieren gebrauchten Least Squares Lösungen der Betriebe erhalten wir mit der Funktion `lm()` in R. Dazu müssen wir zuerst einen dataframe vorbereiten, welche die Zunahmen der Nachkommen und die zugehörigen Betriebe enthält. Wir nennen den dataframe `tbl_beef_farm` und dieser sieht als Tabelle, wie folgt aus.
+
+```{r TabBeefFarm, echo=FALSE, results='asis'}
+knitr::kable(tbl_beef_farm)
+```
+
+Bevor wir das Modell in `lm` angeben ist es wichtig, dass wir sicherstellen, dass die Variable Betrieb im dataframe `tbl_beef_farm` auch wirklich den Datentyp `factor` hat. Dies können wir mit folgendem Statement überprüfen. 
+
+```{r echo=TRUE, results='markup'}
+is.factor(tbl_beef_farm$Betrieb)
+```
+
+Falls die oben gezeigte Überprüfung nicht das Resultat `TRUE` zurückgibt, dann müssen wir die Variable Betrieb in den Datentypen `factor` umwandeln mit dem Befehl
+
+```{r, echo=TRUE, results='markup', eval=FALSE}
+tbl_beef_farm$Betrieb <- as.factor(tbl_beef_farm$Betrieb)
+```
+
+Das Modell wird dann spezifiziert mit
+
+```{r echo=TRUE, results='markup'}
+lm_beef_farm <- lm(Zunahme ~ 0 + Betrieb, data = tbl_beef_farm)
+```
+
+Die Resultate der Anpassung des Regressionsmodells erhalten wir mit der `summary()`-Funktion
+
+```{r echo=TRUE, results='markup'}
+summary(lm_beef_farm)
+```
+
+
+Die Least Squares Lösungen für die Betriebe erhalten wir mit dem Statement 
+
+```{r echo=TRUE, results='markup'}
+coefficients(lm_beef_farm)
+```
+
+
+
+
+

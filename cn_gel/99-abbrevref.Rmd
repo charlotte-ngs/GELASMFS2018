@@ -3,12 +3,12 @@
   -- concerning the table of abbreviations                               --> 
   
 
-```{r WriteTableOfAbbreviations, echo=FALSE, results='hide'}
+```{r WriteTableOfAbbreviations, echo=FALSE, results='hide', eval=FALSE}
 if (!r6objTableAbbrev$is_empty_abbr())
   r6objTableAbbrev$writeToTsvFile()
 ```
 
-```{r AbrTableToDocument, echo=FALSE, results='asis'}
+```{r AbrTableToDocument, echo=FALSE, results='asis', eval=FALSE}
 r6objTableAbbrev$include_abbr_table(psAbbrTitle = "# Abkürzungen {-}")
 ```
 
@@ -41,10 +41,39 @@ bref <- c(bibentry(
   bibentry(
     bibtype = "Book",
     title = "Linear Models for the Prediction of Animal Breeding Values",
-    author = c(as.person("R Mrode")),
+    author = as.person("R Mrode"),
     year = "2005",
     publisher = "CABI Publishing",
     key = "Mrode2005"
+  ),
+  bibentry(
+    bibtype = "Article",
+    title = "The genetic basis for constructing selection indexes",
+    author = as.person("L. N. Hazel"),
+    year = 1943,
+    journal = "Genetics",
+    volume = 28,
+    page = "476-490",
+    key = "Hazel1943"
+  ),
+  bibentry(
+    bibtype = "Article",
+    title = "The efficiency of three methods of selection",
+    author = c(as.person("L. N. Hazel"), as.person("J. L. Lush")),
+    year = 1943,
+    journal = "Journal of Heredity",
+    volume = 33,
+    page = "393-399",
+    key = "HL1943"
+  ),
+  bibentry(
+    bibtype = "Article",
+    title = "Sire evaluation and genetic trends",
+    author = as.person("C. R. Henderson"),
+    year = 1973,
+    journal = "Proceedings of the Animal Breeding and Genetics Symposium in Honour of Dr.Jay L. Lush. ASAS and ADSA, Champaign, Ill.",
+    page = "10-41",
+    key = "Henderson1973"
   )
   
 )
