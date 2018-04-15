@@ -163,7 +163,7 @@ knitr::kable(data.frame(Tier = tbl_beef_data$Tier, Residuen = vec_res_farm), boo
 
 
 ### Schritt 2: Gewichtung der relativen Leistungen
-Für die Gewichtung der relativierten Leistungen müssen wir wisen, welcher Teil der phänotypischen Überlegenheit genetisch bedingt ist. Hierzu benötigen wir die Regression des Genotyps ($u$) auf den Phänotyp $y$ eines Individuums. Der Regressionskoeffizient $b_{u,y}$ des Genotyps auf den Phänotyp entspricht der Erblichkeit $h^2$. Es gilt also
+Für die Gewichtung der relativierten Leistungen müssen wir wissen, welcher Teil der phänotypischen Überlegenheit genetisch bedingt ist. Hierzu benötigen wir die Regression des Genotyps ($u$) auf den Phänotyp $y$ eines Individuums. Der Regressionskoeffizient $b_{u,y}$ des Genotyps auf den Phänotyp entspricht der Erblichkeit $h^2$. Es gilt also
 
 \begin{equation}
 b_{u,y} = \frac{\sigma_{u,y}}{\sigma_y^2} = h^2
@@ -285,7 +285,7 @@ Aufgrund dieser beiden Definitionen können die folgenden Fälle unterschieden w
 Die folgenden Umstände können die Zuchtwertschätzung noch zusätzlich erschweren.
 
 * Informationsquellen können auch wiederholte Leistungen des gleichen Merkmals darstellen. Beispiele sind Töchter des gleichen Vaters oder Probewägungen bei der Milchleistung oder die Wurfgrösse bei der gleichen Sau.
-* Bei gewissen Merkmalen im Zuchtziel ist die Erhebung sehr umständlich oder sehr teuer. In diesem Fall wird oft auf sogenannte Hilfsmerkmale ausgewichen. Das Beispiel der Rückenspeckdicke als Hilfsmerkmal für die Fleischigkeit beim Schwein hatten wir schon früher erwähnt.
+* Bei gewissen Merkmalen im Zuchtziel ist die Erhebung sehr umständlich oder sehr teuer. In diesem Fall wird oft auf so genannte Hilfsmerkmale ausgewichen. Das Beispiel der Rückenspeckdicke als Hilfsmerkmal für die Fleischigkeit beim Schwein hatten wir schon früher erwähnt.
 
 
 #### Theorie der Indexkonstruktion
@@ -300,7 +300,7 @@ Unter dem Begriff _Indexkonstruktion_ versteht man die Berechnung der Gewichtung
 Der Index wird mit dem Ziel konstruiert, dass die Korrelation ($r_{TI}$) zwischen dem wahren und geschätzten Zuchtwert maximiert wird. Da der Index ($I$) einer multiplen linearen Regression entspricht, wobei die gesuchten Gewichtungsfakturen $b_i$ den Parametern der Regression entsprechen und diese mit Least Squares geschätzt werden, gilt es folglich die mittlere quadrierte Abweichung zwischen den wahren Zuchtwerten und dem Index zu minimieren. 
 
 \begin{equation}
-\hat{b} = argmin_b E(T-I)^2
+\hat{b} = argmin_b \{E(T-I)^2\}
 (\#eq:tarfunindex)
 \end{equation}
 
@@ -311,7 +311,7 @@ T = u \text{ und } I = bx
 (\#eq:simplecond)
 \end{equation}
 
-Stellen wir daraus die zu minimierende Zielfunktion aus Gleichung \@ref(eq:tarfunindex) auf so erlaten wir
+Stellen wir daraus die zu minimierende Zielfunktion aus Gleichung \@ref(eq:tarfunindex) auf so erhalten wir
 
 \begin{eqnarray}
 E(T-I)^2  &=&  E(u - bx)^2 \nonumber \\
@@ -358,10 +358,113 @@ Varianzen von Merkmalen sind als Kovarianzen eines Merkmals mit sich selber in d
 (\#eq:generalindexeqs)
 \end{eqnarray}
 
+Verwandeln wir das Gleichungssystem \@ref(eq:generalindexeqs) in Matrix-Vektor-Schreibweise, wobei wir $\sigma_{gipj} = G_{ij}$ und $\sigma_{pipj} = P_{ij}$ setzen dann folgt
+
+\begin{equation}
+Pb = Ga
+(\#eq:matvecindex)
+\end{equation}
+
+Durch Linksmultiplikation beider Seiten in \@ref(eq:matvecindex) mit der Inversen $P^{-1}$ der Matrix $P$ ergibt sich die folgende Lösung für den Vektor $b$ 
+
+\begin{eqnarray}
+P^{-1}Pb &=& P^{-1}Ga \nonumber \\
+      b &=& P^{-1}Ga
+(\#eq:matvecindexsol)
+\end{eqnarray}
+
+Da die Matrix $P$ eine Varianz-Kovarianzmatrix ist, ist sie sicher positiv-definit und somit ist garantiert, dass die Inverse $P^{-1}$ existiert. 
+
+Als Mass der Genauigkeit wird oft die Korrelation zwischen Index und Gesamtzuchtwert verwendet. 
+
+\begin{equation}
+r_{TI} = \frac{\sigma_{TI}}{\sigma_I \sigma_T}
+(\#eq:KorrIndAggGen)
+\end{equation}
+
+Setzten wir dafür die Grössen unseres einfachen Beispiels aus der Herleitung ein dann folgt
+
+\begin{eqnarray}
+\sigma_T^2  &=& E(u^2) = \sigma_u^2 \nonumber \\
+\sigma_I^2  &=& E(b^2x^2) = b^2E(x^2) = b^2\sigma_x^2 \nonumber \\
+\sigma_{TI} &=& E(u*bx) = b*E(ux) = b\sigma_u^2
+(\#eq:DerAccBv)
+\end{eqnarray}
+
+Setzen wir \@ref(eq:DerAccBv) in die Gleichung \@ref(eq:KorrIndAggGen) ein so folgt
+
+\begin{eqnarray}
+r_{TI} &=& \frac{\sigma_{TI}}{\sigma_I \sigma_T} \nonumber \\
+       &=& \frac{b\sigma_u^2}{b\sigma_x * \sigma_u}
+(\#eq:KorrIndAggGenInsert)
+\end{eqnarray}
+
+Die Korrelation $r_{TI}$ wird dann maximal^[Dies war eine der Anforderungen bei der Konstruktion des Indexes], wenn wir $\sigma_{TI} = \sigma_I^2$ setzen. Somit gilt dann, dass
+
+\begin{equation}
+r_{TI} = \frac{\sigma_I^2}{\sigma_I \sigma_T} = \frac{\sigma_I}{\sigma_T}
+(\#eq:KorrIndAggGenResult)
+\end{equation}
+
+Diese Beziehung gilt auch allgemein. Die Korrelation zwischen wahrem und geschätztem Zuchtwert entspricht dem Verhältnis der Standardabweichung des geschätzten Zuchtwertes geteilt durch die Standardabweichung des wahren Zuchtwertes. In der Tierzucht wird oft das Quadrat der Genauigkeit $r_{TI}$ verwendet und als __Bestimmtheitsmass__ des Zuchtwerts bezeichnet. 
 
 
+### Nachkommenleistungen
+Die Zuchtwertschätzung aufgrund von Nachkommenleistungen ist immer noch eine der häufigsten Arten, wie Zuchtwerte in der Tierzucht ermittelt werden. Die Nachkommen eines Vatertiers sind oft Halbgeschwister (oder eine Kombination aus Halb- und Vollgeschwister). Die Relativierung der phänotypischen Leistungen wird durch die Korrektur der Leistungen der Nachkommen mit einem geeigneten Vergleichswert ermittelt. Die phänotypische Varianz eines Durchschnitts aus $n$ vergleichbaren Leistungen ist allgemein
 
-\pagebreak
+\begin{equation}
+\sigma_{\bar{x}}^2 = \frac{1+(n-1)t}{n}\ \sigma_x^2
+(\#eq:PhenVarMean)
+\end{equation}
+
+wobei $t$ der Wiederholbarkeit oder Intraklassenkorrelation entspricht. Den Wert für $t$ kann aus den folgenden Überlegungen hergeleitet werden.
+
+* Wir nehmen an, dass die $n$ Tiere untereinander Halbgeschwister sind.
+* Halbgeschwister haben im Schnitt $1/4$ der Allele gemeinsam
+* Die Kovarianz zwischen Halbgeschwister beträgt somit $1/4 \sigma_u^2$
+* Die Korrelation entspricht der Kovarianz dividiert durch die phänotypische Varianz
+
+Somit gilt für die Halbgeschwister
+
+$$t = 1/4 * \frac{\sigma_u^2}{\sigma_x^2} = \frac{1}{4} * h^2$$
+
+Damit erhalten wir die folgende Gleichung^[Diese werden auch als Normalgleichungen bezeichnet] aus der Indexkonstruktion
+
+\begin{equation}
+\frac{1+(n-1)\frac{1}{4} * h^2}{n} * \sigma_x^2 * b = r_{1\alpha} * \sigma_u^2
+(\#eq:NormEqHalfSib)
+\end{equation}
+
+wobei $r_{1\alpha}$ dem Verwandtschaftsgrad zwischen dem Probanden und dem Nachkommen entspricht. Zwischen Vater und Nachkommen beträgt dieser $r_{1\alpha} = 1/2$, da ein Nachkommen die Hälfte der Allele vom Vater erbt. Setzen wir das ein, dann erhalten wir
+
+\begin{equation}
+\frac{1+(n-1)\frac{1}{4} * h^2}{n} * \sigma_x^2 * b = \frac{1}{2} * \sigma_u^2
+(\#eq:NormEqHalfSibInsert)
+\end{equation}
+
+Aufgelöst nach $b$ ergibt sich das folgende Resultat
+
+\begin{equation}
+b = \frac{2nh^2}{4 + (n-1)h^2}
+(\#eq:NormEqHalfSibResult)
+\end{equation}
+
+Setzen wir $k=(4-h^2)/h^2$ so erhalten wir für $b$ den aus der Literatur bekannten Wert von 
+
+\begin{equation}
+b = \frac{2n}{n + k}
+(\#eq:NormEqHalfSibLit)
+\end{equation}
+
+Die Genauigkeit der so geschätzten Zuchtwerte ergibt sich als
+
+\begin{equation}
+r_{TI} = \sqrt{\frac{n}{n + k}}
+(\#eq:AccBvHalfSib)
+\end{equation}
+
+Für grosse Werte von $n$, d.h. wenn ein Vater sehr viele Nachkommen hat, dann strebt der Wert von $b$ gegen $2$ und erreicht so den theoretischen Wert aus der Definition \@ref(def:defzw). Die Genauigkeit strebt gegen den Wert $1$ für sehr grosse Werte von $n$. Dies erwarten wir auch intuitiv, dass die Genauigkeit mit zunehmender Anzahl von Nachkommen ansteigt. 
+
 
 ## Anhang 1: Least Squares Lösungen für die Betriebe {#leastsquares-betrieb}
 Die Least Squares Lösungen der Betriebe werden aus dem einfachen Regressionsmodell mit dem Betrieb als einzigen fixen Effekt für die Beobachtungen. Das Modell für eine Beobachtung $y_{ij}$ lautet somit
