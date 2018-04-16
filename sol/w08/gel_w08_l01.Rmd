@@ -1,0 +1,172 @@
+---
+title: "AZWS - Lösung 1"
+author: "Peter von Rohr"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document:
+    keep_tex: FALSE
+output_file: asmas_w08_l01.pdf
+---
+
+```{r DocumentSetup, echo=FALSE, results='hide'}
+knitr::opts_chunk$set(echo = FALSE, results = 'hide')
+# r6objTableAbbrev <- rmddochelper::R6ClassTableAbbrev$new()
+```
+
+
+
+## Aufgabe 1: Kontrollfragen Zuchtprogramm
+
+__Kontrollfrage 1__: Nennen Sie die sechs Bestandteile eines Zuchtprogramms und teilen Sie diese in die Kategorien _Planung_ (P), _Informationsfluss_ (I) und _Ausführung_ (A) ein.
+
+__Kontrollfrage 2__: Welche Arten von Zuchtprogrammen gibt es und wo sind diese anzutreffen (Regionen, Struktureigentschaften) ?
+
+__Kontrollfrage 3__: Aus welchen Gründen wurden die Stationsprüfung beim Schwein und die Milchleistungsprüfung beim Rind eingeführt? 
+
+### Lösung
+
+__Antwort 1__:
+
+1. Zuchtziel - (P)
+2. Leistungsprüfung (I)
+3. Zuchtwertschätzung (I)
+4. Reproduktionstechniken (A)
+5. Selektion und gezielte Anpaarung (A)
+6. Selektionserfolg (I)
+
+__Antwort 2__: 
+
+* Zuchtprogrammen, bei denen __Zuchtfortschritt im Zentrum steht. Verbreitung: Regionen mit knappen Ressourcen, wenig Züchtungsinfrastruktur oder grossen Betriebsstrukturen
+* Zuchtprogramme, bei denen wirtschaftliches Ergebnis der beteiligten Betriebe/Firmen/Organisationen im Zentrum steht.
+
+__Angwort 3__: 
+
+* Die Stationsprüfung beim Schwein wurde zur Vereinheitlichung und zur besseren Standardisierung der Umweltbedingungen eingeführt. So konnten die Leistungen zwischen Prüfgruppen in konstanter Umwelt miteinander verglichen werden.
+* Die Milchleistungsprüfung wurde zur Sicherung der Qualität und aus Managementgründen eingeführt.
+
+
+## Aufgabe 2: Einflussfaktoren Selektionserfolg
+Füllen Sie in der folgenden Tabelle aus, welche Einflüsse die einzelnen Komponenten des Zuchtprogramms auf den Selelektionserfolg haben.
+
+\renewcommand{\arraystretch}{3.0}
+ \renewcommand{\tabcolsep}{0.2cm}
+ \begin{tabular}{|p{4cm}|p{3.5cm}|p{3.5cm}|p{3.5cm}|}
+\hline
+           &   $i$  &  $r_{TI}$  &  $\sigma_a$ \\
+\hline
+Leistungsprüfung         &        &            &             \\  
+\hline
+Zuchtwertschätzung       &        &            &             \\
+\hline
+Reproduktionstechniken   &        &            &             \\
+\hline
+Selektion und Anpaarung  &        &            &             \\
+\hline
+\end{tabular}
+
+
+### Lösung
+
+\renewcommand{\arraystretch}{3.0}
+ \renewcommand{\tabcolsep}{0.2cm}
+ \begin{tabular}{|p{4cm}|p{3.5cm}|p{3.5cm}|p{3.5cm}|}
+\hline
+           &   $i$  &  $r_{TI}$  &  $\sigma_a$ \\
+\hline
+Leistungsprüfung         &  bei vielen Tieren günstig messbar. Verteilung nahe an Normalverteilung
+                         &  möglichst hohe Genauigkeit der Messung. Messung besser als Bewertung          
+                         &  Merkmale mit ausreichender genetisch-additiver Varianz und Erblichkeit \\  
+\hline
+Zuchtwertschätzung       &  BLUP-Tiermodell, damit alle Tiere im Pedigree Zuchtwerte
+                         &  Verwendung aller Verfügbarer Information (Pedigree und Daten) in BLUP-Tiermodell, damit Genauigkeit möglichst hoch 
+                         &  Verwendung korrekt geschätzter Varianzkomponenten in Zuchtwerschätzverfahren   \\
+\hline
+Reproduktionstechniken   &  Erhöhung der Anzahl Nachkommen pro Elterntier erhöht Selektionsintensität
+                         &  überbetrieblicher Einsatz ermöglicht genauere Schätzung der Zuchtwerte, da Umwelt besser berücksichtigt
+                         &  bessere Schätzung der Umwelt erlaubt bessere Trennung zwischen genetisch-additiver Varianz und Restvarianz \\
+\hline
+Selektion und Anpaarung  &  Strenge Selektion und Anpaarung der besten Tiere erhöhen die Selektionsintensität
+                         &  Selektion vieler junger Tiere verkürzt Generationenintervall, aber Genauigkeit ist eher tiefer
+                         &  Gezielte Paarung über Betriebe hinweg verbessert Schätzung der genetisch-additiven Varianz \\
+\hline
+\end{tabular}
+
+\renewcommand{\arraystretch}{1.0}
+\renewcommand{\tabcolsep}{0.2cm}
+
+## Aufgabe 3: 
+In der nachfolgenden Tabelle sind Erblichkeiten ($h^2$) und phänotypische Standardabweichung ($S_p$ oder $\sigma_p$) für eine Reihe von Merkmalen beim Schwein gegeben
+
+```{r}
+suppressPackageStartupMessages(require(magrittr)) 
+suppressPackageStartupMessages(require(dplyr))
+tbl_all_param_pigs <- dplyr::data_frame(
+  Merkmal = c("MTZ", "FV", "AwF", "ImF", "pH1", "pH30", "H30","FEZ"),
+  h2 = c(.32, .47, .6, .51, .29, .16, .22, .42),
+  Sg = c(42.31, .09, 1.78, .33, .09, .02, 1.58, .86)
+)
+tbl_all_param_pigs <- tbl_all_param_pigs %>% mutate(Sp = round(Sg/sqrt(h2), digits = 2) )
+tbl_param_pigs <- tbl_all_param_pigs %>% select(Merkmal, h2, Sp)
+```
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(tbl_param_pigs)
+```
+
+
+
+a. Berechnen Sie die genetisch additive Varianz für alle Merkmale
+```{r}
+sel_int <- .8
+gen_interval <- 1.5
+```
+
+b. Angenommen, es wird mit einer Intensität von $i=`r sel_int`$ aufgrund einer Eigenleistung selektiert und das Generationeninterval betrage $L = `r gen_interval`$ Jahre beim Schein. Wie gross ist der jährliche Selektionserfolg für jedes Merkmal?
+
+```{r}
+imf_current <- 1.6
+imf_new <- 1.8
+```
+
+c. Wie lange dauert es bis sich der ImF vom aktuellen Populationsmittel von  $`r imf_current`\%$ auf $`r imf_new`\%$ verbessert hat?
+
+
+### Lösung
+
+a. Die additive-genetische Varianz $V_g$ entspricht dem Produkt aus der Erblichkeit mal die phänotypische Varianz. Somit lautet das Resultat
+
+```{r, echo=FALSE, results='asis'}
+tbl_genvar <- tbl_all_param_pigs %>% mutate(Vg = round(h2 * Sp^2, digits = 4)) %>% select(Merkmal, Vg)
+knitr::kable(tbl_genvar)
+```
+
+b. Bei der Selektion mit einer Eigenleistung entspricht die Genauigkeit der Zuchtwertschätzung der Erblichkeit. Also ist die Korrelation $r_{IT}$ gleich der Quadratwurzel aus der Erblichkeit $h^2$. Aus dem Skript kennen wir die Formel für den jährlichen Selektionserfolg $SR$ oder $\Delta G$ als
+
+$$\Delta G = \frac{i * r_{IT} * \sigma_a}{L} $$
+
+\pagebreak
+
+Somit lauten die Selektionserfolge
+
+```{r, echo=FALSE, results='asis'}
+tbl_selresp <- tbl_all_param_pigs %>% mutate(SR = round(sel_int * sqrt(h2) * Sg / gen_interval, digits = 4)) %>% select(Merkmal, SR)
+knitr::kable(tbl_selresp)
+```
+
+c. Soll sich das Populationsmittel $\mu_{ImF}$ von $`r imf_current`\%$ auf $`r imf_new`\%$ verbessern, dann müssen wir den Unterschied zwischen dem aktuellen und dem neuen gewünschten Populationsmittel durch den Selektionsfortschritt pro Jahr teilen. Dann erhalten wir die Zeitdauer $t$, welche für diese Steigerung benötigt wird.
+
+$$t = \frac{\mu_{ImF,neu} - \mu_{ImF,aktuell}}{\Delta G_{ImF}}$$
+
+```{r}
+delta_g_imf <- unlist(tbl_selresp %>% filter(Merkmal == "ImF") %>% select(SR))
+sel_time <- (imf_new - imf_current)/delta_g_imf
+sel_time_rounded2 <- round(sel_time, digits = 2)
+```
+
+Eingesetzt erhalten wir
+
+$$t =  \frac{`r imf_new` - `r imf_current`}{`r delta_g_imf`} = `r sel_time_rounded2`$$
+
+Das heisst es dauert rund `r sel_time_rounded2` Jahre für die Verbesserung des ImF von aktuell $`r imf_current`\%$ auf $`r imf_new`\%$.
+
+
