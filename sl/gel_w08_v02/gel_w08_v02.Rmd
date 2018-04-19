@@ -1,0 +1,132 @@
+---
+title: "Zuchtwertschätzung"
+author: "Peter von Rohr"
+date: "16.04.2018"
+output: beamer_presentation
+output_file: gel_w08_v02.pdf
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, results = "asis")
+knitr::knit_hooks$set(odg.conv = rmddochelper::odg.graphics.conv.hook)
+```
+
+## Selektionsfortschritt
+
+* Differenz zwischen mittleren Leistung der Nachkommen und mittleren Leistung der (gesamten) Elterngeneration
+
+$$ \Delta G = \frac{i * r_{TI} * \sigma_T}{L} $$
+
+* Vier Faktoren
+
+1. Selektionsintensität $i$
+2. Genauigkeit der Zuchtwertschätzung $r_{TI}$
+3. additiv-genetische Standardabweichung $\sigma_T$
+4. Generationeninterval $L$
+
+
+## Verteilung über Generationen
+```{r GerichteteSelektionElternNk,echo=FALSE, odg.conv=TRUE, odg.path="odg", odg.graph.cache=TRUE}
+knitr::include_graphics(path = "png/GerichteteSelektionElternNk.pdf")
+```
+
+
+## Geschichte der Zuchtwertschätzung
+* Selektion auf Phänotypen
+    + funktioniert für Erscheinungsmerkmale
+    + nicht erfolgreich bei Leistungsmerkmalen
+* Leistungen anfangs nicht objektiv gemessen
+* Leistungssteigerung erfolgte mit
+    + systematischer Erfassung der Leistungen
+    + Auswertung in der Zuchtwertschätzung
+    + Verfügbarkeit von Rechenressourcen
+
+
+## Weshalb sind Zuchtwerte wichtig
+* Für Selektion brauchen wir Rangierung der Selektionskandidaten
+* Somit brauchen wir ein Kriterium anhand dessen wir Kandidaten rangieren können
+* Da Eltern die Hälfte ihrer Allele an Nachkommen weitergeben, soll Kriterium das genetische Potential beschreiben
+
+## Rangierung bedeutet
+```{r, echo=FALSE, results='hide'}
+set.seed(543)
+n_sel_cand <- 10
+n_crit_mean <- 100
+n_crit_sd <- 8
+vec_crit_val <- floor(rnorm(10, mean = n_crit_mean, sd = n_crit_sd))
+tbl_sel_data <- dplyr::data_frame(Tier = paste("Tier", 1:n_sel_cand), Kriterium = vec_crit_val)
+suppressPackageStartupMessages(require(ggplot2)) 
+qplot(Tier, Kriterium, data = tbl_sel_data)
+```
+
+
+## Resultat der Rangierung
+```{r FigOrderedCriterion, echo=FALSE, results='asis'}
+tbl_sel_data_ordered <- tbl_sel_data[order(tbl_sel_data$Kriterium),]
+knitr::kable(tbl_sel_data_ordered, booktabs = TRUE, caption ="Rangierung der Tiere nach deren Werte des Kriteriums")
+```
+
+
+## Definition des Zuchtwerts
+
+* doppelte Leistungsabweichung der Nachkommen im Vergleich zum Populationsdurchschnitt
+* _doppelte_ Leistungsabweichung, da Elternteil nur Hälfte seiner Allele weitergibt
+* viele Nachkommen, da weitergegebene Elternallele einer Zufallsstichprobe entsprechen
+* Zuchtwert als Abweichung von Populationsschnitt, somit nur innerhalb der Population gültig
+* Durchschnitt der Zuchtwerte ist $0$
+
+
+## Prinzip der Zuchtwertschätzung
+* Bei allen Zuchtwertschätzungen wird nach dem gleichen Prinzip vorgegangen
+* Leistungen werden __relativiert__
+    + Korrektur der Leistung damit Zuchtwerte unter gleichen Bedingungen vergleichbar
+    + Subtraktion der Leistung um einen Vergleichswert
+* Relativerte Leistungen werden gewichtet
+    + Gewichtung erfolgt nach Informationsquellen
+    + höhere Gewichtung bei verlässlicheren Informationsquellen
+    
+
+## Mathematische Umsetzung
+* Relativierung: Subtraktion eines Vergleichswertes (hier mit $\mu$ bezeichnet)
+* Gewichtung: Multiplikation mit Faktor gemäss Informationsquellen
+* Somit ist der geschätzte Zuchtwert ($\hat{u}_i$) des Tieres $i$
+
+$$ \hat{u}_i = b_i(y_i - \mu)$$
+
+
+## Beispiel: Zuchtwertschätzung mit Eigenleistungen
+* Gegeben Zahlenbeispiel aus dem Skript
+* Schritt 1: __Relativieren__
+    + Korrektur der Eigenleistungen um die LeastSquares Lösungen der Betriebe
+$$e_i = y_i - x^T_i\hat{\beta}$$
+
+* Schritt 2: __Gewichtung__
+    + Welcher Teil des phänotyps ist genetisch bedingt
+    + Eigenleistung führt zu Regression von Genotyp auf Phänotyp
+$$b = \frac{Cov(u,y)}{Var(y)} = \frac{\sigma_{u,y}}{\sigma_y^2} = \frac{\sigma_u^2}{\sigma_y^2}=h^2$$
+
+* Resultat
+$$ \hat{u}_i = h^2(y_i - x^T_i\hat{\beta})$$
+
+* Verwendung: beschränkt auf Tiere mit Eigenleistung
+
+
+## Selektionsindex
+* Ziel der Zuchtwertschätzung: auf additiver Genwirkung basierende Leistungsüberlegenheit der Nachkommen eines Tieres aufgrund vorliegender Informationsquellen so zu schätzen, dass Korrelation zwischen wahrem und geschätztem Zuchtwert maximal
+* additive Genwirkung: nur eine Hälfte der Allele von Eltern an Nachkommen
+* Leistungsüberlegenheit der Nachkommen - aufgrund der Definition des Zuchtwerts
+* Informationsquellen können vom Tier selber oder von Verwandten stammen
+* alternative Zielformulierung zur Korrelation: Minimierung der mittleren quadrierten Fehler (oder der Fehlervarianz)
+
+
+## Begriffe
+Wichtige Unterscheidung zwischen zwei "Arten" von Zuchtwerten
+
+1. __wahrer Zuchtwert__: Summe der Gensubstitutionseffekte
+2. __geschätzer Zuchtwert__: aufgrund von Informationsquellen (Daten) mit einem statistischen Modell geschätzter Wert.
+
+
+## Konstruktion des Selektionsindexes
+* Ziel: alle verfügbaren Informationsquellen ($x_i$) werden zu einem Index $I$ kombiniert
+* Kombination erfolgt über lineare Funktion
+

@@ -1,0 +1,161 @@
+---
+title: "AZWS - Lösung 2"
+author: "Peter von Rohr"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document:
+    keep_tex: FALSE
+output_file: asmas_w09_l02.pdf
+---
+
+```{r DocumentSetup, echo=FALSE, results='hide'}
+knitr::opts_chunk$set(echo = FALSE, results = 'hide')
+```
+
+
+
+## Aufgabe 1: Zuchtwertschätzung mit Nachkommenleistungen
+Berechnen Sie die geschätzten Zuchtwerte und die Bestimmtheitsmasse für die drei Väter des Zahlenbeispiels (Seite 21) im Skript. Wir nehmen an, dass alle Nachkommen (Tiere 12-27) Halbgeschwister sind. Als Abweichung für die Relativierung der Leistungen nehmen wir wieder die Least Squares Lösungen der Betriebe an.
+
+Das Zahlenbeispiel aus dem Skript ist hier in reduzierter Form noch einmal dargestellt
+
+```{r TableBeefDataReduced, echo=FALSE, results='asis'}
+n_nr_sire <- 3
+n_nr_dam <- 8
+n_nr_parents <- n_nr_sire + n_nr_dam
+n_nr_offspring <- 16
+n_nr_animals <- n_nr_parents + n_nr_offspring
+dam_id <- rep(4:11,2)
+
+tbl_beef_data_reduced <- dplyr::data_frame(Tier = (n_nr_parents + 1):n_nr_animals,
+                                   Vater = c(rep(1,8), rep(2,6), rep(3,2)),
+                                   Betrieb = c(rep(1,4), rep(2,4), rep(1,4), rep(2,4)),
+                                   Zunahme = c(1.26,1.32,1.4,1.44,1.52,1.5,1.42,1.46,1.34,1.32,1.24,1.28,1.44,1.4,1.54,1.56))
+
+knitr::kable(tbl_beef_data_reduced, align = "c", booktabs = TRUE)
+```
+
+### Ihre Aufgabe
+* Schätzen Sie die Zuchtwerte für die drei Väter aufgrund der Nachkommenleistungen
+* Vergleichen Sie die Rangierung der Väter aufgrund der geschätzten Zuchtwerte und aufgrund der Mittelwerte der Nachkommenwerte der Väter.
+
+
+### Lösung
+Für die Berechnungen und die Umformatierung der Resultate brauchen wir zwei R-packages, welche wir gleich als erste laden.
+
+```{r echo=TRUE, results='markup'}
+suppressPackageStartupMessages( require(magrittr) )
+suppressPackageStartupMessages( require(dplyr) )
+```
+
+Bei der Schätzung der Zuchtwerte gehen wir nach dem im Skript vorgestellten Prinzip vor. 
+
+* __Schritt 1__: Relativieren - dafür verwenden wir wieder die Least Squares Lösungen für die Betriebe. Diese werden hier nochmals gerechnet. Wichtig ist, dass wir die Betriebe zuerst in Faktoren verwandeln, sonst werden diese nicht als fixe Effekte, sondern als Kovariablen behandelt.
+
+```{r LsqSolFarm, echo=TRUE, results='markup'}
+tbl_beef_data_reduced$Betrieb <- as.factor(tbl_beef_data_reduced$Betrieb)
+lm_beef_farm <- lm(formula = Zunahme ~ 0 + Betrieb, data = tbl_beef_data_reduced)
+```
+
+Die Least-Squares Lösungen entsprechen dann:
+
+```{r CoefFarm, echo=TRUE, results='markup'}
+coefficients(lm_beef_farm)
+```
+
+
+Die um die Betriebseffekte korrigierten Zunahmen erhalten wir als Residuen von `lm_beef_farm`. Diese brauchen wir für die Zuchtwertschätzung also fügen wir den Vektor der Residuen als zusätzliche Kolonne zum Tibble (spezieller Dataframe) mit den Ausgangsdaten hinzu. 
+
+```{r RelZunahme, echo=TRUE, results='markup'}
+tbl_beef_data_reduced <- tbl_beef_data_reduced %>% 
+  mutate(RelativierteZunahme = residuals(lm_beef_farm))
+```
+
+* __Schritt 2__: Gewichtung - Für die Zuchtwertschätzung aufgrund von Nachkommenleistungen, wobei die Nachkommen alle Halbgeschwister sind, ist die Gewichung für den Vater $s$ im Skript gegeben als 
+
+$$b_s = \frac{2n_s}{n_s+k}$$
+
+```{r echo=FALSE, results='hide'}
+h2 <- .25
+k <- (4-h2)/h2
+```
+
+wobei $k = (4-h^2)/h^2$ und die Erblichkeit ($h^2$) ist gegeben als $h^2 = `r h2`$. Dabei bleibt der Wert von $k$ für alle Väter konstant und beträgt $k=`r k`$. Der Term $n_s$ entspricht der Anzahl Nachkommen für den Vater $s$ und ist für jeden Vater unterschiedlich. 
+
+Somit empfielt es sich zuerst für jeden Vater die Anzahl Nachkommen zu bestimmen.
+
+```{r NumberOffspring, echo=TRUE, results='markup'}
+tbl_beef_offspring <- tbl_beef_data_reduced %>% 
+  group_by(Vater) %>% 
+  summarize(AnzahlNachkommen = n()) 
+```
+
+Als Zwischenresultate können wir diese in einer Tabelle zeigen
+
+```{r NumberOffspringTabel, echo=FALSE, results='asis'}
+knitr::kable(tbl_beef_offspring, align = "c", booktabs = TRUE)
+```
+
+Die Gewichtungsfaktoren $b_s$ lassen sich aus $k$ und der Anzahl Nachkommen berechnen.
+
+```{r WeightsFather, echo=TRUE, results='markup'}
+tbl_beef_offspring <- tbl_beef_offspring %>% 
+  mutate(GewichtsFaktorB = 2*AnzahlNachkommen/(AnzahlNachkommen + k))
+```
+
+Dies fügt dem Tibble (spezieller Dataframe) einen neue Kolonne mit den Gewichtungsfaktoren hinzu. Das Resultat sieht, wie folgt aus
+
+```{r WeightFactorTable, echo=FALSE, results='asis'}
+knitr::kable(tbl_beef_offspring, align = "c", booktabs = TRUE)
+```
+
+
+* __Schritt 3__: Zusammenstellen der Resultate - Aus den relativierten Zunahmen rechen wir jetzt für jeden Vater noch den Durchschnitt und multiplizieren diese durchschnittlichen relativierten Leistungen mit den Gewichtungsfaktoren.
+
+```{r MeanRelObs, echo=TRUE, results='markup'}
+# Mittlere Zunahmen
+tbl_beef_offspring <- cbind(tbl_beef_offspring, 
+  tbl_beef_data_reduced %>% 
+    group_by(Vater) %>% 
+    summarise(MittlereZunahme = mean(Zunahme)) %>% 
+    select(MittlereZunahme))
+# Mittlere relativierte Zunahmen
+tbl_beef_offspring <- cbind(tbl_beef_offspring, 
+  tbl_beef_data_reduced %>% 
+    group_by(Vater) %>% 
+    summarise(MittlereRelZuname = mean(RelativierteZunahme)) %>% 
+    select(MittlereRelZuname))
+```
+
+Die mittleren relativierten Zunahmen geben wir hier wieder als Zwischenresultate in einer Tabelle an.
+
+```{r MeanRelObsTable, echo=FALSE, results='asis'}
+knitr::kable(tbl_beef_offspring, align = "c", booktabs = TRUE)
+```
+
+Als letztes müssen wir jetzt noch die Gewichtungsfaktoren und die mittleren relativierten Leistungen miteinander multiplizieren.
+
+```{r EstBreedValOffspring, echo=TRUE, results='markup'}
+tbl_beef_offspring <- tbl_beef_offspring %>% 
+  mutate(GeschZuchtwertNk = GewichtsFaktorB * MittlereRelZuname)
+```
+
+Die geschätzten Zuchtwerte der drei Väter mit allen Zwischenresultaten sind in der nachfolgenden Tabelle gezeigt.
+
+```{r EstBreedValOffspringTable, echo=FALSE, results='asis'}
+knitr::kable(tbl_beef_offspring, align = "c", booktabs = TRUE)
+```
+
+Die Rangierung der Väter aufgrund der beiden Kriterien lautet
+
+```{r OrderTable, echo=FALSE, results='asis'}
+tbl_beef_order <- data_frame(Vater = tbl_beef_offspring$Vater, 
+                             RangMittelwert = order(tbl_beef_offspring$MittlereZunahme, decreasing = TRUE),
+                             RangZws = order(tbl_beef_offspring$GeschZuchtwertNk, decreasing = TRUE))
+knitr::kable(tbl_beef_order, align = "c", booktabs = TRUE)
+```
+
+
+
+
+
