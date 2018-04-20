@@ -183,6 +183,8 @@ vec_topics_addmat[which(Datum == format(as.Date("2018/03/05"), "%d.%m"))] <- pas
 vec_topics_addmat[which(Datum == format(as.Date("2018/03/19"), "%d.%m"))] <- paste0("[Genotypen Übung 3](", sBaseUrl, "ex/w04/asmas_w04_u03_genotypes.txt", ")") 
 vec_topics_addmat[which(Datum == format(as.Date("2018/03/26"), "%d.%m"))] <- paste0("[LASSO Übung 4](", sBaseUrl, "ex/w05/asmas_w05_u04_lasso.txt", ")") 
 vec_topics_addmat[which(Datum == format(as.Date("2018/04/09"), "%d.%m"))] <- paste0("[SVT Flyer](", sBaseUrl, "misc/SVT/SVT-Flyer-2017-web.pdf", ")") 
+vec_topics_addmat[which(Datum == format(as.Date("2018/04/16"), "%d.%m"))] <- paste0("[Prüfung 2017](", sBaseUrl, "misc/exam_2017/asmas_2017_exam_que.pdf", 
+                                                                                    "), [Lösungen](", sBaseUrl, "misc/exam_2017/asmas_2017_exam_sol.pdf", ")") 
 # dataframe and table with additional material
 df_addmat <- data.frame(Woche = Woche, Datum = Datum, Thema = vec_topics_addmat, stringsAsFactors = FALSE)
 knitr::kable(df_addmat)

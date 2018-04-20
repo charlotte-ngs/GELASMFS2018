@@ -12,14 +12,7 @@ output_file: asmas_w09_l02.pdf
 knitr::opts_chunk$set(echo = FALSE, results = 'hide')
 ```
 
-
-
-## Aufgabe 1: Zuchtwertschätzung mit Nachkommenleistungen
-Berechnen Sie die geschätzten Zuchtwerte und die Bestimmtheitsmasse für die drei Väter des Zahlenbeispiels (Seite 21) im Skript. Wir nehmen an, dass alle Nachkommen (Tiere 12-27) Halbgeschwister sind. Als Abweichung für die Relativierung der Leistungen nehmen wir wieder die Least Squares Lösungen der Betriebe an.
-
-Das Zahlenbeispiel aus dem Skript ist hier in reduzierter Form noch einmal dargestellt
-
-```{r TableBeefDataReduced, echo=FALSE, results='asis'}
+```{r BeefDataReduced}
 n_nr_sire <- 3
 n_nr_dam <- 8
 n_nr_parents <- n_nr_sire + n_nr_dam
@@ -32,6 +25,98 @@ tbl_beef_data_reduced <- dplyr::data_frame(Tier = (n_nr_parents + 1):n_nr_animal
                                    Betrieb = c(rep(1,4), rep(2,4), rep(1,4), rep(2,4)),
                                    Zunahme = c(1.26,1.32,1.4,1.44,1.52,1.5,1.42,1.46,1.34,1.32,1.24,1.28,1.44,1.4,1.54,1.56))
 
+### # Least-Squares Lösungen für die Betriebe hier schon vor-berechnen
+tbl_beef_data_reduced$Betrieb <- as.factor(tbl_beef_data_reduced$Betrieb)
+lm_beef_farm <- lm(formula = Zunahme ~ 0 + Betrieb, data = tbl_beef_data_reduced)
+```
+
+
+## Aufgabe 1: Relativierung
+Anhand des Zahlenbeispiels im Skript (Seite 21 und siehe auch Aufgabe 2) wurde die Relativierung mit der folgenden Gleichung erklärt 
+
+$$e = y - Xb$$
+
+\begin{tabular}{lll}
+wobei  &  &  \\
+       & $e$  &  der Vektor der relativierten Beobachtungen ist \\
+       & $y$  &  der Vektor der phänotypischen Beobachtungen ist \\
+       & $b$  &  Vektor der Least-Squares Schätzungen für Betriebe \\
+       & $X$  &  Design-Matrix, der Betriebe den Beobachtungen zuordnet
+\end{tabular}
+
+### Ihre Aufgabe:
+* Stellen Sie die Vektoren $y$, $b$ und die Matrix $X$ auf
+* Berechnen Sie aus den gemachten Angaben die relativierten Beobachtungen
+
+
+### Lösung
+* Der Vektor $y$ entspricht dem Vektor der Zunahmen. Somit können schreiben
+
+```{r VecY, echo=FALSE, results='asis'}
+vec_y <- tbl_beef_data_reduced$Zunahme
+cat("$$")
+cat("y=\\left[")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(vec_y), collapse = "\n"), "\n")
+cat("\\right] $$\n")
+```
+
+* Der Vektor $b$ entspricht den Least-Squares Lösungen der Betriebe. Diese lauten
+
+```{r VecB, echo=FALSE, results='asis'}
+vec_b <- coefficients(lm_beef_farm)
+cat("$$")
+cat("b=\\left[")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(vec_b), collapse = "\n"), "\n")
+cat("\\right] $$\n")
+```
+
+* Die Matrix $X$ ist die Designmatrix, welche die Betriebe und die Beobachtungen verknüpft.
+
+```{r MatX, echo=FALSE, results='asis'}
+mat_X <- model.matrix(lm_beef_farm)
+cat("$$")
+cat("X=\\left[")
+cat(paste(rmddochelper::sConvertMatrixToLaTexArray(mat_X), collapse = "\n"), "\n")
+cat("\\right] $$\n")
+```
+
+* Der Vektor $e$ der relativierten Beobachtungen wird nun berechnet als
+
+```{r VecE, echo=FALSE, results='asis'}
+vec_e <- vec_y - mat_X %*% vec_b
+cat("$$")
+cat("e = y - Xb = \\left[")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(vec_y), collapse = "\n"), "\n")
+cat("\\right] ")
+cat(" - \\left[")
+cat(paste(rmddochelper::sConvertMatrixToLaTexArray(mat_X), collapse = "\n"), "\n")
+cat("\\right]")
+cat(" * \\left[")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(vec_b), collapse = "\n"), "\n")
+cat("\\right]")
+cat(" = \\left[")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(vec_e), collapse = "\n"), "\n")
+cat("\\right] $$\n")
+```
+
+* Vergleichen wir den manuell berechneten Vektor $e$ der relativierten Zunahmen mit den Residuen aus der Anpassung der Regression mit `lm()` dann sehen wir die Übereinstimmung.
+
+```{r CompareResRelZn, echo=FALSE, results='asis'}
+tbl_comp_res_relzn <- dplyr::data_frame(Tier = tbl_beef_data_reduced$Tier,
+                                 Residuen = residuals(lm_beef_farm),
+                                 RelZunahme = as.vector(vec_e))
+knitr::kable(tbl_comp_res_relzn, align = "c", booktabs = TRUE)
+```
+
+
+
+
+## Aufgabe 2:Zuchtwertschätzung mit Nachkommenleistungen
+Berechnen Sie die geschätzten Zuchtwerte und die Bestimmtheitsmasse für die drei Väter des Zahlenbeispiels (Seite 21) im Skript. Wir nehmen an, dass alle Nachkommen (Tiere 12-27) Halbgeschwister sind. Als Abweichung für die Relativierung der Leistungen nehmen wir wieder die Least Squares Lösungen der Betriebe an.
+
+Das Zahlenbeispiel aus dem Skript ist hier in reduzierter Form noch einmal dargestellt
+
+```{r TableBeefDataReduced, echo=FALSE, results='asis'}
 knitr::kable(tbl_beef_data_reduced, align = "c", booktabs = TRUE)
 ```
 
@@ -156,6 +241,40 @@ knitr::kable(tbl_beef_order, align = "c", booktabs = TRUE)
 ```
 
 
+## Aufgabe 3: Anzahl Nachkommen
+Wie viele Nachkommen müsste Vater 1 haben, damit sein Zuchtwert grösser ist, als der von Vater 3?
+
+### Lösung
+```{r SetupSol3}
+h2 <- .25
+k <- (4-h2)/h2
+e1bar <- tbl_beef_offspring$MittlereRelZuname[1]
+uhat1 <- tbl_beef_offspring$GeschZuchtwertNk[3]
+n <- k*uhat1/(2*e1bar-uhat1)
+n
+```
+
+* Bei dieser Aufgabe setzten wir den geschätzten Zuchtwert von Vater 3 der Formel zur Berechnung von Vater 1 gleich, wobei die Anzahl Nachkommen als unbekannte Variable in der Formel enthalten ist. Aus dieser Formel berechnen wir dann die Anzahl Nachkommen.
+* Der geschätzte Zuchtwert vom Vater 3  beträgt: `r tbl_beef_offspring$GeschZuchtwertNk[3]`. 
+* Der geschätzte Zuchtwert von Vater 1 wird berechnet als
+
+\begin{equation}
+\hat{u}_1 = b_1 * \bar{e}_1 = \frac{2n}{n + k} * \bar{e}_1
+\label{eq:EstBvSire1}
+\end{equation}
+
+Wobei $\bar{e}_1$ die mittlere relativierte Zunahme über die Nachkommen von Vater 1 ist. Diese beträgt `r tbl_beef_offspring$MittlereRelZuname[1]`. Der geschätzte Zuchtwert für Vater 1 $\hat{u}_1$ soll nun gleich oder grösser als `r tbl_beef_offspring$GeschZuchtwertNk[3]`. Die gesuchte Grösse ist $n$ und wir lösen die Gleichung \ref{eq:EstBvSire1} nach $n$ auf.
+
+
+$$(n+k) * \hat{u}_1 = 2n* \bar{e}_1$$
+
+$$k * \hat{u}_1 = 2n * \bar{e}_1 - n * \hat{u}_1 = n * ( 2* \bar{e}_1 - \hat{u}_1 )$$
+
+Somit ist 
+
+$$n = \frac{k * \hat{u}_1}{2* \bar{e}_1 - \hat{u}_1} = \frac{`r k` * `r uhat1`}{2*`r e1bar` - `r uhat1`} = `r n`$$
+
+Als Resultat haben wir gefunden, dass Vater 1 mindestens `r ceiling(n)` Nachkommen haben muss, damit sein Zuchtwert grösser ist, als der von Vater 3.
 
 
 
