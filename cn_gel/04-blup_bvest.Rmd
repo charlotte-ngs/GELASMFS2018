@@ -1,0 +1,296 @@
+# BLUP Zuchtwertschätzung
+Bei der Zuchtwertschätzung aufgrund des Selektionsindexes (siehe Abschnitt \@ref(zws-selindex)) besteht die Problematik der Bestimmung des Vergleichswertes mit welchem die beobachteten Phänotypen relativiert werden sollen. Diese Problematik war schon lange bekannt, aber erst die Einführung der Zuchtwertschätzung anhand des BLUP-Verfahrens brachte eine Lösung. Zunächst wollen wir die Problematik noch etwas genauer beschreiben.
+
+
+## Problematik des Vergleichswertes {#problem-fix-effects}
+In der Theorie ist das Populationsmittel ($\mu$) der ideale Vergleichswert, da der mittlere Zuchtwert ($\bar{G}$) über eine Population gleich Null ist. Aus dem verwendeten genetischen Standardmodell (\@ref(eq:GenStandardModel)) lässt sich die folgende Beziehung ableiten.
+
+\begin{equation}
+P\ =\ G\ +\ E \rightarrow \bar{P} = \bar{G} + \bar{E} = \bar{E} = \mu
+(\#eq:GenStandardModel)
+\end{equation}
+
+Das Populationsmittel misst also den mittleren Einfluss der Umwelt ($E$). Streng genommen gilt das aber nur in einer idealisierten Population, in welcher alle Selektionskandidaten und alle Leistungen der anderen Informationsquellen zur selben Zeit erbracht werden. In der Praxis ist das aber nicht realistisch, weil bei der Kombination von Informationen aus verschiedenen Generationen (z. Bsp. Eigenleistung und Nachkommenleistungen) werden diese Leistungen sicher nicht gleichzeitig erbracht. Ausserdem werden Populationen in der Praxis an verschiedenen Standorten auf verschiedenen Betrieben gehalten. Diese Unterschiede haben einen erheblichen Einfluss auf die Leistung. Als Beispiel dafür ist in Abbildung \@ref(fig:MilkMountainPlane)^[Grafik von https://www.swissmilk.ch/de/produzenten/milchmarkt/marktakteure-strukturen/milchproduzenten/] die Milchproduktion im Berg- und Talgebiet über verschiedene Betriebsgrössen in der Schweiz dargestellt.
+
+```{r MilkMountainPlane,echo=FALSE, fig.cap="Milchproduktion im Berg- und Talgebiet", odg.conv=TRUE, odg.path="odg", odg.graph.cache=TRUE}
+knitr::include_graphics(path = "png/MilkMountainPlane.pdf")
+```
+
+Alle die erwähnten Faktoren können als Umweltfaktoren zusammengefasst werden, welche die genetischen Unterschiede zwischen den Tieren verzerren. Geschätzte Zuchtwerte sollten aber nicht von den Umweltfaktoren abhängig sein. Deshalb hat man schon früh gleiche Umweltbedingungen wie z. Bsp. in der Milchviehhaltung Herde, Kalbejahr, Kalbesaison und das Erstkalbealter zu Klassen von systematisierbaren __Umwelteinflüssen__ zusammengefasst. Neben Umwelteinflüssen gibt es auch noch andere Faktoren, wie zum Beispiel Laktationsnummer oder Alter, welche nichts mit der Umwelt zu tun haben, aber trotzdem einen Einfluss auf die Leistung haben. Diese sollten eigentlich besser als systematisierbare __fixe Effekte__ bezeichnet werden. Vereinfachend werden hier alle systematisierbaren Einflussfaktoren auf die Leistung als fixe Effekte bezeichnet. Um Verzerrungen der geschätzten Zuchtwerte zu vermeiden, unterteilt man die Population in Vergleichsgruppen, die in allen fixen Effekten der gleichen Klasse angehören. 
+
+Je mehr fixe Effekte in der Zuchtwertschätzung berücksichtigt werden und je feiner die Einteilung in Vergleichsgruppen ist, desto besser können Einflüsse der fixen Effekte auf die geschätzten Zuchtwerte berücksichtigt werden. Auf der anderen Seite führt eine sehr feine Einteilung der Population in sehr viele Vergleichsgruppen zu einer schwachen Gruppenbesetzung, d.h. die Anzahl Tiere in einer Gruppe kann sehr tief sein. Dies hat statistiche Konsequenzen, welche nicht wünschenswert sind. Diese Konsequenzen werden als __Verzerrungen__ bezeichnet und werden im nächsten Abschnitt beschrieben. 
+
+
+### Verzerrung der geschätzten Zuchtwerte
+Mit schwächer werdenden Vergleichsgruppen steigt die Wahrscheinlichkeit, dass der Mittelwert der Zuchtwerte nicht mehr bei Null liegt. Für die Verteilung des Mittelwerts ($\bar{u}$) der Zuchtwerte einer Gruppe von $n$ zufällig ausgewählten Vergleichstiere aus der Population gilt
+
+\begin{equation}
+\bar{u} \sim \mathcal{N}(0, {\sigma_u^2 \over n})
+(\#eq:DensityMeanBv)
+\end{equation}
+
+Verglichen mit der phänotypischen Varianz ($\sigma_x^2$) ist additiv-genetische Varianz $\sigma_u^2$ in der Regel klein. Damit besteht zwar nur eine kleine Wahrscheinlichkeit, dass der mittlere Zuchtwert in einer Vergleichsgruppe von Null abweicht. Sinkt aber die Gruppengrösse sehr stark ab, dann steigt dieses Risiko trotzdem wieder an. 
+
+Wenn der mittlere geschätzte Zuchtwert in einer Vergleichsgruppe nicht mehr Null ist, dann tritt das Phänomen der __Verzerrung__ (auch "Bias" genannt) auf. Die Auswirkung der Verzerrung können anhand der folgenden kurzen Herleitung gezeigt werden. Betrachten wir zunächst den Mittelwert $\bar{x}_{VT}$ der phänotypischen Leistungen in einer Vergleichsgruppe ($VT$)
+
+\begin{equation}
+\bar{x}_{VT} = \bar{P}_{VT} = \bar{G}_{VT} + \bar{U}_{VT}
+(\#eq:BiasBv)
+\end{equation}
+
+Dabei wird angenommen, dass der mittlere Zuchtwert $\bar{G}_{VT} = 0$ ist und dass der mittlere Umwelteffekt den Einfluss aller fixen Effekte misst. Die Auswirkungen auf den geschätzten Zuchtwert $I$, wenn $\bar{G}_{VT} \ne 0$ ist, sehen wir in der folgenden Gleichungssequenz
+
+\begin{eqnarray}
+I  &=&  b * (x - \bar{x}_{VT}) \nonumber \\
+   &=&  b * (x - (\bar{G}_{VT} + \bar{U}_{VT})) \nonumber \\
+   &=&  b * (x - \bar{U}_{VT}) - b * \bar{G}_{VT} \nonumber \\
+   &=&  \hat{ZW} - b * \bar{G}_{VT} 
+(\#eq:BiasSelIdx)
+\end{eqnarray}
+
+Der Index ($I$) schätzt also nicht den Zuchtwert ($\hat{ZW}$) des Tieres sondern etwas anderes. Der Term $b * \bar{G}_{VT}$ bezeichnet man als Verzerrung. Somit ist die Verzerrung abhängig vom mittleren geschätzten Zuchtwert der Vergleichstiere.
+
+
+## Lösung der Vergleichsproblematik mit BLUP
+Wie im Abschnitt \@ref(problem-fix-effects) gezeigt wurde, stellt die Vergleichsproblematik einen so genannten "Teufelskreis" dar. Für die Berechnung eines Vergleichswertes, der eine Schätzung von unverzerrten ("un-biased") Zuchtwerten erlaubt, müssten die Zuchtwerte der Vergleichstiere bekannt sein. Für die Schätzung der Zuchtwerte der Vergleichstiere brauchen wir aber wieder die Vergleichswerte. 
+
+Erst die Arbeiten von Charles R. Henderson und seinem Team zwischen 1949 und 1973, welche zur Entwicklung des BLUP-Verfahrens für die Zuchtwertschätzung führten, konnten das Problem nachhaltig lösen. Dabei werden im BLUP-Verfahren die fixen Effekte und die Zuchtwerte simultan geschätzt. Neben der Entwicklung des BLUP-Verfahrens für die Zuchtwertschätzung hat Henderson und seine Mitarbeiter auch Rechenvorschriften (Algorithmen) vorgeschlagen, welche eine sehr effiziente Umsetzung des BLUP-Verfahrens in der praktischen Zuchtwertschätzung erlauben und somit der ganzen Methodik zum Durchbruch verholfen hat.
+
+Aus Sicht der Statistik besteht das BLUP-Verfahren in der Anwendung von linearen gemischten Modellen zur Auswertung der Daten aus der Tierzucht. Lineare gemischte Modelle sind eine Unterklasse der linearen Modelle, welche neben den fixen Effekten auch zufällige Effekte (abgesehen von den zufälligen Resteffekten) im Modell mit einschliesst. Wie diese Effekte unterschieden werden, beschreibt der nächste Abschnitt.
+
+
+## Fixe und zufällige Effekte
+Die Unterscheidung in fixe und zufällige Effekte basiert nicht auf einer soliden universell gültigen Definition und ist oft auch Gegenstand von Diskussionen. In der praktischen Zuchtwertschätzung ist die Einteilung fixe und zufällige Effekte auch von den verwendeten Softwareprogrammen abhängig. Ein Beispiel dafür sind die Herde-Jahr-Saison-Effekten, welche man aufgrund vom gängigen Verständnis als fixe Effekte auffassen würde. Diese Effekte haben sehr viele Effektstufen und da gewisse Programme damit nicht umgehen können, werden diese Effekte als zufällige Effekte modelliert.
+
+Allgein lassen sich folgende Unterscheidungskriterien zwischen fixen und zufälligen Effekten auflisten.
+
+\begin{tabular}{p{6.5cm}p{6.5cm}}
+\hline
+fixer Effekt  &  zufälliger Effekt \\
+\hline
+Klassen sind exakt und reproduzierbar definiert  &
+Realisierungen stammen aus einer Verteilung, welche durch Erwartungswert und Varianz definiert ist \\
+Für den Wert einer Klasse kann a priori kein Erwartungswert angegeben werden &
+Phänotypische Beobachtungen werden durch Varianz der zufälligen Effekts beeinflusst \\
+In der Statistik interessiert der Mittelwert der Effektklassen &
+In der Statistik interessiert die Varianz aller Realisierungen, nicht der Mittelwert \\
+Fixe Effekte können für die Korrektur von Beobachtungen verwendet werden &
+\end{tabular}
+
+Bestimmte Effekte lassen sich eindeutig zuordnen. So sind Geschlecht, Rasse oder Betrieb sicher Effekte, welche aufgrund der genannten Unterscheidungskriterien als fix eingestuft werden können. Auf der anderen Seite ist auch klar, dass Zuchtwerte als zufällige Faktoren modelliert werden. Dabei wissen wir schon aufgrund der Annahmen aus dem grundlegenden genetischen Modells (siehe Gleichung \@ref(eq:GenStandardModel)), dass der Erwartungswert der Zuchtwerte gleich Null ist und die Streuung der Zuchtwerte der additiv-genetischen Varianz entspricht. 
+
+
+## Lineares gemischtes Modell {#lin-mixed-model}
+In einem linearen gemischten Modell gibt es neben dem zufälligen Resteffekt noch andere zufällige Effekte. In unserem Zahlenbeispiel werden die Betriebe als fixe Effekte und die Väter als zufällige Effekte modelliert. Für eine einzelne Beobachtung ($y_{ijk}$) lässt sich das lineare gemischte Modell, wie folgt notieren.
+
+\begin{equation}
+y_{ijk} = \beta_i + u_j + e_{ijk}
+(\#eq:LinMixModelSingleObs)
+\end{equation}
+
+dabei steht $\beta_i$ für den fixen Effekt des $i$-ten Betriebs, $u_j$ der zufällige Zuchtwert des $j$-ten Vaters und $e_{ijk}$ für den zufälligen Resteffekt des $k$-ten Nachkommen des $j$-ten Vaters auf dem $i$-ten Betrieb. Notiert man diese Modellformulierung für jede Beobachtung und verwandelt diese in Matrix-Vektor-Schreibweise, so erhalten wir das folgende Modell
+
+\begin{equation}
+y = X\beta + Zu + e
+(\#eq:LinMixModelMatVec)
+\end{equation}
+
+\begin{tabular}{lll}
+wobei &  &  \\
+      &  $y$  &  Vektor der Länge $n$ mit Beobachtungen \\
+      &  $b$  &  Vektor der Länge $p$ mit Klassen der fixen Effekte  \\
+      &  $X$  &  $n\times p$ - Designmatrix als Verknüpfung zwischen fixen Effekten und Beobachtungen \\
+      &  $u$  &  Vektor der Länge $q$ mit Klassen der zufälligen Effekte  \\
+      &  $Z$  &  $n\times q$ - Designmatrix als Verknüpfung zwischen zufälligen Effekten und Beobachtungen \\
+      &  $e$  &  Vektor der Länge $n$ mit zufälligen Resteffekten
+\end{tabular}
+
+In der Anwendung des linearen gemischten Modells in der Zuchtwertschätzung werden alle fix klassierbaren Effekte (Umwelt, etc.) als fixe Effekte ($\beta$) modelliert und die Zuchtwerte werden als zufällige Effekte ($u$) im Modell berücksichtigt. Das Resultat der Lösung des linearen gemischten Modells beinhaltet Schätzer ($\hat{\beta}$) für die fixen Effekte und geschätzte Zuchtwerte ($\hat{u}$). Im Gegensatz um Selektionsindex müssen wir beim linearen gemischten Modell nicht zuerst die Beobachtungen relativieren und die relativierten Beobachtungen dann gewichten. Die Schätzung der fixen und der zufälligen Effekte geschieht im BLUP-Verfahren in einem Schritt.
+
+
+## Vatermodell
+Wir wenden das lineare gemischte Modell nun für unser Zahlenbeispiel an. Zuerst betrachten wir den analogen Fall zur Schätzung der Zuchtwerte für die drei Väter anhand der Nachkommenleistungen. Das resultierende Modell wurde anfangs bei der Einführung des BLUP-Verfahrens sehr häufig eingesetzt und bei einzelnen Auswertungen (z. Bsp. bei der Zuchtwertschätzung Geburtsverlauf beim Milchvieh in der Schweiz) wird dieses Modell immer noch verwendet. Dieses Modell wird als __Vatermodell__ bezeichnet und ist in der folgenden Gleichung für unser Zahlenbeispiel gezeigt.
+
+\vspace{2ex}
+```{r SireModel, echo=FALSE, results='asis'}
+# Vektor der Beobachtungen
+vec_y <- tbl_beef_data$Zunahme
+n_anz_beob <- length(vec_y)
+
+# Designmatrix X 
+vec_betriebe <- as.factor(tbl_beef_data$Betrieb)
+n_anz_btr <- length(levels(vec_betriebe))
+mat_X <- matrix(0, nrow = n_anz_beob, ncol = n_anz_btr)
+vec_res <- sapply(seq_along(vec_betriebe), function(x) mat_X[x,vec_betriebe[x]] <<- 1)
+
+# vector beta
+vec_beta <- rmddochelper::vecGetVecElem("\\beta", pnVecLen = n_anz_btr, psResult = "latex")
+
+# Designmatrix Z
+vec_sire <- as.factor(tbl_beef_data$Vater)
+n_anz_sire <- length(levels(vec_sire))
+mat_Z <- matrix(0, nrow = n_anz_beob, ncol = n_anz_sire)
+vec_res <- sapply(seq_along(vec_sire), function(x) mat_Z[x, vec_sire[x]] <<- 1)
+
+# vector u
+vec_u <- rmddochelper::vecGetVecElem("u", pnVecLen = n_anz_sire, psResult = "latex")
+
+# vector e
+vec_e <- rmddochelper::vecGetVecElem("e", pnVecLen = n_anz_beob, psResult = "latex")
+
+# showing the model
+cat("$$\\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_y), collapse = "\n"), "\n")
+cat("\\right]\n")
+cat(" = \\left[\n")
+cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = mat_X, pnDigits = 0), collapse = "\n"), "\n")
+cat("\\right]\n")
+cat("\\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_beta), collapse = "\n"), "\n")
+cat("\\right]\n")
+cat(" + \\left[\n")
+cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = mat_Z, pnDigits = 0), collapse = "\n"), "\n")
+cat("\\right]\n")
+cat("\\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_u), collapse = "\n"), "\n")
+cat("\\right]\n")
+cat(" + \\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_e), collapse = "\n"), "\n")
+cat("\\right]\n")
+cat("$$\n")
+```
+
+Wobei $\beta_1$ und $\beta_2$ die unbekannten Effekte der beiden Betriebe und $u_1$, $u_2$ und $u_3$ die ebenfalls unbekannten Zuchtwerte der drei Väter darstellen. Die obigen Gleichungssystem ausformulierten Designmatrizen $X$ und $Z$ zeigen, wie die Beobachtungen zu den fixen Effekten und den Zuchtwerten verknüpft werden. 
+
+Da die zufälligen Effekte $u$ und $e$ als Abweichungen definiert sind, sind deren Erwartungswerte Null, somit gilt, dass
+
+$$E(u) = 0 \text{ und } E(e) = 0$$
+
+Somit gilt
+
+$$E(y) = E(X\beta + Zu + e) = X\beta$$
+
+In einem linearen gemischten Modell spielen neben den Erwartungswerten auch die Varianzen eine Rolle. Dabei gilt es zu beachten, dass die fixen Effekte ($\beta$) keinen Beitrag zur Varianz leisten. Bei der Betrachtung der Varianzen beginnen wir bei den Resteffekten ($e$). Im einfachsten Fall, wenn keine besondere Struktur, wie wiederholte Messungen, in den Daten vorhanden sind, dann können wir die Varianz der Resteffekte einfach, wie folgt definieren.
+
+$$var(e) = I*\sigma_e^2 = R$$
+
+Für die Zuchtwerte ($u$) ist die Varianz ($var(u)$) als Funktion der genetisch-additiven Verwandtschaftsmatrix definiert. 
+
+$$var(u) = A*\sigma_u^2 = G$$
+
+Beim Vatermodell gilt es zu beachten, dass nur die Verwandtschaft zwischen den Vätern berücksichtigt werden. Für unser Zahlenbeispiel sind die Väter untereinander nicht verwandt und somit gilt 
+
+$$G = I * {\sigma_u^2 / 4}$$
+
+Die Varianz ($var(y)$) der Beobachtungen können wir nun zusammensetzen. Damit erhalten wir
+
+$$var(y) = var(X\beta + Zu + e) = var(Zu + e) = ZGZ^T + R = V$$
+
+wobei wir annehmen, dass $cov(u, e) = 0$
+
+In der praktischen Zuchtwertschätzung ist die Kovarianz zwischen den Beobachtungen ($y$) und den Zuchtwerten ($u$) oft von Bedeutung. Diese kann wie folgt berechnet werden.
+
+\begin{eqnarray}
+cov(y,u)  &=& cov(Zu + e, u) \\
+          &=& cov(Zu, u) + cov(e,u) \\
+          &=& Zcov(u, u) \\
+          &=& ZG
+(\#eq:CovYU)
+\end{eqnarray}
+
+
+### Schätzung der unbekannten Effekte
+Bis hierher haben wir die Eigenschaften des linearen gemischten Modells für die Anwendung der Zuchtwertschätzung beschrieben. Nun geht es darum für die unbekannten Effekte $\beta$ und $u$ Schätzwerte aus den Daten zu ermitteln. Die ausführliche Herleitung der Schätzwerte würde den Rahmen dieser Veranstaltung sprengen. Deshalb gehen wir direkt zu den Ergebnissen der Arbeiten von Henderson und seinem Team über.
+
+Die mit dem BLUP-Verfahren ermittelten Schätzer für die Zuchtwerte ($u$) betragen
+
+\begin{equation}
+\hat{u} = BLUP(u) = GZ^TV^{-1}(y - X\hat{\beta})
+(\#eq:BlupEstBv)
+\end{equation}
+
+wobei $\hat{\beta}$ dem Schätzer der fixen Effekte entspricht. Dieser Schätzer entspricht dem allgemeinen Least-Squares-Schätzer (GLS) der fixen Effekte. Somit gilt
+
+\begin{equation}
+\hat{\beta} = (X^TV^{-1}X)^{-1}X^TV^{-1}y
+(\#eq:BlupEstFixedEffect)
+\end{equation}
+
+Die Matrix $V$ enthält hier auch die genetischen Kovarianzen. 
+
+
+### Eigenschaften von BLUP
+Die Methoden, welche auf dem BLUP-Verfahren (auch kurz BLUP-Methoden genannt) haben wichtige Eigenschaften und diese sind in der Abkürzung BLUP versteckt. Die Abkürzung BLUP steht nämlich für \textbf{B}est \textbf{L}inear \textbf{U}nbiased \textbf{P}rediction. Die einzelnen Bestandteile haben die folgende Bedeutung
+
+* _Best_: unter allen lineare Schätzern ist der Schätzer aus BLUP der "beste" im Sinne, dass er die tiefste Fehlervarianz ($var(u - \hat{u})$) hat. Dies ist gleichbedeutend mit der Eigenschaft, dass die Korrelation zwischen wahrem Effekt ($u$) und dem Schätzer ($\hat{u}$) maximal ist.
+* _Linear_: der Schätzer ist eine lineare Funktion der Beobachtungen. 
+* _Unbiased_: die Schätzwerte sind unverzerrt, das heisst es gilt $E(u) = E(\hat{u})$.
+* _Prediction_: die Unterscheidung zwischen Vorhersage und Schätzung wird im deutschen Sprachgebrauch eigentlich nicht gemacht. Deshalb sprechen wir hier allgemein von Schätzung oder Schätzwert. 
+
+Bei der Zuchtwertschätzung  mit der BLUP-Methode nehmen wir an, dass die Varianzkomponenten fehlerfrei bekannt sind. Dies ist in der Praxis nicht der Fall. Die Varianzkomponenten sind unbekannt und müssen auch aus den Daten geschätzt werden. 
+
+
+## Hendersons Mischmodellgleichungen
+Die Formeln zur Berechnung der Schätzer für die Zuchtwerte (\@ref(eq:BlupEstBv)) und die fixen Effekte (\@ref(eq:BlupEstFixedEffect)) beinhalten beide die Inverse ($V^{-1}$) der Kovarianzmatrix $V$ der phänotypischen Beobachtungen. In den praktischen Zuchtwertschätzungen hat diese Matrix eine Dimension in der Grössenordnung von $10^6\times 10^6$. Die Inversion einer solch grossen Matrix ist nicht praktikabel. Als Lösung diese Problems entwickelte Henderson die sogenannten __Mischmodellgleichungen__, welche die Inversion von $V$ vermied. Für das verwendete Zahlenbeispiel sehen die Mischmodellgleichungen, wie folgt aus
+
+\begin{equation}
+\left[ 
+  \begin{array}{rr}
+  X^TR^{-1}X  &  X^TR^{-1}Z \\
+  Z^TR^{-1}X  &  Z^TR^{-1}Z + G^{-1}
+  \end{array}
+\right]
+\left[ 
+  \begin{array}{r}
+  \hat{\beta} \\
+  \hat{u}
+  \end{array}
+\right]
+= 
+\left[ 
+  \begin{array}{r}
+  X^TR^{-1}y \\
+  Z^TR^{-1}y
+  \end{array}
+\right]
+(\#eq:MixedModelEq)
+\end{equation}
+
+Sofern die Matrix $R$ eine einfache Struktur hat und deshalb gilt, dass $R = I * \sigma_e^2$ können die Mischmodellgleichungen vereinfacht geschrieben werden als
+
+\begin{equation}
+\left[ 
+  \begin{array}{rr}
+  X^TX  &  X^TZ \\
+  Z^TX  &  Z^TZ + G^{-1} * \lambda
+  \end{array}
+\right]
+\left[ 
+  \begin{array}{r}
+  \hat{\beta} \\
+  \hat{u}
+  \end{array}
+\right]
+= 
+\left[ 
+  \begin{array}{r}
+  X^Ty \\
+  Z^Ty
+  \end{array}
+\right]
+(\#eq:MixedModelEqSimple)
+\end{equation}
+
+Die neu eingeführte Variable $\lambda$ enspricht dem Varianzverhältnis $\lambda = \sigma_e^2 / \sigma_u^2$. 
+
+
+## Zuchtwertschätzung mit dem BLUP-Tiermodell
+Die Mischmodellgleichungen stellen ein allgemeines Werkzeug für Fragestellungen, welche mit gemischten linearen Modellen bearbeitet werden können. Die bisherige Verwendung der Mischmodellgleichungen und der BLUP-Methode ermöglichte uns die Schätzung der Zuchtwerte der Väter. Es ist allerdings unbefriedigend, dass weder die Mütter noch die Nachkommen einen geschätzten Zuchtwert erhielten. Für die praktische Anwendung in der Zuchtarbeit wären aber geschätzte Zuchtwerte für diese Tiere als Selektionskriterium auch wünschenswert.
+
+Genau dieses Bedürfnis, dass alle Tiere in einem Pedigree (Stammbaum, welcher die Abstammungen der Tiere aufzeigt) geschätzte Zuchtwerte erhalten, wird mit dem BLUP-Tiermodell befriedigt. Das statistische Modell sieht gleich aus, wie das Modell des Vatermodells (siehe Gleichung \@ref(eq:LinMixModelMatVec)). Unterschiedlich ist allerdings der Vektor ($u$) der Zuchtwerte und die Matrix $Z$. Der Vektor der Zuchtwerte enhält nun Zuchtwerte aller Tiere im Pedigree. 
+
+Durch die Veränderung des Vektors $u$ ändert sich auch die Varianz ($var(u)$) der Zuchtwerte. Diese enspricht nun der vollständigen genetisch-additiven Verwandschaftsmatrix $A$ mal der genetisch-additiven Varianz.
+
+$$G = A * \sigma_u^2$$
+
+Die Schätzwerte der fixen Effekte und der Zuchtwerte erhalten wir auch aus den Mischmodellgleichungen. 

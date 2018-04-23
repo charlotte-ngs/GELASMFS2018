@@ -1,0 +1,144 @@
+---
+title: "BLUP-Zuchtwertschätzung"
+author: "Peter von Rohr"
+date: "23.04.2018"
+output: beamer_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::knit_hooks$set(odg.conv = rmddochelper::odg.graphics.conv.hook)
+```
+
+## Lineare Funktion als Selektionsindex
+
+* Index ($I$)
+
+$$I = b_1 x_1 + b_2 x_2 + \ldots + b_nx_n = b^Tx$$
+
+* Statistisch gesehen: $I$ entspricht multipler linearer Regression
+* unbekannte Regressionskoeffizienten $b_i$ sind abhängig von
+    + Erblichkeit des Merkmals
+    + Art der Informationsquelle
+    + Verwandtschaft zwischen Proband und Informationsquelle
+    
+
+## Terminologie
+
+* __Selektionsindex__ ($I$): Schätzung des Zuchtwertes für ein Merkmal aufgrund von verschiedenen Informationen
+* Heute: häufige Verwendung zur Schätzung des Gesamtzuchtwerts
+* __Gesamtzuchtwert__ ($T$): 
+    + praktische Tierzucht verlangt mehrere Merkmale gleichzeitig zu verbessern
+    + komplexe Zuchtziele enthält mehrere Merkmale
+    + Kombination von Merkmalen über Gesamtzuchtwert
+    
+$$T = a_1u_1 + a_2u_2 + \ldots + a_nu_n$$
+wobei $a_i$: wirtschaftliche Gewichte - Änderung des Grenznutzens bei Änderung des Merkmals
+
+
+## Kombinationsmöglichkeiten
+
+```{r KombiSelIdxAggGen,echo=FALSE, odg.conv=TRUE, odg.path="odg", odg.graph.cache=TRUE}
+knitr::include_graphics(path = "png/KombiSelIdxAggGen.pdf")
+```
+
+
+## Indexkonstruktion
+* Schätzung der Gewichtungsfaktoren $b_i$
+* Folgende Parameter müssen bekannt sein
+    + $h^2$ und $sd_p$ der Merkmale in $I$ und in $T$
+    + $r_P$ der Indexmerkmale
+    + $r_G$ zwischen Zuchtziel und Index
+    + $r_G$ zwischen Zuchtzielmerkmalen
+    + wirtschaftliche Gewichte der Zuchtzielmerkmale
+* Indexgewichte $b_i$ sollen so bestimmt werden, dass
+    + $r_{TI}$ maximal wird oder
+    + mittlerer quadrierter Fehler $E\left[(T-I)^2\right]$ minimal
+    
+
+## Herleitung für einfaches Beispiel
+* Zuchtziel enthält nur ein Merkmal $\rightarrow \ T = u$ und $a=1$
+* Index besteht aus Eigenleisung, also ist $I = bx$
+* Mittlerer quadrierter Fehler (MSE)
+
+\begin{eqnarray}
+MSE  &=&  E\left[(T-I)^2\right] \nonumber \\
+     &=&  E\left[(u-bx)^2\right] \nonumber \\
+              &=&  E\left[u^2 -2ubx + b^2u^2\right] \nonumber \\
+              &=&  E\left[u^2\right] - 2bE\left[ ux\right] + b^2E\left[ u^2\right] \nonumber \\
+              &=&  \sigma_u^2 - 2b\sigma_{ux} + b^2\sigma_x^2
+\end{eqnarray}
+
+
+## Minimierung von MSE
+* Ableitung von $MSE$ nach $b$
+* Nullsetzen der Ableitung und nach $b$ auflösen
+* Resultat enspricht dem geschätzten Gewichtungsfaktor
+
+\begin{eqnarray}
+\frac{\partial MSE}{\partial b}  &=&  -2 \sigma_{ux} + 2b\sigma_x^2 =  0
+\end{eqnarray}
+
+* Somit gilt 
+\begin{eqnarray}
+ b\sigma_x^2  &=&  \sigma_{ux} \nonumber \\
+           b  &=&  \frac{\sigma_{ux}}{\sigma_x^2} \nonumber \\
+             &=&  \frac{\sigma_u^2}{\sigma_x^2} =  h^2
+\end{eqnarray}
+
+
+## Verallgemeinerung
+* Mehrere Merkmale in $I$ und mehrere Merkmale in $T$
+* Notation
+
+\begin{tabular}{ll}
+$\sigma_{pxpy}$  &  phänotypische Kovarianz zwischen Index-Merkmalen x und y \\
+$\sigma_{pxgy}$  &  genetische Kovarianz zwischen Index-Merkmal x \\
+                 &  und Zuchtziel-Merkmal y
+\end{tabular}
+
+* Gleichungssystem
+
+\begin{eqnarray}
+\sigma_{p1p1}b_1 + \ldots + \sigma_{p1pn}b_n  &=&  \sigma_{p1g1}a_1  + \ldots \sigma_{p1gm}a_m \nonumber \\
+\ldots  &=& \nonumber \ldots  \nonumber \\
+\sigma_{pnp1}b_1 + \ldots + \sigma_{pnpn}b_n  &=&  \sigma_{png1}a_1 + \ldots \sigma_{pngm}a_m \nonumber
+\end{eqnarray}
+
+
+## Matrix-Vektor-Schreibweise
+* Matrix $P$ mit $P_{ij} = \sigma_{pipj}$
+* Matrix $G$ mit $G_{ij} = \sigma_{pigj}$
+* Indexgleichung oder Normalgleichung
+
+$$Pb = Ga$$
+* Beidseitige Links-Multiplikation mit $P^{-1}$
+\begin{eqnarray}
+Pb &=& Ga \nonumber \\
+P^{-1}Pb &=& P^{-1}Ga \nonumber \\
+b &=& P^{-1}Ga \nonumber
+\end{eqnarray}
+
+
+## Genauigkeit 
+* Mass für die Genauigkeit: $r_{TI}$
+* Bestimmtheitsmass ($B$) ist $B = r_{TI}^2$
+* Berechnung
+$$r_{TI} = \frac{\sigma_{TI}}{\sigma_T \sigma_I}$$
+* Eigenleistung und ein Indexmerkmal
+$$\sigma_T^2 = \sigma_u^2 \text{, } \sigma_I^2 = b^2\sigma_x^2 \text{ und } \sigma_{TI} = b\sigma_u^2$$
+
+* Somit ist
+
+$$r_{TI} = \frac{b\sigma_u^2}{\sigma_u b\sigma_x} = h$$
+
+
+## Nachkommenleistungen
+* Schätzung der Zuchtwerte der Eltern (hier Väter) aufgrund der mittleren Nachkommenleistungen
+* Annahme für einen bestimmten Elternteil sind Nachkommen Halbgeschwister
+* Relativierung der Leistungen wird hier über mittlere Betriebseffekte gemacht
+* Gewichtungsfaktor aufgrund 
+
+$$\sigma_{\bar{x}}^2 = \frac{1+(n-1)t}{n}\ \sigma_x^2$$
+
+

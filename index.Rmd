@@ -116,7 +116,7 @@ vec_topics_notes[which(Datum == format(as.Date("2018/03/26"), "%d.%m"))] <- past
 
 vec_topics_notes[which(Datum == format(as.Date("2018/04/09"), "%d.%m"))] <- paste0("[Einführung und Zuchtprogramme](", s_cn_gel_url, "01-intro_breedprog.pdf", ")") 
 vec_topics_notes[which(Datum == format(as.Date("2018/04/16"), "%d.%m"))] <- paste0("[Zuchtwertschätzung](", s_cn_gel_url, "03-elem_bvest.pdf", ")") 
-
+vec_topics_notes[which(Datum == format(as.Date("2018/04/23"), "%d.%m"))] <- paste0("[BLUP-Zuchtwertschätzung](", s_cn_gel_url, "04-blup_bvest.pdf", ")") 
 
 
 # define dataframe for schedule table
@@ -136,6 +136,8 @@ vec_topics_slides[which(Datum == format(as.Date("2018/03/05"), "%d.%m"))] <- pas
 vec_topics_slides[which(Datum == format(as.Date("2018/03/12"), "%d.%m"))] <- paste0("[Regression (Teil 2)](", s_sl_url, "w2/asmas_w02_v03.pdf", "), [GBLUP](", s_sl_url, "w03/asmas_w03_v03.pdf)") 
 vec_topics_slides[which(Datum == format(as.Date("2018/03/19"), "%d.%m"))] <- paste0("[LASSO](", s_sl_url, "w04/asmas_w04_v04.pdf)") 
 vec_topics_slides[which(Datum == format(as.Date("2018/03/26"), "%d.%m"))] <- paste0("[Bayes](", s_sl_url, "w05/asmas_w05_v05.pdf)") 
+vec_topics_slides[which(Datum == format(as.Date("2018/04/09"), "%d.%m"))] <- paste0("[Einführung](", s_sl_url, "w07/gel_w07_v01.pdf)") 
+vec_topics_slides[which(Datum == format(as.Date("2018/04/16"), "%d.%m"))] <- paste0("[Zuchtprogramm](", s_sl_url, "w08/gel_w08_v02.pdf)") 
 # create data frame and convert it to table
 df_slides <- data.frame(Woche = Woche, Datum = Datum, Thema = vec_topics_slides, stringsAsFactors = FALSE)
 knitr::kable(df_slides)
@@ -153,6 +155,7 @@ vec_topics_ex[which(Datum == format(as.Date("2018/03/19"), "%d.%m"))] <- paste0(
 vec_topics_ex[which(Datum == format(as.Date("2018/03/26"), "%d.%m"))] <- paste0("[Regression und LASSO](", s_ex_url, "w05/asmas_w05_u04.pdf", ")") 
 vec_topics_ex[which(Datum == format(as.Date("2018/04/09"), "%d.%m"))] <- paste0("[Bayes](", s_ex_url, "w06/asmas_w06_u06.pdf", ")") 
 vec_topics_ex[which(Datum == format(as.Date("2018/04/16"), "%d.%m"))] <- paste0("[Zuchtprogramm](", s_ex_url, "w08/gel_w08_u01.pdf", ")") 
+vec_topics_ex[which(Datum == format(as.Date("2018/04/23"), "%d.%m"))] <- paste0("[Zuchtwertschätzung](", s_ex_url, "w09/gel_w09_u02.pdf", ")") 
 # create dataframe and table
 df_ex <- data.frame(Woche = Woche, Datum = Datum, Thema = vec_topics_ex, stringsAsFactors = FALSE)
 knitr::kable(df_ex)
@@ -169,6 +172,8 @@ vec_topics_sol[which(Datum == format(as.Date("2018/03/12"), "%d.%m"))] <- paste0
 vec_topics_sol[which(Datum == format(as.Date("2018/03/19"), "%d.%m"))] <- paste0("[Regression und GBLUP](", s_sol_url, "w04/asmas_w04_l03.pdf", ")")
 vec_topics_sol[which(Datum == format(as.Date("2018/03/26"), "%d.%m"))] <- paste0("[Regression und LASSO](", s_sol_url, "w05/asmas_w05_l04.pdf", ")")
 vec_topics_sol[which(Datum == format(as.Date("2018/04/09"), "%d.%m"))] <- paste0("[Bayes](", s_sol_url, "w06/asmas_w06_l06.pdf", ")")
+vec_topics_sol[which(Datum == format(as.Date("2018/04/16"), "%d.%m"))] <- paste0("[Zuchtprogramm](", s_sol_url, "w08/gel_w08_l01.pdf", ")")
+#vec_topics_sol[which(Datum == format(as.Date("2018/04/23"), "%d.%m"))] <- paste0("[Zuchtwertschätzung](", s_sol_url, "w09/gel_w09_l02.pdf", ")")
 # create dataframe and table
 df_sol <- data.frame(Woche = Woche, Datum = Datum, Thema = vec_topics_sol, stringsAsFactors = FALSE)
 knitr::kable(df_sol)

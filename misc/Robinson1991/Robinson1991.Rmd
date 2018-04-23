@@ -1,0 +1,110 @@
+---
+title: "Robinson G.K.(1991), That BLUP Is a Good Thing: The Estimation of Random Effects"
+subtitle: "Paper Summary"
+author: "Peter von Rohr"
+date: "`r Sys.Date()`"
+output:
+  tufte::tufte_handout:
+    citation_package: natbib
+    latex_engine: xelatex
+  tufte::tufte_html: default
+  tufte::tufte_book:
+    citation_package: natbib
+    latex_engine: xelatex
+bibliography: skeleton.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+library(tufte)
+# invalidate cache when the tufte version changes
+knitr::opts_chunk$set(tidy = FALSE, cache.extra = packageVersion('tufte'))
+options(htmltools.dir.version = FALSE)
+```
+
+# Disclaimer
+This is a summary of the paper [@Robinson1991]. This aims at finding an easy enough^[Lecture Notes by [@Goetz2014] mention that none of the available derivations of BLUP is suitably easy to be presented in an Agronomy Masters Class] derivation of BLUP, such that it can be presented in class. 
+
+
+# Introduction
+BLUP stands for _Best Lineare Unbiased Prediction_ and is the de-facto standard method for predicting or estimating^[In German, only the translated term of estimation is used.] breeding values. It is a method of estimating random effects^[Therefore, the model is called a linear mixed effects model.]. 
+
+The context of BLUP is the linear model
+
+\begin{equation}
+y = X\beta + Zu + e
+\label{eq:LinMixedModel}
+\end{equation}
+
+\begin{tabular}{llp{10cm}}
+where  &  &  \\
+       &  $y$  &  vector of $n$ observable random variables \\
+       &  $\beta$  &  vector of $p$ unknown parameters having fixed size (fixed effects) \\
+       &  $X$, $Z$ &  known design matrices \\
+       &  $u$, $e$ &  vectors of $q$ and $n$ unobservable random variables (random effects)
+\end{tabular}
+
+{The first and second moments of the random effects are given as}
+
+$$E(u) = 0 \text{ and } E(e) = 0$$ and 
+
+$$Var\left[\begin{array}{c} u \\ e \end{array} \right] 
+  = \left[ \begin{array}{cc}  
+    G  &  0 \\
+    0  &  R
+  \end{array}\right] * \sigma^2 
+$$  
+
+where $G$ and $R$ are positive definite matrices and $\sigma^2$ is a known constant.
+
+In general, it is assumed that variance-covariance structures are known^[The topic of variance components estimation is addressed later], except for the constant factor $\sigma^2$. 
+
+BLUP estimates of the realisations of the random variables $u$ are 
+
+* _linear_ in the sense that they are linear functions of the data $y$. 
+* _unbiased_ in the sense that the average estimate is equal to the average of the quantity that is estimated^[shorter we can say that $E(u) = E(\hat{u})$].
+* _best_ in the sense that they have minimum error in the class of all linear unbiased estimators and 
+* _predictors_ to distinguish them from estimators.
+
+{Discussion about difference between predictor and estimator is ignored here}
+
+Mathematically, the BLUP estimators $\hat{\beta}$ of $\beta$ and $\hat{u}$ of $u$ are defined as the solution to the following simultaneous equations, given by [@Henderson1950]. 
+
+
+
+
+
+
+
+
+
+```{r bib, include=FALSE}
+vec_bref <- c(bibentry(
+  bibtype = "Article",
+  title = "That BLUP Is a Good Thing: The Estimation of Random Effects",
+  author = as.person("G.K. Robinson"),
+  year = 1991,
+  journal = "Statistical Science",
+  volume = 6,
+  number = 1,
+  page = "15-51",
+  key = "Robinson1991"),
+  bibentry(
+    bibtype = "Unpublished",
+    title   = "Quantitative Genetik und Zuchtplanung",
+    author  = as.person("K-U. Götz [aut]"),
+    year    = "2014",
+    note    = "Bayerische Landesanstalt für Landwirtschaft, Institut für Tierzucht",
+    key     = "Goetz2014"
+  ),
+  bibentry(
+    bibtype = "Article",
+    title = "Estimation of genetic parameters (abstract)",
+    author = as.persion("C.R. Henderson")
+  ))
+# write entries in vec_bref to bib-file
+sBibFile <- "skeleton.bib"
+if(!file.exists(sBibFile))
+  cat(paste(toBibtex(vec_bref), collapse = "\n"), "\n", file = sBibFile)
+
+```

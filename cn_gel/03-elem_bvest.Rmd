@@ -198,7 +198,7 @@ Die Verwendung dieses einfachen Zuchtwertschätzverfahrens ist sehr eingeschrän
 
 \pagebreak
 
-## Selektionsindex zur Schätzung von Zuchtwerten
+## Selektionsindex zur Schätzung von Zuchtwerten {#zws-selindex}
 Es bestehen zwei wesentliche Methoden für die Schätzung von Zuchtwerten. 
 
 1. __Selektionsindextheorie__ nach [@HL1943] und [@Hazel1943] und
@@ -465,6 +465,233 @@ r_{TI} = \sqrt{\frac{n}{n + k}}
 
 Für grosse Werte von $n$, d.h. wenn ein Vater sehr viele Nachkommen hat, dann strebt der Wert von $b$ gegen $2$ und erreicht so den theoretischen Wert aus der Definition \@ref(def:defzw). Die Genauigkeit strebt gegen den Wert $1$ für sehr grosse Werte von $n$. Dies erwarten wir auch intuitiv, dass die Genauigkeit mit zunehmender Anzahl von Nachkommen ansteigt. 
 
+\pagebreak
+
+```{r VgHgInformation, echo=FALSE, fig.cap = "Informationsquellen bei Voll- und Halbgeschwister", odg.conv=TRUE, odg.path="odg", odg.graph.cache=TRUE}
+knitr::include_graphics(path = "png/VgHgInformation.pdf")
+```
+
+### Vollgeschwister
+Falls wir den Zuchtwert für einen Probanden aus der Nachkommengeneration schätzen wollen, dann können seine Vollgeschwister und seine Halbgeschwister Informationen liefern. Die Abbilung \@ref(fig:VgHgInformation) gibt eine Übersicht über die Verwandtschaftsstruktur zwischen dem Proband und den Informationsquellen. Der Proband hat die Tiere 18 und 19 als Vollgeschwister und die Tiere 16 und 17 sind Halbgeschwister zum Probanden. Der Proband selber hat keine Beobachtung. 
+
+Für die Schätzung des Zuchtwerts des Probanden mit der Indexgleichung müssen wir für die aktuelle Situation der verfügbaren Informationsquellen in die Matrizen $P$ und $G$ umsetzen. Schematisch sieht die Matrix P, wie folgt aus
+
+$$P = \left[ 
+  \begin{array}{cc} 
+  var_P(\bar{VG})  &  cov_P(HG) \\
+  cov_P(HG)        &  var_P(\bar{VG})
+  \end{array}\right]$$
+
+Die Varianz $var_P(\bar{VG})$ eines Vollgeschwisterdurchschnitts berechnen wir gemäss der schon bekannten Formel \@ref(eq:PhenVarMean) berechnet, wobei bei Vollgeschwistern $t = h^2/2$. Somit ist
+
+$$var_P(\bar{VG}) = \frac{1+(n-1)\ h^2/2}{n}\ \sigma_x^2$$
+
+Zwischen den Vollgeschwistergruppen sind alle Tiere Halbgeschwister. Somit entspricht die Kovarianz zwischen den Informationen der genetischen Kovarianz von Halbgeschwistern. Diese beträgt, 
+
+$$cov_P(HG) = {1 \over 4} h^2 \sigma_x^2$$
+
+Somit können wir $P$ aufstellen als 
+
+$$P = \left[ 
+  \begin{array}{cc} 
+  \frac{1+(n-1)\ h^2/2}{n}\sigma_x^2  &  {1 \over 4} h^2 \sigma_x^2 \\
+  {1 \over 4} h^2 \sigma_x^2        &  \frac{1+(n-1)\ h^2/2}{n}\ \sigma_x^2
+  \end{array}\right]$$
+
+Die rechte Seite stellt die genetischen Beziehungen zwischen den Informanten und dem Probanden. Die Tiere 16 und 17 sind Halbgeschwister zum Probanden, deshalb beträgt die genetische Kovarianz $r_{1\alpha} = 1/4 \ \sigma_u^2$. Die Tiere 18 und 19 sind Vollgeschwister zum Probanden. Somit beträgt $r_{2\alpha} = 1/2\ \sigma_u^2$. Einsetzen der bis jetzt gefundenen Beziehungen in die Indexgleichung und Division beider Seiten der Gleichung durch $\sigma_x^2$ führt zu
+
+$$\left[ 
+  \begin{array}{cc} 
+  \frac{1+(n-1)\ h^2/2}{n}  &  {1 \over 4} h^2 \\
+  {1 \over 4} h^2        &  \frac{1+(n-1)\ h^2/2}{n}
+  \end{array}\right]
+  \left[ 
+  \begin{array}{c} 
+  b_1 \\
+  b_2
+  \end{array}\right]
+  =
+  \left[ 
+  \begin{array}{c} 
+  1/4 \ h^2 \\
+  1/2 \ h^2
+  \end{array}\right]
+  $$
+
+Setzen wir dafür die Zahlen ein, dann erhalten wir die folgende Beziehung
+
+```{r FullHalfSib, echo=FALSE, results='hide'}
+h2 <- .25
+n <- 2
+var_vg <- (1+(n-1)*h2/2)/n
+cov_hg <- 0.25*h2
+mat_p <- matrix(c(var_vg, cov_hg, cov_hg, var_vg), ncol = 2, byrow = TRUE)
+mat_g <- matrix(c(0.25*h2, 0.5*h2), ncol = 1)
+vec_vg_hg_b <- rmddochelper::vecGetVecElem(psBaseElement = "b_", pnVecLen = 2)
+```
+
+```{r, echo=FALSE, results='asis'}
+cat("$$\\left[\n")
+cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = mat_p, pnDigits = 4), collapse = "\n"), "\n")
+cat("\\right]")
+cat("\\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_vg_hg_b), collapse = "\n"), "\n")
+cat("\\right]")
+cat(" = \\left[\n")
+cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = mat_g, pnDigits = 4), collapse = "\n"), "\n")
+cat("\\right]$$")
+```
+
+Als Lösung erhalten wir
+
+```{r, echo=FALSE, results='asis'}
+vec_b_sol <- solve(mat_p, mat_g)
+cat("$$b = \\left[\n")
+cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = vec_b_sol, pnDigits = 4), collapse = "\n"), "\n")
+cat("\\right]$$")
+```
+
+```{r, echo=FALSE}
+vec_vg_hg_x <- c(-17.5*2/1000, 2*47.5/1000)
+```
+
+Die beiden Vollgeschwister zum Probanden erhalten erwartungsgemäss ein höheres Gewicht als die beiden Halbgeschwister. Unter angenommenen Leistungsabweichungen von `r vec_vg_hg_x[1]` und `r vec_vg_hg_x[2]` ergibt sich der geschätzte Zuchtwert ($I$) für den Probanden als
+
+```{r, echo=FALSE, results='asis'}
+est_bv <- crossprod(vec_b_sol, vec_vg_hg_x)
+cat("$$I = b^T * x = \\left[\n")
+cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = t(vec_b_sol), pnDigits = 4), collapse = "\n"), "\n")
+cat("\\right]")
+cat("\\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_vg_hg_x), collapse = "\n"), "\n")
+cat("\\right] = ", est_bv, "\n")
+cat("$$\n")
+```
+
+Der geschätzte Zuchtwert des Probanden ist beträchtlich tiefer als die gegebenen Leistungsabweichungen. Dies wird durch die Gewichtung der Informationsquellen verursacht.
+
+
+### Vollgeschwister und Eigenleistung
+In diesem Abschnitt gehen wir davon aus, dass der Proband zusätzlich zu den Informationen der Voll- und der Halbgeschwister auch noch eine Eigenleistung aufweist. Somit erweitern sich die Indexgleichungen um die folgenden Elemente. Die schematische Darstellung der erweiterten Matrix $P$ sieht, wie folgt aus
+
+$$P = \left[ 
+  \begin{array}{ccc}
+  var_P(\bar{VG})  &  cov_P(HG)  &  cov_P(HG) \\
+  cov_P(HG)        &  var_P(\bar{VG})  &  cov_P(VG) \\
+  cov_P(HG)        &  cov_P(VG)        &  var_p
+  \end{array}
+\right]$$
+
+In dieser erweiterten Matrix ist das Element $cov_P(VG)$ neu dazugekommen. Das ist die Kovarianz zwischen der Eigenleistung und der durchschnittlichen Leistung der Vollgeschwister. Diese Kovarianz entspricht der genetischen Kovarianz zwischen dem Probanden und seinen Vollgeschwistern und beträgt somit die Hälfte der genetisch-additiven Varianz. Das Einsetzen der Formeln in die erweiterten Formen der Matrizen $P$ und $G$ führt zu folgendem Ergebnis
+
+$$P = \left[ 
+  \begin{array}{ccc} 
+  \frac{1+(n-1)\ h^2/2}{n}\sigma_x^2  &  {1 \over 4} h^2 \sigma_x^2            &  {1 \over 4} h^2 \sigma_x^2  \\
+  {1 \over 4} h^2 \sigma_x^2          &  \frac{1+(n-1)\ h^2/2}{n}\ \sigma_x^2  &  {1 \over 2} h^2 \sigma_x^2 \\
+  {1 \over 4} h^2 \sigma_x^2          &  {1 \over 2} h^2 \sigma_x^2            &  \sigma_x^2
+  \end{array}\right]$$
+
+und 
+
+$$G = \left[ 
+  \begin{array}{c} 
+  1/4 \ h^2 \sigma_x^2\\
+  1/2 \ h^2 \sigma_x^2\\
+  h^2 \sigma_x^2
+  \end{array}\right]$$
+
+
+Die numerische Lösung soll Teil einer Übung sein.
+
+
+## Sicherheit der geschätzten Zuchtwerte
+Mittlerweilen haben wir verschiedene Zuchtwerte für den Probanden im Zahlenbeispiel berechnet. Es stellt sich nun die Frage, welcher der Schätzwerte ist genauer. Die Genauigkeit der geschätzten Zuchtwerte wurde schon in \@ref(eq:KorrIndAggGen) definiert. Für komplexere Indices braucht es aber noch ein paar Elemente mehr. Ausgangspunkt bietet die Indexgleichung 
+
+\begin{equation}
+Pb = Ga
+(\#eq:IndNormEqAcc)
+\end{equation}
+
+Der Index entspricht
+
+\begin{equation}
+I = b^T * x
+(\#eq:IndMatVecNotation)
+\end{equation}
+
+Die Varianz-Kovarianz-Matrix der Informationsquellen ($x$) entspricht der Matrix $P$ und somit gilt
+
+\begin{equation}
+var(I) = \sigma_I^2 = b^T * P * b
+(\#eq:VarIndex)
+\end{equation}
+
+Die Varianz ($var(T)$) des Zuchtziels ($T$) entspricht nicht der Matrix $G$, sondern dafür müssen wir eine neue Matrix ($C$) definieren. Es gilt also
+
+$$C = var(u)$$
+
+die genetische Varianz-Kovarianz-Matrix aller Merkmale im Zuchtziel. Die Varianz des Zuchtziels enspricht somit
+
+\begin{equation}
+var(T) = \sigma_T^2 = a^T * C * a
+(\#eq:VarAggGenotype)
+\end{equation}
+
+Daraus folgt das Bestimmtheitsmass ($B$) oder die Genauigkeit ($r_{TI}$) als 
+
+\begin{equation}
+B = r_{TI}^2 = \frac{cov(T,I)^2}{var(T)} = \frac{\sigma_I^2}{\sigma_T^2} = \frac{b^TPb}{a^TCa}
+(\#eq:Bestimmtheitsmass)
+\end{equation}
+
+Für die bis anhin geschätzten Zuchtwerte gilt: $C = \sigma_u^2 = h^2\sigma_x^2$, da wir nur ein Merkmal berücksichtigt haben. Da wir im Zuchtziel nur ein Merkmal haben, ist auch $a=1$. Somit lauten die Genauigkeiten
+
+```{r, echo=FALSE}
+acc_no_own_perf <- t(vec_b_sol) %*% mat_p %*% vec_b_sol / h2
+```
+
+```{r, echo=FALSE}
+cov_vg <- .5*h2
+mat_p_op <- matrix(c(c(var_vg, cov_hg, cov_hg, cov_hg, var_vg, cov_vg, cov_hg, cov_vg, 1)), ncol = 3, byrow = TRUE)
+mat_g_op <- matrix(c(.25*h2, .5*h2, h2), ncol = 1, byrow = TRUE)
+vec_b_sol_op <- solve(mat_p_op, mat_g_op)
+acc_op <- t(vec_b_sol_op) %*% mat_p_op %*% vec_b_sol_op / h2
+```
+
+```{r, echo=FALSE, results='asis'}
+tbl_acc <- dplyr::data_frame(Methode = c("ohne Eigenleistung", "mit Eigenleistung"),
+                             Genauigkeit = round(c(acc_no_own_perf, acc_op), digits = 3))
+knitr::kable(tbl_acc, align = "c", booktabs = TRUE)
+```
+
+Die zusätzliche Berücksichtigung bringt somit einen beträchtlichen Anstieg des Bestimmtheismass.
+
+
+## Selektionserfolg
+Wie schon früher gesehen wird der Selektionserfolg $\Delta G$ berechnet als
+
+\begin{equation}
+\Delta G = i * r_{TI} * \sigma_T
+(\#eq:SelResponseGeneral)
+\end{equation}
+
+Im Fall eines einzelnen Merkmals im Zuchtziel ist $\sigma_T = \sigma_u$ und weiter gilt $r_{TI} = \sigma_I / \sigma_T$. Damit folgt
+
+\begin{equation}
+\Delta G = i * \sigma_I
+(\#eq:SelResponseOneTrait)
+\end{equation}
+
+Somit hängt der Selektion bei der Indexselektion nur von der Selektionsintensität und der Streuung des Index ab. Diese Streuung ist aber eine Funktion der Genauigkeit der Zuchtwertschätzung. Je ungenauer die Zuchtwerte geschätzt werden, desto kleiner wird die Streung des Index. Die Argumentation kann auch umgedreht werden. Der Selektionserfolg bei der Indexselektion hängt nur von der Genauigkeit der Zuchtwertschätzung ab.
+
+
+## Selektionserfolg in Einzelmerkmalen
+Der nach der Gleichung \@ref(eq:SelResponseGeneral) berechnete Selektionserfolg ergibt den Fortschritt auf der Basis des Gesamtzuchtwerts also in einer monetären Einheit. In der Praxis besteht aber oft ein Interesse am Selektionserfolg in den Einzelmerkmalen. Die Selektionsfortschritte der einzelnen Merkmale berechnen sich als 
+
+$$\Delta g = b^T \Delta G$$
+
+wobei $\Delta g$ ein Vektor mit den Selektionserfolgen der einzelnen Merkmale ist.
+
 
 ## Anhang 1: Least Squares Lösungen für die Betriebe {#leastsquares-betrieb}
 Die Least Squares Lösungen der Betriebe werden aus dem einfachen Regressionsmodell mit dem Betrieb als einzigen fixen Effekt für die Beobachtungen. Das Modell für eine Beobachtung $y_{ij}$ lautet somit
@@ -477,7 +704,7 @@ y_{ij} = \beta_j + \epsilon_{ij}
 Die für das Relativieren gebrauchten Least Squares Lösungen der Betriebe erhalten wir mit der Funktion `lm()` in R. Dazu müssen wir zuerst einen dataframe vorbereiten, welche die Zunahmen der Nachkommen und die zugehörigen Betriebe enthält. Wir nennen den dataframe `tbl_beef_farm` und dieser sieht als Tabelle, wie folgt aus.
 
 ```{r TabBeefFarm, echo=FALSE, results='asis'}
-knitr::kable(tbl_beef_farm)
+knitr::kable(tbl_beef_farm, align = "c", booktabs = TRUE)
 ```
 
 Bevor wir das Modell in `lm` angeben ist es wichtig, dass wir sicherstellen, dass die Variable Betrieb im dataframe `tbl_beef_farm` auch wirklich den Datentyp `factor` hat. Dies können wir mit folgendem Statement überprüfen. 
@@ -510,6 +737,8 @@ Die Least Squares Lösungen für die Betriebe erhalten wir mit dem Statement
 ```{r echo=TRUE, results='markup'}
 coefficients(lm_beef_farm)
 ```
+
+
 
 
 
