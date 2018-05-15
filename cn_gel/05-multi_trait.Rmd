@@ -1,0 +1,365 @@
+# Mehrere Merkmale
+Bis hierher können wir Zuchtwerte mit dem BLUP-Tiermodell schätzen. Wir haben aber in der Zuchtwertschätzung immer nur ein Merkmal betrachtet. Dieser Fall wird auch als __univariate__ Zuchtwertschätzung bezeichnet. In der Tierzuchtpraxis möchten wir aber ein Zuchtziel verfolgen, in welchem mehrere Merkmale gleichzeitig verbessert werden sollen. Zwischen gewissen Merkmalen bestehen auch genetische Korrelationen und dann nutzt die univariate Zuchtwertschätzung die vorhandenen Informationen nicht optimal. 
+
+Werden Zuchtwerte für mehrere Merkmale gemeinsam in einem Modell geschätzt, dann nennen wir das eine __multivariate__ Zuchtwertschätzung. Diese kann in mehreren Formen auftreten.
+
+1. Multivariater Selektionsindex auf der Basis von Leistungsabweichungen
+2. Multivariate BLUP-Zuchtwertschätzung
+3. Nachträgliche Kombination von univariat geschätzten Zuchtwerten mit der Selektionsindexmethode
+
+In der Praxis treten heute die Methoden 2 und 3 und Kombinationen davon auf. Betreffend der Umsetzung funktioniert Methode 3 gleich wie Methode 1. Der Unterschied ist nur, dass in Methode 3 die geschätzten Zuchtwerte anstelle der Leistungsabweichungen verwendet werden.
+
+Im folgenden soll die Methode 1 kurz demonstriert werden, wobei diese Demonstration auch gleich für die Methode 3 gelten soll.
+
+
+## Einführung
+In der multivariaten Zuchtwertschätzung gehen wir immer von einem Zuchtziel ($T$) aus, welches mehrere Merkmale enthält. Die einzelnen Merkmale werden dabei über deren wirtschaftlichen Gewichte ($a$) kombiniert. Einfach gesagt, entspricht das wirtschaftliche Gewicht eines Merkmals der Änderung des Gewinns pro Tier, wenn sich das mittlere Niveau des Merkmals aufgrund des Selektionsfortschritts um eine kleine Einheit verändert. Der Selektionsfortschritt ($\Delta G$) im multivariaten Fall mit $n$ Merkmalen beträgt somit
+
+$$\Delta G = a_1 \Delta g_1 + a_2 \Delta g_2 + \ldots + a_n \Delta g_n$$
+
+wobei $a_i$ das wirtschaftliche Gewicht und $\Delta g_i$ der Zuchtfortschritt jeweilen für Merkmal $i$ darstellt. Bezüglich der Einheiten, ist der Zuchtfortschritt in der Einheit des jeweiligen Merkmals angegeben und das wirtschaftliche Gewicht ist in einer monetären Einheit (z. Bsp. SFr) pro Merkmalseinheit angegeben. Dann resultiert als Einheit für den multivariaten Zuchtfortschritt ($\Delta G$) die monetäre Einheit (SFr).
+
+
+## Multivariate Zuchtwertschätzung mit dem Selektionsindex {#multivariate-bvest-selindex}
+In diesem Abschnitt zeigen wir ein Beispiel für eine multivariate Zuchtwertschätzung mit dem Selektionsindex. Dieses Beispiel kann zur Illustration der oben aufgelisteten Methode 1 (Verwendung von Leistungsabweichungen) und Methode 3 (Verwendung von univariat geschätzten Zuchtwerten) verwendet werden.
+
+
+### Eigenleistung für zwei Merkmale
+In der Milchrinderzucht werden die Produktionsmerkmale Milchmenge, Fett und Eiweiss oft zu einem Index zusammengefasst. Wir konstruieren hier einen einfacheren Index der nur aus den Mengenmerkmalen für Fett und Eiweiss besteht. Als Informationsquellen nehmen wir die Eigenleistung jeder Kuh an. Zuerst definieren wir den Gesamtzuchtwert und den Index, wie folgt
+
+\vspace{2ex}
+\begin{tabular}{ll}
+  Gesamtzuchtwert:  &  $T = a_F * u_F + a_E * u_E$  \\
+  Index:            &  $I = b_F * x_F + b_E * x_E$
+\end{tabular}
+
+\vspace{2ex}
+Die folgenden Parameterwerte nehmen wir als gegeben an.
+
+```{r ParameterValuesSetup, echo=FALSE, results='hide'}
+sigma_pf <- 30
+sigma_pe <- 25
+h2_f <- .4
+h2_e <- .3
+a_f <- 1.25
+a_e <- 5
+r_p <- .85
+r_g <- .7
+```
+
+\begin{center}
+\vspace{2ex}
+\begin{tabular}{lrr}
+\hline
+Parameter  &  Fett  &  Eiweiss  \\
+\hline
+Phänotypische Standardabweichung  $\sigma_P$  &  $`r format(sigma_pf, nsmall=1)`$  &  $`r format(sigma_pe, nsmall=1)`$ \\
+Heritabilität $h^2$                           &  $`r h2_f`$  &  $`r h2_e`$ \\
+wirtschaftliches Gewicht $a$                  &  $`r a_f`$  &  $`r format(a_e, nsmall = 2)`$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{2ex}
+Die phänotypische Korrelation zwischen Fett und Eiweiss beträgt $r_{pFE} = `r r_p`$, die genetische Korrelation beträgt $r_{gFE} = `r format(r_g, nsmall = 2)`$. 
+
+Die Indexnormalgleichungen ergeben sich als
+
+$$
+\left[
+  \begin{array}{cc}
+  \sigma_{pF}^2  &  \sigma_{pFE}  \\
+  \sigma_{pFE}   &  \sigma_{pE}^2
+  \end{array}
+\right]
+\left[
+  \begin{array}{c}
+  b_F \\
+  b_E
+  \end{array}
+\right]
+=
+\left[
+  \begin{array}{cc}
+  \sigma_{gF}^2  &  \sigma_{gFE}  \\
+  \sigma_{gFE}   &  \sigma_{gE}^2
+  \end{array}
+\right]
+\left[
+  \begin{array}{c}
+  a_F \\
+  a_E
+  \end{array}
+\right]
+$$
+
+Setzen wir die angenommenen Parameter ein, ergibt sich das folgende numerische Gleichungssystem für die beiden Unbekannten $b_F$ und $b_E$.
+
+```{r MatSetup, echo=FALSE, results='hide'}
+# phenotypic covariance between f and e
+sigma_pfe <- r_p * sigma_pf * sigma_pe
+# phenotypic variance-covariance matrix
+mat_p <- matrix(c(sigma_pf^2, sigma_pfe, sigma_pfe, sigma_pe^2), nrow = 2, byrow = TRUE)
+# genetic standard deviations of f and e
+sigma_gf <- sqrt(h2_f) * sigma_pf
+sigma_ge <- sqrt(h2_e) * sigma_pe
+# genetic covariance between f and e
+sigma_gfe <- r_g * sqrt(h2_f) * sigma_pf * sigma_ge
+# genetic variance-covariance matrix
+mat_g <- matrix(c(sigma_gf^2, sigma_gfe, sigma_gfe, sigma_ge^2), nrow = 2, byrow = TRUE)
+vec_b <- c("b_F", "b_E")
+vec_a <- c(a_f, a_e)
+vec_b_sol <- solve(mat_p) %*% crossprod(mat_g, vec_a)
+```
+
+```{r NumericEqIndex, echo=FALSE, results='asis'}
+cat("$$\n")
+cat("\\left[\n")
+cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = mat_p, pnDigits = 1), collapse = "\n"), "\n")
+cat("\\right]\n")
+cat("\\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_b)))
+cat("\\right]\n")
+cat("=\n")
+cat("\\left[\n")
+cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = mat_g, pnDigits = 1), collapse = "\n"), "\n")
+cat("\\right]\n")
+cat("\\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_a)))
+cat("\\right]\n")
+cat("$$\n")
+```
+
+
+Als Lösung ergibt sich
+
+```{r SolEqIndex, echo=FALSE, results='asis'}
+cat("$$\n")
+cat("\\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_b)))
+cat("\\right]\n")
+cat("=\n")
+cat("\\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = round(vec_b_sol, digits = 3))))
+cat("\\right]\n")
+cat("$$\n")
+```
+
+Im Selektionsindex ist das Verhältnis der Gewichte der Merkmale im Vektor $b$ etwas enger als das Verhältnis der wirtschaftlichen Gewichte $a$. Das kommt durch die Berücksichtigung der Kovarianzen zwischen den Merkmalen zustande.
+
+Analog zur gezeigten Herleitung der Lösung des Vektors $b$ für die erste Methode der multivariaten Zuchtwertschätzung mit dem Selektionsindex werden die Indexgewichte für die dritte Methode bestimmt. Anstelle der phänotypischen Leistungsabweichgungen werden die Resultate der univariaten Zuchtwertschätzungen verwendet.
+
+
+## Multivariate BLUP-Zuchtwertschätzung
+Nur weil mehrere Merkmale gleichzeitig im Zuchtziel berücksichtigt werden sollen, will man nicht auf die Vorzüge von BLUP verzichten. Aktuell werden in der Praxis zwei Lösungen umgesetzt.
+
+1. Zuchtwerte werden univariate mit dem BLUP-Tiermodell (oder selten mit dem Vatermodell) geschätzt und diese Schätzungen werden mit dem Selektionsindex (wie im vorherigen Abschnitt gezeigt) kombiniert. Dies entspricht der Methode 3, wie sie am Anfang des Kapitels beschrieben wurde.
+2. Man verwendet ein multivariates BLUP-Modell für die Zuchtwertschätzung.
+
+Die multivariate BLUP-Zuchtwertschätzung ist das optimale Verfahren. Sie hat die folgenden Vorteile
+
+* unterschiedliche Heritabilitäten zwischen den Merkmalen
+* umweltbedingte Korrelationen zwischen Merkmalen bestehen
+* nicht alle Merkmale bei allen Tieren vollständig vorhanden sind
+* wenn eines der Merkmale bereits für die Selektion verwendet wird.
+
+Ein multivariates lineares Modell kann als zwei übereinander gestapelte univariate Modelle betrachtet werden. Für ein erstes Merkmal definieren wir
+
+$$y_1 = X_1b_1 + Z_1u_1 + e_1$$
+
+Analog für ein zweites Merkmal
+
+$$y_2 = X_2b_2 + Z_2u_2 + e_2$$
+
+Werden die Tiere und die Beobachtungen nach den Merkmalen geordnet, dann kann die Vereinigung der Modelle, wie folgt geschrieben werden. 
+
+\begin{equation}
+\left[ 
+  \begin{array}{c}
+  y_1 \\
+  y_2
+  \end{array}
+\right]
+=
+\left[ 
+  \begin{array}{lr}
+  X_1  &  0  \\
+  0    &  X_2
+  \end{array}
+\right]
+\left[ 
+  \begin{array}{c}
+  b_1 \\
+  b_2
+  \end{array}
+\right]
++
+\left[ 
+  \begin{array}{lr}
+  Z_1  &  0  \\
+  0    &  Z_2
+  \end{array}
+\right]
+\left[ 
+  \begin{array}{c}
+  u_1 \\
+  u_2
+  \end{array}
+\right]
++
+\left[ 
+  \begin{array}{c}
+  e_1 \\
+  e_2
+  \end{array}
+\right]
+(\#eq:MultVarBlup)
+\end{equation}
+
+Bei den Varianzen wird es etwas komplizierter. Wir betrachten zuerst die genetischen Kovarianzmatrix ($G$) der Merkmale und verwenden die folgende Notation.
+
+$$
+G = \left[ 
+  \begin{array}{lr} 
+  \sigma_{u1}^2   &  \sigma_{u1,u2} \\
+  \sigma_{u1,u2}  &  \sigma_{u2}^2
+  \end{array} 
+\right] 
+=
+\left[ 
+  \begin{array}{lr} 
+  g_{11}   &  g_{12} \\
+  g_{12}  &  g_{22}
+  \end{array} 
+\right]
+$$
+
+Analog definieren wir die Kovarianzmatrix der Residuen als
+
+$$
+R = \left[
+  \begin{array}{lr} 
+  r_{11}   &  r_{12} \\
+  r_{12}  &  r_{22}
+  \end{array} 
+\right]
+$$
+
+Zusammengefasst ergibt sich für die Varianz der zufälligen Effekte im Modell
+
+$$
+var \left[ 
+  \begin{array}{c}
+  u_1 \\
+  u_2 \\
+  e_1 \\
+  e_2
+  \end{array}
+\right]
+=
+\left[ 
+  \begin{array}{rrrr}
+  g_{11}A   &  g_{12}A  &  0       &  0 \\
+  g_{12}A   &  g_{22}A  &  0       &  0 \\
+  0         &  0        &  r_{11}  &  r_{12} \\
+  0         &  0        &  r_{12}  &  r_{22}
+  \end{array}
+\right]
+$$
+
+wobei $A$ für die genetisch-additive Verwandtschaftsmatrix steht. Für die Kovarianz der Zuchtwerte wird auch oft die folgende abgekürzte Schreibweise verwendet.
+
+$$
+var \left[ 
+  \begin{array}{c}
+  u_1 \\
+  u_2 \\
+  \end{array}
+\right]
+=
+\left[ 
+  \begin{array}{rr}
+  g_{11}A   &  g_{12}A \\
+  g_{12}A   &  g_{22}A
+  \end{array}
+\right]
+=
+G \otimes A
+$$
+
+wobei $\otimes$ für das sogenannte Kronecker-Produkt zwischen zwei Matrizen steht. Die Definition ist aus der oben gezeigten Gleichung ersichtlich. Mehr Informationen zum Kronecker-Produkt sind unter https://de.wikipedia.org/wiki/Kronecker-Produkt erhältlich.
+
+
+## Mehrmerkmalsselektion
+Sobald die Zuchtwerte multivariat geschätzt werden, stellt sich die Frage, wie diese geschätzten Zuchtwerte für alle wirtschaftlich relevanten Merkmale gleichzeitig in der Selektion verwendet werden. Dabei müssen wir berücksichtigen, dass die verschiedenen Merkmale unterschiedliche Informationsgehalte, unterschiedliche Erblichkeiten und wirtschaftliche Bedeutungen haben. Wir müssen also ein Verfahren zur Verfügung haben, welche mehrere Merkmale im Zuchtziel berücksichtigen kann. Es konnte gezeigt werden, dass der __Selektionsindex__ das optimale Verfahren für die Selektion auf mehrere Merkmale ist. Trotzdem werden in der Praxis noch weitere Selektionsmethoden praktiziert. Dabei handelt es sich um die _Tandemselektion_ und um die _Selektion nach unabhängigen Grenzen_. Diese beiden Methoden sollen im Anschluss an diesen Abschnitt noch kurz beschrieben werden.
+
+Grundsätzlich soll die Anzahl der Selektionsmerkmale so tief wie möglich gehalten werden. Jedes neu in die Selektion aufgenommene Merkmal verhindert den Erfolg in den übrigen Merkmalen, allein schon dadurch, dass die mögliche Selektionsintensität auf mehr Merkmale verteilt werden muss. Bei unerwünschten genetischen Korrelationen zwischen Selektionsmerkmalen kann der Erfolg sogar noch geringer ausfallen.
+
+
+### Tandemselektion
+Werden die Selektionsmerkmale nacheinander einzeln angewendet, so spricht man von Tandemselektion. Es wird mit einem Merkmal begonnen und wenn wir das Zuchtziel für dieses Merkmal erreicht haben, dann wird das nächste Merkmal bearbeitet. Diese Einzelmerkmalsselektion wird so lange fortgeführt, bis das Zuchtziel für alle Merkmale erreicht ist. 
+
+Diese Methode hat das Problem, dass bei der Bearbeitung eines Merkmals für alle anderen Merkmale auch immer korrelierte Selektionserfolge realisiert werden. Diese können gering sein oder bei ungünstigen genetischen Korrelationen können die Fortschritte auch negativ ausfallen. Generell ist es sehr schwierig bei der Selektion auf ein bestimmtes Merkmal alle anderen Merkmale auf einem bestimmten Niveau konstant zu halten. Zusätzlich ist diese sequenzielle Bearbeitung von immer nur einem Merkmal ineffizient, da es sehr viel Zeit braucht, damit bei allen Merkmalen eine bestimmte Verbesserung erzielt wird.
+
+
+### Selektion nach unabhängigen Grenzen
+Die Methode der Selektion nach unabhängigen Grenzen (SNUG) wurde hauptsächlich vor der Entdeckung der Indexselektion angewendet. Dieses Verfahren besteht darin, dass für alle Merkmale im Zuchtziel Selektionsgrenzen festgelegt werden und nur solche Tiere als Elterntiere ausgewählt werden, die in _allen_ Merkmalen über den Selektionsgrenzen liegen. Diese Methode ist einfach anwendbar und führt im Gegensatz zur Tandemselektion schon nach einer Generation zu Selektionsfortschritten in allen Merkmalen.
+
+Anhand des folgenden Beispiels soll die Methode der SNUG aufgezeigt werden. Der Einfachheit halber beschränken wir uns auf zwei Merkmale. Die Methode lässt sich aber auch auf mehrere Merkmale verallgemeinern.
+
+```{r SnugExSetup, echo=FALSE, results='hide'}
+set.seed(5698)
+limit_milk <- 7000
+limit_protein <- 3.5
+mean_milk <- 6800
+sd_milk <- 500
+mean_protein <- 3.4
+sd_protein <- 0.35
+number_cows <- 30
+tbl_milk_protein <- dplyr::data_frame(Milch = runif(number_cows, 
+                                                    min = (mean_milk-3*sd_milk), 
+                                                    max = (mean_milk+3*sd_milk)),
+                                      Protein = rnorm(number_cows, mean = mean_protein, sd = sd_protein))
+```
+
+In einer Milchrinderpopulation sollen die Milchmenge und der Eiweissgehalt verbessert werden. Als Selektionsgrenzen für erstlaktierende Kühe werden mindestens $`r limit_milk`$ kg und ein Einweissgehalt von $`r limit_protein` \%$ veranschlagt. In Abbildung \@ref(fig:MilkProteinPlot) ist die Ausgangslage graphisch dargestellt. 
+
+
+```{r MilkProteinPlot, echo=FALSE, fig.align='center', fig.cap="Milchmenge und Eiweissgehalt von Erstlaktierenden Kühen"}
+p <- ggplot2::ggplot(data = tbl_milk_protein, ggplot2::aes(Milch, Protein)) + 
+  ggplot2::geom_point() +
+  ggplot2::geom_hline(yintercept = limit_protein) + 
+  ggplot2::geom_vline(xintercept = limit_milk)
+print(p)
+```
+
+Die Selektionsgrenzen für die beiden Merkmale sind durch die horizontale und die vertikale Linie dargestellt. Diese Selektionsgrenzen teilen die Population in vier Quadranten ein. Die Kühe im linken unteren Feld erfüllen die Selektionsgrenzen für keines der beiden Merkmale. Die Kühe im linken oberen und rechten unteren Quadraten erfüllen die Kriterien für jeweilen ein Merkmal. Nur die Kühe oben rechts werden als Mütter ausgewählt, denn nur sie erfüllen die Selektionskriterien für beide Merkmale.
+
+Der Nachteil der SNUG liegt darin, dass die Tiere im linken oberen und im rechten unteren Quadranten nicht berücksichtigt werden. Oft weisen diese aber zumindest in einem Merkmal sehr gute Leistungen auf. Ihr allfällig ausgezeichnetes genetisches Potential wird nicht an die nächste Generation weitergegeben und ist somit für die Population verloren.
+
+Aus statistisch-genetischer Sicht gibt es drei Probleme mit der SNUG
+
+1. Züchter neigen dazu, die __Grenzen für jedes Merkmal im positiven Bereich__, d.h. rechts des Mittelwertes anzusiedeln. Nehmen wir zwei unkorrelierte, normalverteilte Merkmale an, dann werden $75 \%$ der Tiere ausgeschlossen. Bei fünf Merkmalen sind es schon $97 \%$ der Tiere, welche von der Selektion ausgeschlossen werden. Das kann bei männlichen Tieren in der KB funktionieren. Aber sonst führt das zu einem Verlust von vielen Tieren mit einem guten genetischen Potential. Als Folge davon wird auch der Verlust von genetischer Variabilität beschleunigt.
+2. __Nichtberücksichtigung von genetischen Beziehungen__ zwischen den Merkmalen. Bei der Festlegung der Selektionsgrenzen müssen die genetischen Beziehungen zwischen den Merkmalen berücksichtigt werden. Nur so können wir abschätzten ob sich die Selektion auf ein Merkmal den Fortschritt in einem anderen Merkmal unterstützt oder behindert. Werden diese Zusammenhänge ignoriert, können sich die Selektionserfolge in eine andere Richtung entwickeln, als dass wir das erwarten würden. In Beispiel von Abbildung \@ref(fig:MilkProteinPlot) besteht eine negative genetische Korrelation zwischen Milchmenge und Eiweissgehalt, deshalb werden viele Kühe von der Selektion ausgeschlossen.
+3. __Unterschiedliche wirtschaftliche Bedeutung__ der Merkmale. Durch die Strategie, dass die Grenzen für jedes Merkmal im positiven Bereich sein müssen, werden vor allem Zuchtfortschritte in den Merkmalen mit der höchsten Erblichkeit und nicht mit der höchsten wirtschaftlichen Bedeutung erzielt.
+
+
+### Abhängige Selektionsgrenzen (Indexselektion)
+Die Indexselektion wird auch als Selektion nach abhängigen Selektionsgrenzen bezeichnet. Sie führt zum optimalen Selektionserfolg aller Selektionsmerkmale unter den gegebenen genetischen und wirtschaftlichen Voraussetzungen. Die Konstruktion eines solchen Indexes ist in Abschnitt \@ref(multivariate-bvest-selindex) beschrieben. 
+
+Die Vorteile der Indexselektion werden hier noch einmal zusammengefasst
+
+* Berücksichtigung der genetischen Beziehungen der Zuchtzielmerkmale untereinander
+* Berücksichtigung der phänotypischen Beziehungen zwischen den Informationsquellen
+* Möglichkeit zur Nutzung von Hilfsmerkmalen
+* Genaue Berücksichtigung der unterschiedlichen wirtschaftlichen Bedeutung der Zielmerkmale
+* Erwartete Selektionserfolge insgesamt und in den Zuchtzielmerkmalen lassen sich die Fortschritte exakt berechnen
+
+Trotz der viele Vorteile kommt die reine Indexselektion in der Praxis nicht vor. Der Grund dafür ist, dass in jeder Population züchterisch bedeutsame Merkmale existieren, welche wirtschaftlich nicht einfach zu bewerten sind oder für welche keine genetischen Parameter verfügbar sind. Daneben gibt es auch qualitative Merkmale (z. Bsp. Anomalien oder Erbfehler) welche nur schwer in einen Index integrierbar wären. Deshalb ist die Selektion in der Praxis eine Mischung aus Indexselektion und einer Reihe von Mindestanforderungen, welche nichts anderes als unabhängige Selektionsgrenzen in den nicht fassbaren Merkmalen darstellen.  
+
+
+
+
+
+
+

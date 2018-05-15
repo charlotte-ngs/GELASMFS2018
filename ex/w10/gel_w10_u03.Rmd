@@ -1,0 +1,45 @@
+---
+title: "AZWS - Übung 3"
+author: "Peter von Rohr"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document:
+    keep_tex: FALSE
+output_file: asmas_w10_u03.pdf
+---
+
+```{r DocumentSetup, echo=FALSE, results='hide'}
+knitr::opts_chunk$set(echo = FALSE, results = 'hide')
+```
+
+```{r, echo=FALSE}
+vec_vg_hg_op_x <- c(-17.5*2/1000, 2*47.5/1000, 0.075)
+```
+
+## Aufgabe 1: Halb-, Vollgeschwister und Eigenleistung
+Im Abschnitt 3.4.4 im Skript (Seite 32) soll der Zuchtwert für ein Selektionskandidat (Proband) mit dem Selektionsindex geschätzt werden. Wie in Abbildung 3.2 im Skript gezeigt wurde, hat der Selektionskandidat zwei Vollgeschwister und zwei Halbgeschwister. Zusätzlich zu den Geschwisterleistungen soll auch die Eigenleistung des Selektionskandidaten berücksichtigt werden. 
+
+
+### Ihre Aufgabe:
+* Schätzen Sie für den Selektionskandidaten den Zuchtwert mit dem Selektionsindex
+* Verwenden Sie dazu die Angaben des Zahlenbeispiels aus dem Abschnitt 3.1.2, der Konstruktion der Matrizen des Indexes aus Abschnitt 3.4.4 und der Verwandtschaft aus der Abbildung 3.2. 
+* Wir nehmen an, dass der Vektor ($x$) der Leistungsabweichungen wie folgt lautet:
+
+```{r, echo=FALSE, results='asis'}
+cat("$$x = \\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_vg_hg_op_x, pnDigits = 3), collapse = "\n"), "\n")
+cat("\\right]$$\n")
+```
+
+
+
+## Aufgabe 2: BLUP-Vatermodell
+Schätzen Sie für die Väter im Zahlenbeispiel aus dem Abschnitt 3.1.2 die Zuchtwerte mit einem BLUP-Vatermodell.
+
+### Hilfestellung
+* Nehmen Sie an, dass die Väter weder verwandt noch ingezüchtet sind. Somit entspricht die genetisch-additive Verwandtschaftsmatrix $G$ der Einheitsmatrix $I$. 
+
+
+
+
+

@@ -48,6 +48,7 @@ tbl_beef_data <- dplyr::data_frame(Tier = (n_nr_parents + 1):n_nr_animals,
                                    Mutter = dam_id[order(dam_id)],
                                    Betrieb = c(rep(1,4), rep(2,4), rep(1,4), rep(2,4)),
                                    Zunahme = c(1.26,1.32,1.4,1.44,1.52,1.5,1.42,1.46,1.34,1.32,1.24,1.28,1.44,1.4,1.54,1.56))
+n_nr_observation <- nrow(tbl_beef_data)
 
 knitr::kable(tbl_beef_data, 
              booktabs = TRUE, 

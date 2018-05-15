@@ -1,0 +1,93 @@
+---
+title: "AZWS - Übung 4"
+author: "Peter von Rohr"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document:
+    keep_tex: FALSE
+output_file: asmas_w13_u04.pdf
+---
+
+```{r DocumentSetup, echo=FALSE, results='hide'}
+knitr::opts_chunk$set(echo = FALSE, results = 'hide')
+```
+
+```{r, echo=FALSE}
+mean_bv <- 1000
+sd_bv <- 120
+```
+
+## Aufgabe 1: Konfidenzintervalle für geschätzte Zuchtwerte
+In der Milchrinderzucht werden die Produktionszuchtwerte oft auf einen Mittelwert von $`r mean_bv`$ und eine Standardabweichung von $`r sd_bv`$ standardisiert. Nehmen wir eine Irrtumswahrscheinlichkeit $\alpha = 0.01$ an. Wie lauten dann die Grenzen der Konfidenzintervalle für die geschätzten Zuchtwerte.
+
+### Ihre Aufgabe
+Füllen Sie die folgende Tabelle mit den Intervallgrenzen für die vorgegebenen Sicherheiten aus.
+
+```{r, echo=FALSE, results='asis'}
+r2 <- c(seq(.6, .95, .05), 0.99)
+nr_r2 <- length(r2)
+# create the table
+knitr::kable(dplyr::data_frame(Sicherheit = r2,
+                  `Untere Grenze` = rep("", nr_r2),
+                  `Obere Grenze` = rep("", nr_r2)),
+             align = "c",
+             booktabs = TRUE)
+```
+
+\pagebreak
+
+## Aufgabe 2: Mehrmerkmalsselektion
+```{r, echo=FALSE, results='hide'}
+h2_lgf <- .12
+h2_far <- .06
+rp <- -.1
+rg <- -.13
+a_lgf <- 15
+a_far <- 2.5
+nr_sow <- 20
+mean_lgf <- 10
+sd_lgf <- 1.8
+mean_far <- 72
+sd_far <- 8.1
+vec_lgf <- runif(nr_sow, 
+                 min = mean_lgf - 3*sd_lgf,
+                 max = mean_lgf + 3*sd_lgf)
+vec_far <- runif(nr_sow,
+                 min = mean_far - 3*sd_far,
+                 max = mean_far + 3*sd_far)
+tbl_data <- dplyr::data_frame(Sau = 1:nr_sow,
+                              `Lebend Geborene Ferkel` = round(vec_lgf, digits = 0),
+                              `Ferkelaufzuchtrate` = round(vec_far, digits = 1))
+```
+
+In einer Schweinzuchtpopulation wollen wir die Merkmale Anzahl lebend geborene Ferkel (LGF) und die Ferkelaufzuchtrate (FAR) verbessern. Wir haben Daten der beiden Merkmale für `r nr_sow` Muttersauen.
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(tbl_data, align = "c", booktabs = TRUE)
+```
+
+### Ihre Aufgabe
+Vergleichen Sie die Selektion nach unabhängigen Grenzen mit Grenzen $LGF > 12$ und $FAR > 65$ mit der Indexselektion. Erstellen Sie eine Rangliste gemäss der Selektionskandidaten gemäss der Werte der Selektionskriterien. 
+
+Für die Konstruktion des Indexes können sie die folgenden Parameter verwenden.
+
+\begin{center}
+\vspace{2ex}
+\begin{tabular}{lrr}
+\hline
+Parameter  &  LGF  &  FAR  \\
+\hline
+Phänotypische Standardabweichung  $\sigma_P$  &  $`r format(sd_lgf, nsmall=1)`$  &  $`r format(sd_far, nsmall=1)`$ \\
+wirtschaftliches Gewicht $a$                  &  $`r a_lgf`$  &  $`r a_far`$ \\
+Heritabilität $h^2$                           &  $`r h2_lgf`$  &  $`r h2_far`$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Die phänotypische Korrelation zwischen den Merkmalen beträgt $`r rp`$ und die genetische Korrelation beträgt $`r rg`$. 
+
+
+
+
+
+

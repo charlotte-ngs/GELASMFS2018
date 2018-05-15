@@ -27,7 +27,7 @@ This is a summary of the paper [@Robinson1991]. This aims at finding an easy eno
 
 
 # Introduction
-BLUP stands for _Best Lineare Unbiased Prediction_ and is the de-facto standard method for predicting or estimating^[In German, only the translated term of estimation is used.] breeding values. It is a method of estimating random effects^[Therefore, the model is called a linear mixed effects model.]. 
+BLUP stands for _Best Linear Unbiased Prediction_ and is the de-facto standard method for predicting or estimating^[In German, only the translated term of estimation is used.] breeding values. It is a method of estimating random effects^[Therefore, the model is called a linear mixed effects model.]. 
 
 The context of BLUP is the linear model
 
@@ -70,8 +70,45 @@ BLUP estimates of the realisations of the random variables $u$ are
 
 Mathematically, the BLUP estimators $\hat{\beta}$ of $\beta$ and $\hat{u}$ of $u$ are defined as the solution to the following simultaneous equations, given by [@Henderson1950]. 
 
+\begin{eqnarray}
+X^TR^{-1}X\hat{\beta} + X^TR^{-1}Z\hat{u}  &=&  X^TR^{-1}y \nonumber \\
+Z^TR^{-1}X\hat{\beta} + (Z^TR^{-1}Z + G^{-1}) \hat{u}  &=&  Z^TR^{-1}y
+\label{eq:MixedModelEq}
+\end{eqnarray}
 
+The above given equations are called _mixed model equations_ (MME) and $\hat{\beta}$ and $\hat{u}$ are called mixed model solutions. We note that as $G^{-1}$ tends to $0$, the MME tend towards the generalized least-squares (GLS) equations for estimating $\beta$ and $u$, when these components are regarded as fixed effects.
 
+[@Henderson1975] showed that, provided $X$ has full column rank $p$, the variance-covariance matrix of estimation errors is given by 
+
+\begin{equation}
+E \left(
+    \left[ 
+      \begin{array}{c}
+      \beta - \hat{\beta}\\
+      u - \hat{u}
+      \end{array}
+    \right]
+\left[ 
+      \begin{array}{c}
+      \beta - \hat{\beta}\\
+      u - \hat{u}
+      \end{array}
+    \right]^T
+\right)
+=
+\left[
+  \begin{array}{cc}
+  X^TR^{-1}X  &  X^TR^{-1}Z \\
+  Z^TR^{-1}X  &  Z^TR^{-1}Z + G^{-1}
+  \end{array}
+\right]^{-1} \sigma^2
+\label{eq:CovEstError}
+\end{equation}
+
+The BLUP estimates generally differ from the generalized least squares estimates that would be obtained if $u$ were regarded to be fixed. This is illustrated by the following example.
+
+## Example 
+A simple example of model (\ref{eq:LinMixedModel}) is that of first lactation yields of dairy cows with sire additive genetic merit^[also known as breeding values] being treated as random effects ($u$) and herds being treated as fixed effects ($\beta$).  
 
 
 
@@ -100,7 +137,22 @@ vec_bref <- c(bibentry(
   bibentry(
     bibtype = "Article",
     title = "Estimation of genetic parameters (abstract)",
-    author = as.persion("C.R. Henderson")
+    author = as.person("C.R. Henderson"),
+    year = 1950,
+    journal = "Ann. Math. Statist.",
+    volume = 21,
+    page = "309-310",
+    key = "Henderson1950"
+  ),
+  bibentry(
+    bibtype = "Article",
+    title = "Best linear unbiased estimation and prediction under a selection model",
+    author = as.person("C.R. Henderson"),
+    year = 1975,
+    journal = "Biometrics",
+    volume = 31,
+    page = "423-447",
+    key = "Henderson1975"
   ))
 # write entries in vec_bref to bib-file
 sBibFile <- "skeleton.bib"

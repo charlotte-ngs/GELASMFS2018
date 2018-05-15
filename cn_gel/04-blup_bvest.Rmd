@@ -294,3 +294,121 @@ Durch die Veränderung des Vektors $u$ ändert sich auch die Varianz ($var(u)$) 
 $$G = A * \sigma_u^2$$
 
 Die Schätzwerte der fixen Effekte und der Zuchtwerte erhalten wir auch aus den Mischmodellgleichungen. 
+
+\pagebreak
+
+### Beispiel für ein Tiermodell
+Das lineare gemischte Modell und die Mischmodellgleichungen für das Tiermodell sehen gleich aus, wie für das Vatermodell. Einzig die Länge des Vektors $u$ der zufälligen Effekte beträgt nun `r n_nr_animals`. Im Tiermodell beinhaltet der Vektor $u$ die Zuchtwerte aller Tiere im Pedigree und nicht nur diejenigen der Väter, wie im Vatermodell. Entsprechend muss auch die Dimension der Matrix $Z$ angepasst werden. Da die Matrix $Z$ die Beobachtungen zu allen Zuchtwerten verbindet, hat sie gleich viele Zeilen, wie wir Beobachtungen im Datensatz haben. Die Anzahl Kolonnen von $Z$ entspricht der Anzahl an Zuchtwerten. Somit ist die Dimension von $Z$ im Tiermodell $`r n_nr_observation` \times `r n_nr_animals`$. Für unser Zahlenbeispiel lauten $u$ und $Z$, wie folgt
+
+```{r, echo=FALSE, results='asis'}
+vec_u_am <- rmddochelper::vecGetVecElem(psBaseElement = "u", pnVecLen = n_nr_animals, psResult = "latex")
+cat("$$u = \\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_u_am), collapse = "\n"), "\n")
+cat("\\right]$$\n")
+### # design matrix Z
+mat_Z_am <- cbind(matrix(0, nrow = n_nr_observation, ncol = (n_nr_animals - n_nr_observation)), diag(1, n_nr_observation))
+cat("$$Z = \\left[\n")
+cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = mat_Z_am, pnDigits = 0)))
+cat("\\right]$$\n")
+```
+
+Somit können wir die Mischmodellgleichungen aus \@ref(eq:MixedModelEqSimple) mit der für das Tiermodell passenden Matrix $Z$ aufstellen. Die numerische Lösung der Gleichungen soll Teil einer Übung sein. 
+
+
+## Sicherheit der Zuchtwertschätzung
+Beim Selektionsindex konnte die Sicherheit als Korrelation zwischen Index $I$ und Gesamtzuchtwert $T$ abgeleitet werden. Beim BLUP-Tiermodell ist das nicht mehr ganz so einfach. Es kann aber gezeigt werden, dass die Sicherheit als Funktion der Inversen $C^{-1}$ der Koeffizientenmatrix $C$ der Mischmodellgleichungen ausgedrückt werden kann. Dazu verwenden wir die folgende Notation
+
+
+\begin{equation}
+\left[ 
+  \begin{array}{lr}
+  X^TR^{-1}X  &  X^TR^{-1}Z \\
+  Z^TR^{-1}X  &  Z^TR^{-1}Z + G^{-1}
+  \end{array}
+\right]^{-1}
+=
+\left[ 
+  \begin{array}{lr}
+  C^{11}  &  C^{12} \\
+  C^{21}  &  C^{22}
+  \end{array}
+\right]
+(\#eq:CoeffMatMME)
+\end{equation}
+
+Für die Varianz des Fehlers der geschätzten Zuchtwerte gilt 
+
+$$var(u - \hat{u}) = C^{22}$$
+
+Dieser Ausdruck ($var(u - \hat{u})$) wird als _Prediction Error Variance_ (PEV) bezeichnet. Sie ist ein Mass für die Streuung der geschätzten Zuchtwerte um die wahren Werte bei gegebener Informationsstruktur. Die PEV gibt auch den Anteil der genetisch-additiven Varianz an, welche noch nicht durch die geschätzten Zuchtwerte ausgedrück wird. Somit gilt auch 
+
+\begin{equation}
+PEV = var(u - \hat{u}) = C^{22} = (1-r^2)\ \sigma_u^2
+(\#eq:PEVAccBv)
+\end{equation}
+
+wobei $r^2$ in Gleichung \@ref(eq:PEVAccBv) der quadrierten Korrelation zwischen dem wahren und dem geschätzten Zuchtwert entspricht. Diese Korrelation wird als Sicherheit und die quadrierte Korrelation als _Bestimmheitsmass_ ($B$) bezeichnet. Für ein einzelnes Tier $i$ gilt somit 
+
+\begin{equation}
+C_{ii}^{22} = (1 - r_i^2)\ \sigma_u^2
+(\#eq:SingleAnimalPEV)
+\end{equation}
+
+wobei $C_{ii}^{22}$ dem $i$-ten Diagonalelement von $C^{22}$ entspricht. Somit gilt
+
+\begin{equation}
+r_i^2 = 1 - \frac{C_{ii}^{22}}{\sigma_u^2} = 1 - \frac{var(u - \hat{u})}{\sigma_u^2}
+(\#eq:SingleAnimalRel)
+\end{equation}
+
+Aus Gleichung \@ref(eq:SingleAnimalRel) lässt sich erkennen, dass die PEV umso kleiner ist, je grösser die Sicherheit oder das Bestimmtheitsmass.
+
+
+## Konfidenzintervalle für geschätzte Zuchtwerte
+Abgesehen vom Bestimmtheitsmass können die Konfidenzintervalle der geschätzten Zuchtwerte auch eine interessante Grösse sein. Diese Konfidenzintervalle finden aber in der Praxis kaum Beachtung. Für das Bestimmtheitsmass mussten wir die PEV bestimmen. Zieht man aus PEV die Quadratwurzel erhalten wir den Standardfehler (Standard Error of Prediction - SEP) des geschätzten Zuchtwerts. 
+
+$$SEP = \sqrt{PEV} = \sqrt{(1 - r^2)\ \sigma_u^2}$$
+
+Mit Hilfe des SEP kann für eine gegebene Irrtumswahrscheinlichkeit ($\alpha$) das Intervall angegeben werden, innerhalb dessen wir den wahren Zuchtwert mit einer Wahrscheinlichkeit von ($1-\alpha$) erwarten. In der Rinderzucht werden die Zuchtwerte auf eine Standardabweichung von $12$ (oder neuerdings auch von $120$) standardisiert. Dadurch können die Intervallbreiten für $\alpha = .05$ berechnet werden als
+
+```{r echo=FALSE}
+r2 <- c(seq(.4,.9,.1), .95,.99)
+sd_std <- 12
+sep <- sqrt(1-r2) * sd_std
+alpha <- .05
+quant_norm <- qnorm(p = alpha/2, lower.tail = FALSE)
+Interval <- quant_norm * sep * 2
+```
+
+```{r RelTable, echo=FALSE, results='asis'}
+tbl_rel <- dplyr::data_frame(r2 = r2, Interval = Interval)
+knitr::kable(tbl_rel,
+             align = "c",
+             caption = "Intervallbreiten für verschiedene Bestimmtheitsmasse",
+             booktabs = TRUE)
+```
+
+Die Konfidenzintervalle können selbst bei sehr hohen Sicherheiten, wie sie nur bei Altbullen erreicht werden, noch eine beträchtliche Breite aufweisen.
+
+
+### Bedeutung der Sicherheit der Zuchtwerte
+Je nach Tierart und auch je nach Züchter werden den Sicherheiten unterschiedliche Bedeutungen beigemessen. Die Bewertung der Sicherheiten der Zuchtwerte ist abhängig davon ob ein einzelnes Zuchttier oder eine ganze Population betrachtet wird. 
+
+Grundsätzlich sind tiefere Werte bei der Sicherheit nichts "falsches". Die geschätzten Zuchtwerte sind ja unverzerrt, also läuft man als Züchterin oder als Züchter sicher nicht in die Gefahr über längere Zeit einem systematische Fehler zum Opfer zu fallen. Einzig besteht das Risiko, dass bei einzelnen Tieren mit Sicherheiten der geschätzten Zuchtwerte diese Schätzungen sich im Verlauf des Lebens des Tieres noch ändern kann. Betrachtet man das Phänomen der Änderungen der Zuchtwerte über eine Gruppe von Tieren, dann werden bei gewissen Tiere die geschätzten Zuchtwerte steigen und bei anderen Tieren werden diese fallen. Aufgrund der asymmetrischen Wahrnehmen von Risiken durch den Menschen, wird ein Anstieg eines geschätzten Zuchtwerts kaum registriert, während ein Abfall sehr wohl wahrgenommen wird.
+
+Aufgrund des menschlichen Naturells, ist es klar, dass Züchter höhere Sicherheiten der geschätzten Zuchtwerte bevorzugen. Wenn alle anderen Faktoren konstant gehalten werden können, führen höhere Sicherheiten auch zu einem höheren Zuchtfortschritt. Allerdings sind höhere Sicherheiten nicht gratis und müssen oft mit folgenden Nebeneffekten erkauft werden.
+
+* Anstieg des Generationenintervalls, damit mehr Nachkommen abgewartet werden können
+* Verringerung der Testkapazität und damit der Selektionsintensität
+* höhere Kosten, da mehr Tiere geprüft werden müssen
+
+Allgemein wird der Sicherheit der geschätzten Zuchtwerte eher ein zu hoher als ein zu tiefer Stellenwert beigemessen. Gerade in der Rinderzucht könnte ein höherer jährlicher Selektionsfortschritt erzielt werden, wenn man das Generationenintervall verkürzen und eine geringere Sicherheit in Kauf nehmen würde.
+
+
+
+
+
+
+
+
+
