@@ -1,0 +1,222 @@
+---
+title: "AZWS - Lösung 4"
+author: "Peter von Rohr"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document:
+    keep_tex: FALSE
+output_file: asmas_w13_l04.pdf
+---
+
+```{r DocumentSetup, echo=FALSE, results='hide'}
+knitr::opts_chunk$set(echo = FALSE, results = 'hide')
+```
+
+```{r, echo=FALSE}
+mean_bv <- 1000
+sd_bv <- 120
+```
+
+## Aufgabe 1: Konfidenzintervalle für geschätzte Zuchtwerte
+In der Milchrinderzucht werden die Produktionszuchtwerte oft auf einen Mittelwert von $`r mean_bv`$ und eine Standardabweichung von $`r sd_bv`$ standardisiert. Nehmen wir eine Irrtumswahrscheinlichkeit $\alpha = 0.01$ an. Wie lauten dann die Grenzen der Konfidenzintervalle für die geschätzten Zuchtwerte.
+
+### Ihre Aufgabe
+Füllen Sie die folgende Tabelle mit den Intervallgrenzen für die vorgegebenen Sicherheiten aus.
+
+```{r, echo=FALSE, results='asis'}
+r2 <- c(seq(.6, .95, .05), 0.99)
+nr_r2 <- length(r2)
+# create the table
+knitr::kable(dplyr::data_frame(Sicherheit = r2,
+                  `Untere Grenze` = rep("", nr_r2),
+                  `Obere Grenze` = rep("", nr_r2)),
+             align = "c",
+             booktabs = TRUE)
+```
+
+
+### Lösung
+```{r, echo=FALSE, results='asis'}
+sep <- sqrt(1-r2) * sd_bv
+alpha <- .01
+quant_norm <- qnorm(p = alpha/2, lower.tail = FALSE)
+lower_limit <- mean_bv - sep * quant_norm
+upper_limit <- mean_bv + sep * quant_norm
+# fill the table with solutions
+knitr::kable(dplyr::data_frame(Sicherheit = r2,
+                  `Untere Grenze` = round(lower_limit, digits = 1),
+                  `Obere Grenze` = round(upper_limit, digits = 1)),
+             align = "c",
+             booktabs = TRUE)
+
+```
+
+\pagebreak
+
+## Aufgabe 2: Mehrmerkmalsselektion
+```{r, echo=FALSE, results='hide'}
+set.seed(3451)
+limit_lgf <- 12
+limit_far <- 65
+h2_lgf <- .12
+h2_far <- .06
+rp <- -.1
+rg <- -.13
+a_lgf <- 15
+a_far <- 2.5
+nr_sow <- 20
+mean_lgf <- 10
+sd_lgf <- 1.8
+mean_far <- 72
+sd_far <- 8.1
+vec_lgf <- runif(nr_sow, 
+                 min = mean_lgf - 3*sd_lgf,
+                 max = mean_lgf + 3*sd_lgf)
+vec_far <- runif(nr_sow,
+                 min = mean_far - 3*sd_far,
+                 max = mean_far + 3*sd_far)
+tbl_data <- dplyr::data_frame(Sau = 1:nr_sow,
+                              `Lebend Geborene Ferkel` = round(vec_lgf, digits = 0),
+                              `Ferkelaufzuchtrate` = round(vec_far, digits = 1))
+```
+
+In einer Schweinzuchtpopulation wollen wir die Merkmale Anzahl lebend geborene Ferkel (LGF) und die Ferkelaufzuchtrate (FAR) verbessern. Wir haben Daten der beiden Merkmale für `r nr_sow` Muttersauen.
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(tbl_data, align = "c", booktabs = TRUE)
+```
+
+### Ihre Aufgabe
+Vergleichen Sie die Selektion nach unabhängigen Grenzen mit Grenzen $LGF > `r limit_lgf`$ und $FAR > `r limit_far`$ mit der Indexselektion. Erstellen Sie eine Rangliste gemäss der Selektionskandidaten gemäss der Werte der Selektionskriterien. 
+
+Für die Konstruktion des Indexes können sie die folgenden Parameter verwenden.
+
+\begin{center}
+\vspace{2ex}
+\begin{tabular}{lrr}
+\hline
+Parameter  &  LGF  &  FAR  \\
+\hline
+Phänotypische Standardabweichung  $\sigma_P$  &  $`r format(sd_lgf, nsmall=1)`$  &  $`r format(sd_far, nsmall=1)`$ \\
+wirtschaftliches Gewicht $a$                  &  $`r a_lgf`$  &  $`r a_far`$ \\
+Heritabilität $h^2$                           &  $`r h2_lgf`$  &  $`r h2_far`$ \\
+\hline
+\end{tabular}
+\end{center}
+
+Die phänotypische Korrelation zwischen den Merkmalen beträgt $`r rp`$ und die genetische Korrelation beträgt $`r rg`$. 
+
+
+### Lösung
+1. __Selektion nach unabhängigen Grenzen__. 
+Bei der Selektion nach unabhängigen Grenzen umfasst die Rangliste der Kandidaten einfach die Tiere, deren Leistung über beiden Grenzen liegen. Innerhalb der Rangliste gibt es keine definierte Reihenfolge der Tiere. Die Rangliste für die Selektion nach unabhängigen Grenzen sieht somit wie folgt aus
+
+```{r, echo=FALSE, results='asis'}
+suppressPackageStartupMessages(require(dplyr))  
+tbl_sel_snug <- tbl_data %>% filter(`Lebend Geborene Ferkel` > limit_lgf & Ferkelaufzuchtrate > limit_far)
+knitr::kable(tbl_sel_snug, align = "c")
+```
+
+
+2. __Indexselektion__. Als ersten Schritt bei der Indexselektion konstruieren wir die Index-Normalgleichungen. Diese lauten gemäss Skript (Seite 48)
+
+$$
+\left[
+  \begin{array}{cc}
+  \sigma_{pLGF}^2  &  \sigma_{pLGF,FAR}  \\
+  \sigma_{pLGF,FAR}   &  \sigma_{pFAR}^2
+  \end{array}
+\right]
+\left[
+  \begin{array}{c}
+  b_{LGF} \\
+  b_{FAR}
+  \end{array}
+\right]
+=
+\left[
+  \begin{array}{cc}
+  \sigma_{gLGF}^2  &  \sigma_{gLGF,FAR}  \\
+  \sigma_{gLGF,FAR}   &  \sigma_{gFAR}^2
+  \end{array}
+\right]
+\left[
+  \begin{array}{c}
+  a_{LGF} \\
+  a_{FAR}
+  \end{array}
+\right]
+$$
+
+Durch Einsetzen der Parameter erhalten wir die numerischen Gleichungen für die Unbekannten $b_{LGF}$ und $b_{FAR}$. 
+
+```{r MatSetup, echo=FALSE, results='hide'}
+# phenotypic covariance between f and e
+sigma_plgf_far <- rp * sd_lgf * sd_far
+# phenotypic variance-covariance matrix
+mat_p <- matrix(c(sd_lgf^2, sigma_plgf_far, sigma_plgf_far, sd_far^2), nrow = 2, byrow = TRUE)
+# genetic standard deviations of f and e
+sigma_glgf <- sqrt(h2_lgf) * sd_lgf
+sigma_gfar <- sqrt(h2_far) * sd_far
+# genetic covariance between f and e
+sigma_glgf_far <- rg * sigma_glgf * sigma_gfar
+# genetic variance-covariance matrix
+mat_g <- matrix(c(sigma_glgf^2, sigma_glgf_far, sigma_glgf_far, sigma_gfar^2), nrow = 2, byrow = TRUE)
+vec_b <- c("b_{LGF}", "b_{FAR}")
+vec_a <- c(a_lgf, a_far)
+vec_b_sol <- solve(mat_p) %*% crossprod(mat_g, vec_a)
+```
+
+```{r NumericEqIndex, echo=FALSE, results='asis'}
+cat("$$\n")
+cat("\\left[\n")
+cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = mat_p, pnDigits = 2), collapse = "\n"), "\n")
+cat("\\right]\n")
+cat("\\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_b)))
+cat("\\right]\n")
+cat("=\n")
+cat("\\left[\n")
+cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = mat_g, pnDigits = 2), collapse = "\n"), "\n")
+cat("\\right]\n")
+cat("\\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_a)))
+cat("\\right]\n")
+cat("$$\n")
+```
+
+
+Als Lösung ergibt sich
+
+```{r SolEqIndex, echo=FALSE, results='asis'}
+cat("$$\n")
+cat("\\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_b)))
+cat("\\right]\n")
+cat("=\n")
+cat("\\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = round(vec_b_sol, digits = 3))))
+cat("\\right]\n")
+cat("$$\n")
+```
+
+Mit den Indexgewichten aus dem Lösungsvektor $b$ können wir nun für jede Sau einen Indexwert berechnen. Dazu rechnen wir die phänotypischen Leistungen korrigiert um die mittleren Leistungswerte und multiplizieren diese mit den Indexgewichten.
+
+```{r, echo=FALSE, results='asis'}
+mean_lgf <- mean(tbl_data$`Lebend Geborene Ferkel`)
+mean_far <- mean(tbl_data$Ferkelaufzuchtrate)
+tbl_korr_data <- tbl_data %>% mutate(`korrigierte LGF` = `Lebend Geborene Ferkel` - mean_lgf, 
+                                     `korrigierte FAR` = `Ferkelaufzuchtrate` - mean_far,
+                                     Indexwert = `korrigierte LGF` * vec_b_sol[1] + `korrigierte FAR` * vec_b_sol[2])
+knitr::kable(tbl_korr_data)
+```
+
+Die Rangreihenfolge der Mutterschweine nach den Indexwerten lautet dann
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(tbl_korr_data[order(tbl_korr_data$Indexwert, decreasing = TRUE), ])
+```
+
+Der Vergleich der beiden Ranglisten zeigt, dass die ausgewählten Tiere bei der Selektion nach unabhängigen Grenzen auch in der Indexselektion an der Spitze der Rangliste auftauchen. Der Vorteil der Rangliste der Indexselektion ist, dass wir alle Tiere in der Liste haben. So können wir je nach Selektionsintensität die benötigte Anzahl an Elterntieren auswählen. Bei der Selektion nach unabhängigen Grenzen ist die Anzahl der ausgwählten Tieren aufgrund der gewählten Grenzen fix gegeben.
+
+

@@ -1,0 +1,270 @@
+---
+title: "AZWS - Lösung 3"
+author: "Peter von Rohr"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document:
+    keep_tex: FALSE
+output_file: asmas_w10_l03.pdf
+---
+
+```{r DocumentSetup, echo=FALSE, results='hide'}
+knitr::opts_chunk$set(echo = FALSE, results = 'hide')
+```
+
+```{r, echo=FALSE}
+vec_vg_hg_op_x <- c(-17.5*2/1000, 2*47.5/1000, 0.075)
+```
+
+## Aufgabe 1: Halb-, Vollgeschwister und Eigenleistung
+Im Abschnitt 3.4.4 im Skript (Seite 32) soll der Zuchtwert für ein Selektionskandidat (Proband) mit dem Selektionsindex geschätzt werden. Wie in Abbildung 3.2 im Skript gezeigt wurde, hat der Selektionskandidat zwei Vollgeschwister und zwei Halbgeschwister. Zusätzlich zu den Geschwisterleistungen soll auch die Eigenleistung des Selektionskandidaten berücksichtigt werden. 
+
+
+### Ihre Aufgabe:
+* Schätzen Sie für den Selektionskandidaten den Zuchtwert mit dem Selektionsindex
+* Verwenden Sie dazu die Angaben des Zahlenbeispiels aus dem Abschnitt 3.1.2, der Konstruktion der Matrizen des Indexes aus Abschnitt 3.4.4 und der Verwandtschaft aus der Abbildung 3.2. 
+* Wir nehmen an, dass der Vektor ($x$) der Leistungsabweichungen wie folgt lautet:
+
+```{r, echo=FALSE, results='asis'}
+cat("$$x = \\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_vg_hg_op_x, pnDigits = 3), collapse = "\n"), "\n")
+cat("\\right]$$\n")
+```
+
+
+
+### Lösung
+
+Aus dem Skript wissen wir bereits wie die Matrizen $P$ und $G$ aufgebaut sind.
+
+$$P = \left[ 
+  \begin{array}{ccc} 
+  \frac{1+(n-1)\ h^2/2}{n}\sigma_x^2  &  {1 \over 4} h^2 \sigma_x^2            &  {1 \over 4} h^2 \sigma_x^2  \\
+  {1 \over 4} h^2 \sigma_x^2          &  \frac{1+(n-1)\ h^2/2}{n}\ \sigma_x^2  &  {1 \over 2} h^2 \sigma_x^2 \\
+  {1 \over 4} h^2 \sigma_x^2          &  {1 \over 2} h^2 \sigma_x^2            &  \sigma_x^2
+  \end{array}\right]$$
+
+und 
+
+$$G = \left[ 
+  \begin{array}{c} 
+  1/4 \ h^2 \sigma_x^2\\
+  1/2 \ h^2 \sigma_x^2\\
+  h^2 \sigma_x^2
+  \end{array}\right]$$
+  
+  
+  
+```{r FullHalfSibOwnPerf, echo=FALSE, results='hide'}
+h2 <- .25
+n <- 2
+var_vg <- (1+(n-1)*h2/2)/n
+cov_hg <- 0.25*h2
+vec_vg_hg_b_op <- rmddochelper::vecGetVecElem(psBaseElement = "b_", pnVecLen = 3)
+
+cov_vg <- .5*h2
+mat_p_op <- matrix(c(c(var_vg, cov_hg, cov_hg, cov_hg, var_vg, cov_vg, cov_hg, cov_vg, 1)), ncol = 3, byrow = TRUE)
+mat_g_op <- matrix(c(.25*h2, .5*h2, h2), ncol = 1, byrow = TRUE)
+vec_b_sol_op <- solve(mat_p_op, mat_g_op)
+```
+
+Setzen wir die Zahlen ein, dann erhalten wir
+
+```{r, echo=FALSE, results='asis'}
+cat("$$\\left[\n")
+cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = mat_p_op, pnDigits = 4), collapse = "\n"), "\n")
+cat("\\right]")
+cat("\\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_vg_hg_b_op), collapse = "\n"), "\n")
+cat("\\right]")
+cat(" = \\left[\n")
+cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = mat_g_op, pnDigits = 4), collapse = "\n"), "\n")
+cat("\\right]$$")
+```
+
+Daraus erhalten wir die Lösung für den Vektor $b$.
+
+```{r, echo=FALSE, results='asis'}
+cat("$$b = \\left[\n")
+cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = vec_b_sol_op, pnDigits = 4), collapse = "\n"), "\n")
+cat("\\right]$$")
+```
+
+
+```{r}
+hat_i <- crossprod(vec_b_sol_op, vec_vg_hg_op_x)
+```
+
+Den geschätzten Zuchtwert $\hat{I}$ mit der Methode des Selektionsindex berechnen wir als
+
+$$\hat{I} = b^T * x = `r round(hat_i, digits = 3)`$$
+
+
+## Aufgabe 2: BLUP-Vatermodell
+Schätzen Sie für die Väter im Zahlenbeispiel aus dem Abschnitt 3.1.2 die Zuchtwerte mit einem BLUP-Vatermodell.
+
+### Hilfestellung
+* Nehmen Sie an, dass die Väter weder verwandt noch ingezüchtet sind. Somit entspricht die genetisch-additive Verwandtschaftsmatrix $G$ der Einheitsmatrix $I$. 
+
+
+### Lösung
+Das Vatermodell ist ein lineares gemischtes Modell und sieht für unseren Beispieldatensatz, wie folgt aus.
+
+```{r SireModel, echo=FALSE, results='asis'}
+# Erzeugung des Datensatzes aus dem Skript
+n_nr_sire <- 3
+n_nr_dam <- 8
+n_nr_parents <- n_nr_sire + n_nr_dam
+n_nr_offspring <- 16
+n_nr_animals <- n_nr_parents + n_nr_offspring
+dam_id <- rep(4:11,2)
+
+tbl_beef_data <- dplyr::data_frame(Tier = (n_nr_parents + 1):n_nr_animals,
+                                   Vater = c(rep(1,8), rep(2,6), rep(3,2)),
+                                   Mutter = dam_id[order(dam_id)],
+                                   Betrieb = c(rep(1,4), rep(2,4), rep(1,4), rep(2,4)),
+                                   Zunahme = c(1.26,1.32,1.4,1.44,1.52,1.5,1.42,1.46,1.34,1.32,1.24,1.28,1.44,1.4,1.54,1.56))
+
+# Genetische Parameter
+h2 <- .25
+n_var_p <- round(var(tbl_beef_data$Zunahme), digits = 4)
+n_var_g <- round(h2 * n_var_p, digits = 4)
+
+# Vektor der Beobachtungen
+vec_y <- tbl_beef_data$Zunahme
+n_anz_beob <- length(vec_y)
+
+# Designmatrix X 
+vec_betriebe <- as.factor(tbl_beef_data$Betrieb)
+n_anz_btr <- length(levels(vec_betriebe))
+mat_X <- matrix(0, nrow = n_anz_beob, ncol = n_anz_btr)
+vec_res <- sapply(seq_along(vec_betriebe), function(x) mat_X[x,vec_betriebe[x]] <<- 1)
+
+# vector beta
+vec_beta <- rmddochelper::vecGetVecElem("\\beta", pnVecLen = n_anz_btr, psResult = "latex")
+
+# Designmatrix Z
+vec_sire <- as.factor(tbl_beef_data$Vater)
+n_anz_sire <- length(levels(vec_sire))
+mat_Z <- matrix(0, nrow = n_anz_beob, ncol = n_anz_sire)
+vec_res <- sapply(seq_along(vec_sire), function(x) mat_Z[x, vec_sire[x]] <<- 1)
+
+# vector u
+vec_u <- rmddochelper::vecGetVecElem("u", pnVecLen = n_anz_sire, psResult = "latex")
+
+# vector e
+vec_e <- rmddochelper::vecGetVecElem("e", pnVecLen = n_anz_beob, psResult = "latex")
+
+# showing the model
+cat("$$\\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_y), collapse = "\n"), "\n")
+cat("\\right]\n")
+cat(" = \\left[\n")
+cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = mat_X, pnDigits = 0), collapse = "\n"), "\n")
+cat("\\right]\n")
+cat("\\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_beta), collapse = "\n"), "\n")
+cat("\\right]\n")
+cat(" + \\left[\n")
+cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = mat_Z, pnDigits = 0), collapse = "\n"), "\n")
+cat("\\right]\n")
+cat("\\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_u), collapse = "\n"), "\n")
+cat("\\right]\n")
+cat(" + \\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_e), collapse = "\n"), "\n")
+cat("\\right]\n")
+cat("$$\n")
+```
+
+
+Die unbekannten $\beta$ und $u$ werden anhand der Mischmodellgleichungen geschötzt. Daraus resultieren die Schätzungen $\hat{\beta}$ und $\hat{u}$. Die Varianzen der zufälligen Resteffekte sind $R = I * \sigma_e^2$ und die Varianzen der Zuchtwerte der Väter sind $G = I * \sigma_u^2 / 4$, wobei $\sigma_u^2$ der genetisch-additiven Varianz entspricht. Somit lassen sich die Mischmodellgleichungen in der folgenden vereinfachten Form aufschreiben. Der Faktor $\lambda$ ist definiert als 
+
+$$\lambda = 4\sigma_e^2/\sigma_u^2$$
+
+\begin{equation}
+\left[ 
+  \begin{array}{rr}
+  X^TX  &  X^TZ \\
+  Z^TX  &  Z^TZ + G^{-1} * \lambda
+  \end{array}
+\right]
+\left[ 
+  \begin{array}{r}
+  \hat{\beta} \\
+  \hat{u}
+  \end{array}
+\right]
+= 
+\left[ 
+  \begin{array}{r}
+  X^Ty \\
+  Z^Ty
+  \end{array}
+\right]
+\end{equation}
+
+```{r SolSireModel, echo=FALSE, results='hide'}
+# coefficient matrix
+lambda <- 4*(n_var_p - n_var_g) / n_var_g
+mat_XtX <- crossprod(mat_X)
+mat_XtZ <- crossprod(mat_X, mat_Z)
+mat_ZtX <- crossprod(mat_Z, mat_X)
+mat_ZtZ <- crossprod(mat_Z)
+mat_coeff <- cbind(rbind(mat_XtX, mat_ZtX), rbind(mat_XtZ, mat_ZtZ + lambda * diag(1, n_anz_sire)))
+# right-hand side
+mat_Xty <- crossprod(mat_X, vec_y)
+mat_Zty <- crossprod(mat_Z, vec_y)
+mat_rhs <- rbind(mat_Xty, mat_Zty)
+# solution
+vec_mmh_num_sol <- solve(mat_coeff, mat_rhs)
+```
+
+\pagebreak
+
+Die numerischen Lösungen lauten
+
+```{r, echo=FALSE, results='asis'}
+vec_mmhs_hat_sol <- c("\\hat{\\beta}", "\\hat{u}")
+cat("$$\\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_mmhs_hat_sol), collapse = "\n"), "\n")
+cat("\\right]\n")
+cat(" = \\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_mmh_num_sol, pnDigits = 4), collapse = "\n"), "\n")
+cat("\\right]\n")
+cat("$$\n")
+```
+
+Die numerischen Lösungen sind so zu interpretieren, dass die ersten beiden Zahlen im Vektor den Lösungen der Betriebseffekte entsprechen. 
+
+```{r, echo=FALSE, results='asis'}
+vec_beta_hat_sol <- rmddochelper::vecGetVecElem("\\hat{\\beta}", pnVecLen = n_anz_btr, psResult = "latex")
+cat("$$\\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_beta_hat_sol), collapse = "\n"), "\n")
+cat("\\right]\n")
+cat(" = \\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_mmh_num_sol[1:n_anz_btr], pnDigits = 4), collapse = "\n"), "\n")
+cat("\\right]\n")
+cat("$$\n")
+```
+
+Die letzten drei Zahlen des Lösungsvektors entsprechen den geschätzten Zuchtwerten der Väter. 
+
+```{r, echo=FALSE, results='asis'}
+vec_u_hat_sol <- rmddochelper::vecGetVecElem("\\hat{u}", pnVecLen = n_anz_sire, psResult = "latex")
+vec_u_num_sol <- vec_mmh_num_sol[(n_anz_btr+1):length(vec_mmh_num_sol)]
+cat("$$\\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_u_hat_sol), collapse = "\n"), "\n")
+cat("\\right]\n")
+cat(" = \\left[\n")
+cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_u_num_sol, pnDigits = 4), collapse = "\n"), "\n")
+cat("\\right]\n")
+cat("$$\n")
+```
+
+Die Rangfolge der Väter nach den geschätzten Zuchtwerten lautet
+
+```{r, echo=FALSE, results='markup'}
+order(vec_u_num_sol, decreasing = TRUE)
+```
+
