@@ -1,7 +1,7 @@
 ---
 title: "AZWS - Übung 3"
 author: "Peter von Rohr"
-date: "`r Sys.Date()`"
+date: "07.05.2018"
 output: 
   pdf_document:
     keep_tex: FALSE
@@ -33,13 +33,14 @@ cat("\\right]$$\n")
 
 
 
+
 ## Aufgabe 2: BLUP-Vatermodell
 Schätzen Sie für die Väter im Zahlenbeispiel aus dem Abschnitt 3.1.2 die Zuchtwerte mit einem BLUP-Vatermodell.
 
 ### Hilfestellung
-* Nehmen Sie an, dass die Väter weder verwandt noch ingezüchtet sind. Somit entspricht die genetisch-additive Verwandtschaftsmatrix $G$ der Einheitsmatrix $I$. 
+Nehmen Sie an, dass die Väter weder verwandt noch ingezüchtet sind. Somit ist die Varianz-Kovarianzmatrix $G$ zwischen den Vatereffekten proportional zur Einheitsmatrix $I$. Es gilt also 
 
+$$G = I * \sigma_u^2/4$$
 
-
-
+wobei $\sigma_u^2$ der genetisch-additiven Varianz entspricht.
 
