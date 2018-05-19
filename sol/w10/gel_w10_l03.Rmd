@@ -104,7 +104,11 @@ $$\hat{I} = b^T * x = `r round(hat_i, digits = 3)`$$
 Schätzen Sie für die Väter im Zahlenbeispiel aus dem Abschnitt 3.1.2 die Zuchtwerte mit einem BLUP-Vatermodell.
 
 ### Hilfestellung
-* Nehmen Sie an, dass die Väter weder verwandt noch ingezüchtet sind. Somit entspricht die genetisch-additive Verwandtschaftsmatrix $G$ der Einheitsmatrix $I$. 
+Nehmen Sie an, dass die Väter weder verwandt noch ingezüchtet sind. Somit ist die Varianz-Kovarianzmatrix $G$ zwischen den Vatereffekten proportional zur Einheitsmatrix $I$. Es gilt also 
+
+$$G = I * \sigma_u^2/4$$
+
+wobei $\sigma_u^2$ der genetisch-additiven Varianz entspricht.
 
 
 ### Lösung
@@ -186,7 +190,7 @@ $$\lambda = 4\sigma_e^2/\sigma_u^2$$
 \left[ 
   \begin{array}{rr}
   X^TX  &  X^TZ \\
-  Z^TX  &  Z^TZ + G^{-1} * \lambda
+  Z^TX  &  Z^TZ + I * \lambda
   \end{array}
 \right]
 \left[ 
