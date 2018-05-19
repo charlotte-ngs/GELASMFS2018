@@ -231,7 +231,7 @@ Bei der Zuchtwertschätzung  mit der BLUP-Methode nehmen wir an, dass die Varian
 
 
 ## Hendersons Mischmodellgleichungen
-Die Formeln zur Berechnung der Schätzer für die Zuchtwerte (\@ref(eq:BlupEstBv)) und die fixen Effekte (\@ref(eq:BlupEstFixedEffect)) beinhalten beide die Inverse ($V^{-1}$) der Kovarianzmatrix $V$ der phänotypischen Beobachtungen. In den praktischen Zuchtwertschätzungen hat diese Matrix eine Dimension in der Grössenordnung von $10^6\times 10^6$. Die Inversion einer solch grossen Matrix ist nicht praktikabel. Als Lösung diese Problems entwickelte Henderson die sogenannten __Mischmodellgleichungen__, welche die Inversion von $V$ vermied. Für das verwendete Zahlenbeispiel sehen die Mischmodellgleichungen, wie folgt aus
+Die Formeln zur Berechnung der Schätzer für die Zuchtwerte \@ref(eq:BlupEstBv) und die fixen Effekte \@ref(eq:BlupEstFixedEffect) beinhalten beide die Inverse ($V^{-1}$) der Kovarianzmatrix $V$ der phänotypischen Beobachtungen. In den praktischen Zuchtwertschätzungen hat diese Matrix eine Dimension in der Grössenordnung von $10^6\times 10^6$. Die Inversion einer solch grossen Matrix ist nicht praktikabel. Als Lösung diese Problems entwickelte Henderson die sogenannten __Mischmodellgleichungen__, welche die Inversion von $V$ vermied. Für das verwendete Zahlenbeispiel sehen die Mischmodellgleichungen, wie folgt aus
 
 \begin{equation}
 \left[ 
@@ -262,7 +262,7 @@ Sofern die Matrix $R$ eine einfache Struktur hat und deshalb gilt, dass $R = I *
 \left[ 
   \begin{array}{rr}
   X^TX  &  X^TZ \\
-  Z^TX  &  Z^TZ + G^{-1} * \lambda
+  Z^TX  &  Z^TZ + A^{-1} * \lambda
   \end{array}
 \right]
 \left[ 
@@ -281,7 +281,7 @@ Sofern die Matrix $R$ eine einfache Struktur hat und deshalb gilt, dass $R = I *
 (\#eq:MixedModelEqSimple)
 \end{equation}
 
-Die neu eingeführte Variable $\lambda$ enspricht dem Varianzverhältnis $\lambda = \sigma_e^2 / \sigma_u^2$. 
+Die neu eingeführte Variable $\lambda$ enspricht dem Varianzverhältnis $\lambda = \sigma_e^2 / \sigma_u^2$. Gleichzeitig haben wir die Matrix $G$ durch $A * \sigma_u^2$ ersetzt. 
 
 
 ## Zuchtwertschätzung mit dem BLUP-Tiermodell
