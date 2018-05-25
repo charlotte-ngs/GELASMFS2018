@@ -23,7 +23,7 @@ knitr::knit_hooks$set(conv.odg = rmddochelper::odg.graphics.conv.hook)
 <!-- <<PointsQ1, echo=FALSE>>= -->
 ```{r PointsQ1, echo=FALSE}
 # Assign Points for Q1
-lPointsQ1 <- list(TaskA = 0,
+lPointsQ1 <- list(TaskA = 14,
                   TaskB = 0,
                   TaskC = 0,
                   TaskD = 0)
@@ -132,12 +132,56 @@ __TODO__: Tasks in English
 \clearpage
 \pagebreak
 
-\section*{Aufgabe 1: }
+
+```{r DataSetup, echo=FALSE, results='hide'}
+set.seed(2344)
+n_nr_obs <- 12
+bu_mean <- 143
+bu_sd <- 7.5
+res_mean <- 15.5
+res_sd <- 5.3
+reg_coef <- 5.17
+Brustumfang <-  runif(n_nr_obs, min = bu_mean - 1.5* bu_sd, max = bu_mean + 1.5*bu_sd)
+Gewicht <- reg_coef * Brustumfang + rnorm(n_nr_obs, mean = res_mean, sd = res_sd)
+tbl_bu_ge_data <- dplyr::data_frame(Tier = 1:n_nr_obs, 
+                                    Brustumfang = round(Brustumfang, digits = 0), 
+                                    Gewicht     = round(Gewicht, digits = 0))
+```
+
+\section*{Aufgabe 1: Lineare Regression}
+
 \begin{enumerate}
-\item[a)] \end{enumerate}
+\item[a)] In der Tierzucht wird das Körpergewicht oft anhand einer linearen Regression auf den Brustumfang geschätzt. Zur Schätzung der Regressionsparameter werden die folgenden Daten verwendet. 
+\end{enumerate}
 \points{`r lPointsQ1$TaskA`}
 
+
+```{r DataBuGew, echo=FALSE, results='asis'}
+knitr::kable(tbl_bu_ge_data, align = "c")
+```
+
+Das Resultat der Regression des Gewichts auf den Brustumfang lautet wie folgt
+
+```{r LmBuGew, echo=FALSE, results='markup'}
+lm_bu_ge <- lm(Gewicht ~ Brustumfang, data = tbl_bu_ge_data)
+summary(lm_bu_ge)
+```
+
+### Ihre Aufgabe
+Zeichnen Sie für alle Beobachtungen die erklärende Variable (als $x_i$), die Zielgrösse (als $y_i$), die Residuen (als $r_i$) und die geschätzen Regressionskoeffizienten in den folgenden Plot ein.
+
+```{r TaskDataPlotAbline}
+plot(tbl_bu_ge_data$Brustumfang, tbl_bu_ge_data$Gewicht, xlab = "Brustumfang", ylab = "Gewicht")
+abline(lm_bu_ge, col = "red")
+```
+
+\pagebreak
 \noindent\textbf{L\"osung:}
+
+Die für die Beobachtung 11 gezeigten Grössen $x_{11}$, $y_{11}$ und $r_{11}$ sollen für alle Beobachtungen eingezeichnet werden
+```{r SolSavePlot, fig.align='center', echo=FALSE, results='asis'}
+knitr::include_graphics(path = "png/asmfs2018_exam_sol_task1a.pdf")
+```
 
 
 \clearpage
@@ -155,10 +199,44 @@ __TODO__: Tasks in English
 \pagebreak
 
 \begin{enumerate}
-\item[c)]
+\item[c)] Gegeben sind die folgenden beiden Resultate (als `summary()` und `plot()`) zweier Regressionsanalysen (mit `lm()`). Welcher `summary()`-Output gehört zu welchem Plot? 
 \end{enumerate}
 
 \points{`r lPointsQ1$TaskC`}
+
+```{r DataTask1c, echo=FALSE}
+set.seed(4435)
+# constants
+n_nr_obs_task1c <- 10
+res_mean_task1c <- 4.32
+res_sd_task1c <- 1.44
+reg_coeff1_task1c <- 0.564
+reg_coeff2_task1c <- -1.156
+
+# data
+tbl_task1c_o1 <- dplyr::data_frame(x = 1:n_nr_obs_task1c, y = reg_coeff1_task1c * x + rnorm(n_nr_obs_task1c, mean = res_mean_task1c, sd = res_sd_task1c))
+tbl_task1c_o2 <- dplyr::data_frame(x = 1:n_nr_obs_task1c, y = reg_coeff2_task1c * x + rnorm(n_nr_obs_task1c, mean = res_mean_task1c, sd = res_sd_task1c))
+
+# lm
+lm_task1c_o1 <- lm(y ~ x, data = tbl_task1c_o1)
+lm_task1c_o2 <- lm(y ~ x, data = tbl_task1c_o2)
+```
+
+### `summary()`-Output 1:
+```{r SummaryTask1cOutput1, echo=FALSE, results='markup'}
+summary(lm_task1c_o1)
+```
+
+### `summary()`-Output 2:
+```{r SummaryTask1cOutput2, echo=FALSE, results='markup'}
+summary(lm_task1c_o2)
+```
+
+### Plot 1:
+
+
+### Plot 2:
+
 
 ### Lösung: 
 
