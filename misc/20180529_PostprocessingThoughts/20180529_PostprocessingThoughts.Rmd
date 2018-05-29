@@ -1,0 +1,45 @@
+---
+title: "Postprocessing Thoughts after FS2018"
+author: "Peter von Rohr"
+date: "5/29/2018"
+output:
+  html_document:
+    df_print: paged
+link-citations: yes
+bibliography: skeleton.bib
+biblio-style: apalike
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Disclaimer
+This document contains some thoughts that came up after having finished teaching the two courses 
+
+* Applied Statistical Methods in Animal Sciences and (ASM)
+* Applied Genetic Evaluation (GEL)
+
+## Material
+The material covered was taken out of an earlier version of existing course notes by @Goetz2014. The reason for using @Goetz2014 as a template is because these course notes contained a lot of good material about breeding programs and multi-trait selection strategies. The caveat was that we first had to cover a lot of material on breeding value estimation which was already covered in Livestock Breeding and Genomics (LBG).
+
+The material covered is not consistent with the announcement of the official syllabus. No practical aspects of the model structure of the routine evaluations were covered. The question is how relevant this is when the basics and the background is not understood. There might be a possibility to give a short-cut introduction to animal models and sire models and 
+
+
+## Conclusions and Plans for the Future
+* Derivation of BLUP is done in ASM. In GEL and LBG, only the mixed model is presented as a solution and the derivation might be given in an appendix
+* Variance components estimation should be covered also in ASM and in LGB most likely
+* GEL should be started with a short-cut introduction into animal-models and sire models and based on that the more difficult models used in practical evaluations can be shown.
+
+## References
+```{r Bibliography, echo=FALSE, results='hide'}
+vec_bref <- c(bibentry(
+    bibtype = "Unpublished",
+    title   = "Quantitative Genetik und Zuchtplanung",
+    author  = as.person("K-U. Götz [aut]"),
+    year    = "2014",
+    note    = "Bayerische Landesanstalt für Landwirtschaft, Institut für Tierzucht",
+    key     = "Goetz2014"
+  ))
+rmddochelper::write_bib(pvec_bref = vec_bref)
+```  

@@ -188,13 +188,37 @@ knitr::include_graphics(path = "png/asmfs2018_exam_sol_task1a.pdf")
 \pagebreak
 
 \begin{enumerate}
-\item[b)] 
+\item[b)] Für die ersten drei Tiere aus dem Datensatz aus Aufgabe 1a) werden SNP-Daten an fünf SNP-Loci erhoben. Mit diesen SNP-Daten wird versucht den genetischen Anteil des Gewichts der drei Tiere zu schätzen. In einer ersten Analyse wurden die SNP-Effekte mit einer Regressionsanalyse geschätzt. Die Resultate sind im nachfolgenden Output gezeigt. Wo liegt das zentrale Problem dieser Analyse? Schlagen Sie ein alternatives Analyseverfahren vor, welches diese Probleme nicht hat.
+
+\textit{For the first three animals of the data set of 1a) SNP-data at five loci were collected. The genetic part of the trait body weight should be estimated based on the SNP-data for the three animals. In a first analysis, the SNP-effects were estimated with a regression analysis. The results are shown in the following output. Where is the central problem of this analysis? Propose an alternative analysis to regression analysis which does not have the observed problem.}
 \end{enumerate}
 
 \points{`r lPointsQ1$TaskB`}
 
-### Lösung: 
+```{r DataSetupTask1b, echo=FALSE, results='markup'}
+n_anz_snp_tiere <- 3
+Gewicht <- tbl_bu_ge_data$Gewicht[1:n_anz_snp_tiere]
+SNP1 <- c(1,1,-1)
+SNP2 <- c(0,1,0)
+SNP3 <- c(1,0,-1)
+SNP4 <- c(1,1,1)
+SNP5 <- c(0,0,-1)
+tbl_snp_ge_data <- dplyr::data_frame(Tier = 1:n_anz_snp_tiere, 
+                                     Gewicht = Gewicht,
+                                     SNP1 = SNP1,
+                                     SNP2 = SNP2,
+                                     SNP3 = SNP3,
+                                     SNP4 = SNP4,
+                                     SNP5 = SNP5)
+# lm analysis
+lm_snp_ge <- lm(Gewicht ~ 0 + SNP1 + SNP2 + SNP3 + SNP4 + SNP5, data = tbl_snp_ge_data)
+summary(lm_snp_ge)
+```
 
+
+### Lösung: 
+* Anzahl Beobachtungen $n$ ist kleiner als die Anzahl Parameter $p$. Somit können die unbekannten Parameter nicht mit Least Squares geschätzt werden. Deshalb die seltsamen Resultate. 
+* Eine Alternative ist LASSO, GBLUP oder ein Bayes'sches Verfahren.
 \clearpage
 \pagebreak
 
@@ -233,26 +257,58 @@ summary(lm_task1c_o2)
 ```
 
 ### Plot 1:
+```{r PlotTask1cOutput2, echo=FALSE}
+plot(tbl_task1c_o2$x, tbl_task1c_o2$y, xlab = "x", ylab = "y")
+abline(lm_task1c_o2, col = "red")
+```
 
 
 ### Plot 2:
+```{r PlotTask1cOutput1, echo=FALSE}
+plot(tbl_task1c_o1$x, tbl_task1c_o1$y, xlab = "x", ylab = "y")
+abline(lm_task1c_o1, col = "red")
+```
 
 
 ### Lösung: 
-
-\clearpage
-\pagebreak
-
-\section*{Aufgabe 2: }
-
+Plot 2 gehört zu Output 1 und Plot 1 zu Output 2. Die Regressionskoeffizienten entsprechen den Steigungen der roten Geraden. 
 
 \clearpage
 \pagebreak
 
 \begin{enumerate}
-\item[a)] 
+\item[a)] Zum Datensatz aus Aufgabe 1b) wird für die drei Tiere zusätzlich zum Gewicht und zu den SNP-Informationen noch das Geschlecht ermittelt. Der Datensatz ist in der nachfolgenden Tabelle dargestellt.
+
+\textit{The dataset given in 1b) is augmented with the sex of the three animals. The data set is given in the following table.}
 \end{enumerate}
 \points{`r lPointsQ2$TaskA`}
+
+```{r DataSetUpTask2a, echo=FALSE, results='asis'}
+n_anz_snp_tiere <- 3
+Gewicht <- tbl_bu_ge_data$Gewicht[1:n_anz_snp_tiere]
+SNP1 <- c(1,1,-1)
+SNP2 <- c(0,1,0)
+SNP3 <- c(1,0,-1)
+SNP4 <- c(1,1,1)
+SNP5 <- c(0,0,-1)
+sex <- c("F", "M","F")
+tbl_sex_snp_ge_data <- dplyr::data_frame(Tier = 1:n_anz_snp_tiere, 
+                                     Gewicht = Gewicht,
+                                     Geschlecht = sex,
+                                     SNP1 = SNP1,
+                                     SNP2 = SNP2,
+                                     SNP3 = SNP3,
+                                     SNP4 = SNP4,
+                                     SNP5 = SNP5)
+knitr::kable(tbl_sex_snp_ge_data)
+```
+
+### Ihre Aufgabe
+Die Daten sollen mit einem Ridge-Regression (RR) BLUP Modell analysiert werden. Stellen Sie das RR-BLUP Modell in Matrix-Vektor-Schreibweise für die gezeigten Daten auf, wobei das Gewicht die Zielgrösse darstellt und das Geschlecht als fixer Effekt behandelt werden soll. Füllen Sie für jeden Vektor und für jede Matrix auch die konkreten Zahlen aus den Daten ab, soweit dies möglich ist.
+
+\textit{The above shown dataset is to be analysed using a Ridge-Regression (RR) model. Setup the RR-BLUP model for the shown data. Use a matrix-vector notation. Body weight is the target variable and sex should be used as fixed effect. Fill the matrices and the vectors with the numbers coming from the data, as it is possible.}
+
+
 
 ### Lösung
 
@@ -338,9 +394,65 @@ summary(lm_task1c_o2)
 \pagebreak
 
 \begin{enumerate}
-\item[b)] 
+\item[b)] Für das nachfolgend gegebene lineare Regressionsmodell soll die Parameter mit einer Bayes'schen Analyse geschätzt werden. Die Analyse wird anhand des gezeigten R-Codeblocks gemacht. Berechnen Sie die Bayes'schen Schätzwerte für den Achsenabschnitt $\beta_0$ und den Regressionsparameter $\beta_1$ aufgrund des Outputs des gezeigten Programmcodes. 
+
+\textit{Parameters of the following given model are to be estimated using a Bayesian analysis. The analysis is done using the shown R-code below. Compute the Bayesian estimator for the intercept $\beta_0$ and the regression parameter $\beta_1$ based on the output of the R-program.}
 \end{enumerate}
 \points{`r lPointsQ4$TaskB`}
+
+
+```{r DataSetupTask4b}
+### # simulated data according to Rohan's course note from 2013
+set.seed(987)
+n = 20 # number of observations
+k = 1 # number of covariates
+x = matrix(sample(c(0, 1, 2), n * k, replace = T), nrow = n, ncol = k)
+X = cbind(1, x)
+# head(X)
+betaTrue = c(-3.9, 1.76)
+y = X %*% betaTrue + rnorm(n, 0, 1)
+#head(y)
+### # generate dataframe for saving to file
+dfDataRead <- data.frame(y=y, x = X[,2], stringsAsFactors = FALSE)
+```
+
+Das Programm, welches den Gibbs Sampler umsetzt und die Stichproben von $\beta_0$ und $\beta_1$ erzeugt, sieht wie folgt aus. Berechnen Sie aus den gezeigten Stichproben eine Bayes'sch Schätzung für $\beta_0$ und $\beta_1$.
+
+\textit{The program below implements the Gibbs Sampler to generate samples of $\beta_0$ and $\beta_1$. Compute the Bayesian estimates of $\beta_0$ and $\beta_1$ based on the samples shown in the output.}
+
+```{r GibbsSampler, echo=TRUE, results='markup'}
+### # Matrix X as incidence matrix for beta0 and beta1
+X <- cbind(1,dfDataRead$x)
+### # y as vector of observations
+y <- dfDataRead$y
+### # starting values
+beta = c(0, 0) 
+mean_beta <- beta
+# loop for Gibbs sampler
+niter = 10 # number of samples
+for (iter in 1:niter) {
+  # sampling intercept
+  w = y - X[, 2] * beta[2]
+  x = X[, 1]
+  xpxi = 1/(t(x) %*% x)
+  betaHat = t(x) %*% w * xpxi
+  beta[1] = rnorm(1, betaHat, sqrt(xpxi)) # using residual var = 1
+  # sampling slope
+  w = y - X[, 1] * beta[1]
+  x = X[, 2]
+  xpxi = 1/(t(x) %*% x)
+  betaHat = t(x) %*% w * xpxi
+  beta[2] = rnorm(1, betaHat, sqrt(xpxi)) # using residual var = 1
+  # summing up
+  mean_beta <- mean_beta + beta
+  # output current sample
+  cat("iteration: ", iter, " -- beta0: ", beta[1], " -- beta1: ", beta[2], "\n")
+}
+cat("beta0: ", mean_beta[1]/niter, " -- beta 1: ", mean_beta[2]/niter, "\n")
+```
+
+\clearpage
+\pagebreak
 
 ### Lösung
 
@@ -348,19 +460,10 @@ summary(lm_task1c_o2)
 \pagebreak
 
 \begin{enumerate}
-\item[c)] 
+\item[c)] Berechnen Sie den Standardfehler für die Bayes'schen Schätzungen von $\beta_0$ und $\beta_1$ aus 4b)
+
+\textit{Compute the standard error of the Bayesian estimates for $\beta_0$ and $\beta_1$ of 4b)}
 \end{enumerate}
 \points{`r lPointsQ4$TaskC`}
-
-
-
-\clearpage
-\pagebreak
-
-\begin{enumerate}
-\item[d)] 
-\end{enumerate}
-\points{`r lPointsQ4$TaskD`}
-
 
 ### Lösung

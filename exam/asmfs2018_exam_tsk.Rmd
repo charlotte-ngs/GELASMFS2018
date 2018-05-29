@@ -132,7 +132,8 @@ Total    &  `r nPointOverallTotal` & \\
 \end{center}
 
 \vspace{0.5cm}
-\textbf{NB}: \textit{Tasks in English are written in italics}
+
+\textit{Questions in English are in italics}
 
 \clearpage
 \pagebreak

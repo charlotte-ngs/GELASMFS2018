@@ -157,10 +157,6 @@ Total    &  `r nPointOverallTotal` & \\
 
 \noindent\textbf{L\"osung:}
 
-Grundsätzlich sind zwei Arten von Zuchtprogrammen zu unterscheiden
-* Zuchtprogramme, welche auf die Erzielung von Zuchtfortschritt ausgerichtet sind
-* Zuchtprogramme, bei welchen der Verkauf von Zuchtprodukten und Dienstleistungen im Zentrum
-stehen.
 
 \clearpage
 \pagebreak
@@ -175,13 +171,6 @@ stehen.
 
 ### Lösung: 
 
-1. Zuchtziel
-2. Leistungsprüfungen
-3. Zuchtwertschätzung
-4. Reproduktionstechnologien
-5. Selektion und Anpaarung
-6. Selektionserfolg
-
 \clearpage
 \pagebreak
 
@@ -194,9 +183,6 @@ stehen.
 \points{`r lPointsQ1$TaskC`}
 
 ### Lösung: 
-
-1. monolithische Zuchtprogramme mit breiter Beteiligung von vielen Betrieben 
-2. Zuchtprogramme mit hierarchischer Struktur
 
 \clearpage
 \pagebreak
@@ -232,12 +218,6 @@ Generationeninterval  &  8 Jahre &  2 Jahre \\
 
 ### Lösung: 
 
-```{r echo=TRUE, results='markup'}
-(delta_g1 = 1.8 * .9 * 250 / 8)
-(delta_g2 = 1.8 * .65 * 250 / 2)
-```
-
-
 \clearpage
 \pagebreak
 
@@ -252,19 +232,6 @@ Generationeninterval  &  8 Jahre &  2 Jahre \\
 
 ### Lösung
 
-In der Zuchtwertschätzung werden beobachtete Leistungen mit zwei Operationen verarbeitet. 
-
-1. Die Leistungen werden __relativiert__, d.h. sie werden mit anderen Leistungen, welche unter ähnlichen Bedingungen erbracht wurden, miteinander verglichen. Rechnerisch passiert das Relativieren durch die Subtraktion eines Vergleichswertes von den Leistungen.
-2. Die Leistungen werden __gewichtet__, da für verschiedene Tiere unterschiedlich viele Informationen zur Verfügung stehen. Intuitiv ist klar, dass wir einem Zuchtwert aufgrund von einer grossen Anzahl von Nachkommen mehr vertrauen, als einem der nur aufgrund von sehr wenigen Nachkommen geschätzt wurde. Mathematisch entspricht die Gewichtung einer Multiplikation mit einem Faktor.
-
-Fassen wir diese beiden Operationen in einer Formel zusammen so erhalten wir
-
-\begin{equation}
-\hat{u} = b * (y - \mu)
-(\#eq:zuchtwert)
-\end{equation}
-
-
 \clearpage
 \pagebreak
 
@@ -274,9 +241,6 @@ Fassen wir diese beiden Operationen in einer Formel zusammen so erhalten wir
 \textit{Some animal breeders compare the estimated breeding value with its phenotypic own performance. Use the definition of the breeding value to explain why this comparison is not appropriate.}
 \end{enumerate}
 \points{`r lPointsQ2$TaskB`}
-
-### Lösung
-
 
 \clearpage
 \pagebreak
@@ -312,33 +276,6 @@ knitr::kable(tbl_av_farm)
 
 
 ### Lösung: 
-
-Für Nachkommenleistung gilt
-
-$$b = \frac{2n}{n + k}$$
-
-wobei $k = (4-h^2)/h^2$
-
-Da beide Väter 2 Nachkommen haben ist der Gewichtungsfaktor für beide gleich
-
-```{r, echo=TRUE, results='markup'}
-require(dplyr)
-n_nr_offsp_per_father <- tbl_data_task2c %>% 
-  group_by(Vater) %>% 
-  summarize(n_nr_offsp_per_father = n()) %>% 
-  select(n_nr_offsp_per_father)
-(k = (4-h2)/h2)
-(b <- 2 * n_nr_offsp_per_father / (n_nr_offsp_per_father + k))
-
-```
-```{r, echo=TRUE, results='markup'}
-require(dplyr)
-tbl_cor_trait_values <- tbl_data_task2c %>% inner_join(tbl_av_farm) %>% mutate(CorrectedTraitValue = Merkmalswerte - `Mittlerer Merkmalswert`)
-tbl_av_per_sire <- tbl_cor_trait_values %>% group_by(Vater) %>% summarise(mean_trait_value = mean(CorrectedTraitValue))
-(tbl_bv_sire <- tbl_av_per_sire$mean_trait_value * b)
-
-```
-
 
 
 \clearpage
@@ -382,38 +319,9 @@ tbl_data_task3b <- dplyr::data_frame(Tier = (n_nr_dam + n_nr_sire + 1):(n_nr_ani
 knitr::kable(tbl_data_task3b)
 ```
 
+
+
 ### Lösung
-```{r FullHalfSib, echo=FALSE, results='hide'}
-h2 <- .25
-n <- 2
-var_vg <- (1+(n-1)*h2/2)/n
-cov_hg <- 0.25*h2
-mat_p <- matrix(c(var_vg, cov_hg, cov_hg, var_vg), ncol = 2, byrow = TRUE)
-mat_g <- matrix(c(0.25*h2, 0.5*h2), ncol = 1)
-vec_vg_hg_b <- rmddochelper::vecGetVecElem(psBaseElement = "b_", pnVecLen = 2)
-```
-
-```{r, echo=FALSE, results='asis'}
-cat("$$\\left[\n")
-cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = mat_p, pnDigits = 4), collapse = "\n"), "\n")
-cat("\\right]")
-cat("\\left[\n")
-cat(paste(rmddochelper::sConvertVectorToLaTexArray(pvec_avector = vec_vg_hg_b), collapse = "\n"), "\n")
-cat("\\right]")
-cat(" = \\left[\n")
-cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = mat_g, pnDigits = 4), collapse = "\n"), "\n")
-cat("\\right]$$")
-```
-
-Als Lösung erhalten wir
-
-```{r, echo=FALSE, results='asis'}
-vec_b_sol <- solve(mat_p, mat_g)
-cat("$$b = \\left[\n")
-cat(paste(rmddochelper::sConvertMatrixToLaTexArray(pmatAMatrix = vec_b_sol, pnDigits = 4), collapse = "\n"), "\n")
-cat("\\right]$$")
-```
-
 
 \clearpage
 \pagebreak
